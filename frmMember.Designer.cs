@@ -97,6 +97,7 @@
             this.first_NameTextBox = new System.Windows.Forms.TextBox();
             this.last_NameTextBox = new System.Windows.Forms.TextBox();
             this.tabPaid = new System.Windows.Forms.TabPage();
+            this.grpPayType = new System.Windows.Forms.GroupBox();
             this.cboPaid = new System.Windows.Forms.ComboBox();
             this.btnAddPaid = new System.Windows.Forms.Button();
             this.dgPaidHistory = new System.Windows.Forms.DataGridView();
@@ -104,7 +105,6 @@
             this.btnExtra = new System.Windows.Forms.Button();
             this.dgExtraCards = new System.Windows.Forms.DataGridView();
             this.membership = new PFGA_Membership.Membership();
-            this.grpPayType = new System.Windows.Forms.GroupBox();
             label4 = new System.Windows.Forms.Label();
             website_UsernamesLabel = new System.Windows.Forms.Label();
             pal_Exp_DateLabel = new System.Windows.Forms.Label();
@@ -295,7 +295,7 @@
             this.tabControl1.Controls.Add(this.tabGeneral);
             this.tabControl1.Controls.Add(this.tabPaid);
             this.tabControl1.Controls.Add(this.tabExtra);
-            this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Location = new System.Drawing.Point(3, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(953, 538);
@@ -492,7 +492,7 @@
             this.txtCell.Location = new System.Drawing.Point(275, 192);
             this.txtCell.Name = "txtCell";
             this.txtCell.Size = new System.Drawing.Size(100, 20);
-            this.txtCell.TabIndex = 103;
+            this.txtCell.TabIndex = 72;
             // 
             // label2
             // 
@@ -832,6 +832,17 @@
             this.tabPaid.Text = "Payment";
             this.tabPaid.UseVisualStyleBackColor = true;
             // 
+            // grpPayType
+            // 
+            this.grpPayType.AutoSize = true;
+            this.grpPayType.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.grpPayType.Location = new System.Drawing.Point(8, 196);
+            this.grpPayType.Name = "grpPayType";
+            this.grpPayType.Size = new System.Drawing.Size(6, 5);
+            this.grpPayType.TabIndex = 51;
+            this.grpPayType.TabStop = false;
+            this.grpPayType.Text = "Payment Method";
+            // 
             // cboPaid
             // 
             this.cboPaid.FormattingEnabled = true;
@@ -903,17 +914,6 @@
             // 
             this.membership.DataSetName = "Membership";
             this.membership.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // grpPayType
-            // 
-            this.grpPayType.AutoSize = true;
-            this.grpPayType.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.grpPayType.Location = new System.Drawing.Point(8, 196);
-            this.grpPayType.Name = "grpPayType";
-            this.grpPayType.Size = new System.Drawing.Size(6, 19);
-            this.grpPayType.TabIndex = 51;
-            this.grpPayType.TabStop = false;
-            this.grpPayType.Text = "Payment Method";
             // 
             // frmMember
             // 
@@ -1008,11 +1008,11 @@
         private System.Windows.Forms.Button btnAddPaid;
         private System.Windows.Forms.DataGridView dgPaidHistory;
         private System.Windows.Forms.Button btnExtra;
-        private System.Windows.Forms.DataGridView dgExtraCards;
         private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.CheckBox chkCardMade;
         private System.Windows.Forms.ComboBox cboPaid;
         private System.Windows.Forms.GroupBox grpPayType;
+        internal System.Windows.Forms.DataGridView dgExtraCards;
 
     }
 }

@@ -49,18 +49,15 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.membersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuaddNew = new System.Windows.Forms.ToolStripMenuItem();
-            this.reportsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuMailingLabels = new System.Windows.Forms.ToolStripMenuItem();
-            this.exportMembersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mailingListEmailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.renewalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.welcomeLettersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.makeCardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.updateMembersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pendingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toFullToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toHalfYearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reportsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportMembersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mailingListEmailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.makeCardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.updateMembersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cboMemberTypeFilter = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgMemberList)).BeginInit();
@@ -243,28 +240,41 @@
             // mnuaddNew
             // 
             this.mnuaddNew.Name = "mnuaddNew";
-            this.mnuaddNew.Size = new System.Drawing.Size(152, 22);
+            this.mnuaddNew.Size = new System.Drawing.Size(123, 22);
             this.mnuaddNew.Text = "&Add New";
             this.mnuaddNew.Click += new System.EventHandler(this.btnNew_Click);
+            // 
+            // pendingToolStripMenuItem
+            // 
+            this.pendingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toFullToolStripMenuItem,
+            this.toHalfYearToolStripMenuItem});
+            this.pendingToolStripMenuItem.Name = "pendingToolStripMenuItem";
+            this.pendingToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.pendingToolStripMenuItem.Text = "Pending";
+            // 
+            // toFullToolStripMenuItem
+            // 
+            this.toFullToolStripMenuItem.Name = "toFullToolStripMenuItem";
+            this.toFullToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.toFullToolStripMenuItem.Text = "To Full";
+            this.toFullToolStripMenuItem.Click += new System.EventHandler(this.toFullToolStripMenuItem_Click);
+            // 
+            // toHalfYearToolStripMenuItem
+            // 
+            this.toHalfYearToolStripMenuItem.Name = "toHalfYearToolStripMenuItem";
+            this.toHalfYearToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.toHalfYearToolStripMenuItem.Text = "To Half-Year";
+            this.toHalfYearToolStripMenuItem.Click += new System.EventHandler(this.toHalfYearToolStripMenuItem_Click);
             // 
             // reportsToolStripMenuItem
             // 
             this.reportsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuMailingLabels,
             this.exportMembersToolStripMenuItem,
-            this.mailingListEmailsToolStripMenuItem,
-            this.renewalToolStripMenuItem,
-            this.welcomeLettersToolStripMenuItem});
+            this.mailingListEmailsToolStripMenuItem});
             this.reportsToolStripMenuItem.Name = "reportsToolStripMenuItem";
             this.reportsToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
             this.reportsToolStripMenuItem.Text = "Reports";
-            // 
-            // mnuMailingLabels
-            // 
-            this.mnuMailingLabels.Name = "mnuMailingLabels";
-            this.mnuMailingLabels.Size = new System.Drawing.Size(172, 22);
-            this.mnuMailingLabels.Text = "Backtrack Labels";
-            this.mnuMailingLabels.Click += new System.EventHandler(this.btnMailing_Click);
             // 
             // exportMembersToolStripMenuItem
             // 
@@ -279,20 +289,6 @@
             this.mailingListEmailsToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.mailingListEmailsToolStripMenuItem.Text = "Mailing List Emails";
             this.mailingListEmailsToolStripMenuItem.Click += new System.EventHandler(this.mailingListEmailsToolStripMenuItem_Click);
-            // 
-            // renewalToolStripMenuItem
-            // 
-            this.renewalToolStripMenuItem.Name = "renewalToolStripMenuItem";
-            this.renewalToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
-            this.renewalToolStripMenuItem.Text = "Renewal Letters  ";
-            this.renewalToolStripMenuItem.Click += new System.EventHandler(this.renewalToolStripMenuItem_Click);
-            // 
-            // welcomeLettersToolStripMenuItem
-            // 
-            this.welcomeLettersToolStripMenuItem.Name = "welcomeLettersToolStripMenuItem";
-            this.welcomeLettersToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
-            this.welcomeLettersToolStripMenuItem.Text = "Welcome Letters";
-            this.welcomeLettersToolStripMenuItem.Click += new System.EventHandler(this.welcomeLettersToolStripMenuItem_Click);
             // 
             // cardsToolStripMenuItem
             // 
@@ -316,29 +312,6 @@
             this.updateMembersToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.updateMembersToolStripMenuItem.Text = "Update Members";
             this.updateMembersToolStripMenuItem.Click += new System.EventHandler(this.updateMembersToolStripMenuItem_Click);
-            // 
-            // pendingToolStripMenuItem
-            // 
-            this.pendingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toFullToolStripMenuItem,
-            this.toHalfYearToolStripMenuItem});
-            this.pendingToolStripMenuItem.Name = "pendingToolStripMenuItem";
-            this.pendingToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.pendingToolStripMenuItem.Text = "Pending";
-            // 
-            // toFullToolStripMenuItem
-            // 
-            this.toFullToolStripMenuItem.Name = "toFullToolStripMenuItem";
-            this.toFullToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.toFullToolStripMenuItem.Text = "To Full";
-            this.toFullToolStripMenuItem.Click += new System.EventHandler(this.toFullToolStripMenuItem_Click);
-            // 
-            // toHalfYearToolStripMenuItem
-            // 
-            this.toHalfYearToolStripMenuItem.Name = "toHalfYearToolStripMenuItem";
-            this.toHalfYearToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.toHalfYearToolStripMenuItem.Text = "To Half-Year";
-            this.toHalfYearToolStripMenuItem.Click += new System.EventHandler(this.toHalfYearToolStripMenuItem_Click);
             // 
             // cboMemberTypeFilter
             // 
@@ -399,13 +372,10 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem reportsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem mnuMailingLabels;
         private System.Windows.Forms.ToolStripMenuItem membersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mnuaddNew;
         private System.Windows.Forms.ToolStripMenuItem exportMembersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mailingListEmailsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem renewalToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem welcomeLettersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cardsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem makeCardsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem updateMembersToolStripMenuItem;

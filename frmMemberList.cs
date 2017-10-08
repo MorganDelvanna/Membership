@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
-//using Word = Microsoft.Office.Interop.Word;
+using Word = Microsoft.Office.Interop.Word;
 using System.Reflection;
 using System.Collections.Generic;
 using System.IO;
@@ -289,21 +289,6 @@ namespace PFGA_Membership
             reFormatGrid(0);
         }
 
-        private void btnMailing_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                frmParent frm = (frmParent)this.ParentForm;
-                frm.showLabels();
-                this.Close();
-                this.Dispose();
-            }
-            catch (Exception ex)
-            {
-                ErrorLogger.Log("Error trying to generate labels", ex, true);
-            }
-        }
-
         private void mnuSummary_Click(object sender, EventArgs e)
         {
             try
@@ -541,9 +526,96 @@ namespace PFGA_Membership
                     Excel.XlVAlign.xlVAlignCenter;
                 oSheet.get_Range("A1", "J1").EntireColumn.AutoFit();
 
-                //Make sure Excel is visible and give the user control
-		        //of Microsoft Excel's lifetime.
-		        oXL.Visible = true;
+                oSheet = (Excel._Worksheet)oWB.Sheets.Add(System.Reflection.Missing.Value, oWB.Sheets[oWB.Sheets.Count], 1, Excel.XlSheetType.xlWorksheet);
+                oSheet.Name = "Report 2";
+
+                //Add table headers going cell by cell.
+                oSheet.Cells[1, 1] = "Card";
+                oSheet.Cells[1, 2] = "Last Name";
+                oSheet.Cells[1, 3] = "First Name";
+                oSheet.Cells[1, 4] = "Handgun";
+                oSheet.Cells[1, 5] = "Action";
+                oSheet.Cells[1, 6] = "Rifle";
+                oSheet.Cells[1, 7] = "Smallbore";
+                oSheet.Cells[1, 8] = "Archery";
+                oSheet.Cells[1, 9] = "Safety Walk";
+                oSheet.Cells[1, 10] = "Extra Card";
+
+                for (int row = 0; row < dtExport.Rows.Count; row++)
+                {
+                    section.Mask = ulong.Parse(dtExport.Rows[row]["section"].ToString());
+
+                    oSheet.Cells[row + 2, 1] = dtExport.Rows[row]["card"].ToString();
+                    oSheet.Cells[row + 2, 2] = dtExport.Rows[row]["last name"].ToString();
+                    oSheet.Cells[row + 2, 3] = dtExport.Rows[row]["first name"].ToString();
+                    oSheet.Cells[row + 2, 4] = section.AnyOn(BitField.Flag.f2) ? "Yes" : "";
+                    oSheet.Cells[row + 2, 5] = section.AnyOn(BitField.Flag.f6) ? "Yes" : "";
+                    oSheet.Cells[row + 2, 6] = section.AnyOn(BitField.Flag.f5) ? "Yes" : "";
+                    oSheet.Cells[row + 2, 7] = section.AnyOn(BitField.Flag.f3) ? "Yes" : "";
+                    oSheet.Cells[row + 2, 8] = section.AnyOn(BitField.Flag.f1) ? "Yes" : "";
+                    oSheet.Cells[row + 2, 9] = dtExport.Rows[row]["Walk"].ToString() == "Done" ? "yes" : "NO";
+                }
+
+                for (int row = 0; row < dtExtra.Rows.Count; row++ )
+                {
+                    section.Mask = ulong.Parse(dtExtra.Rows[row]["section"].ToString());
+
+                    oSheet.Cells[row + 2, 1] = dtExtra.Rows[row]["card"].ToString();
+                    oSheet.Cells[row + 2, 2] = dtExtra.Rows[row]["last name"].ToString();
+                    oSheet.Cells[row + 2, 3] = dtExtra.Rows[row]["first name"].ToString();
+                    oSheet.Cells[row + 2, 4] = section.AnyOn(BitField.Flag.f2) ? "Yes" : "";
+                    oSheet.Cells[row + 2, 5] = section.AnyOn(BitField.Flag.f6) ? "Yes" : "";
+                    oSheet.Cells[row + 2, 6] = section.AnyOn(BitField.Flag.f5) ? "Yes" : "";
+                    oSheet.Cells[row + 2, 7] = section.AnyOn(BitField.Flag.f3) ? "Yes" : "";
+                    oSheet.Cells[row + 2, 8] = section.AnyOn(BitField.Flag.f1) ? "Yes" : "";
+                    oSheet.Cells[row + 2, 9] = dtExtra.Rows[row]["Walk"].ToString() == "Done" ? "yes" : "NO";
+                    oSheet.Cells[row + 2, 10] = "Yes";
+                }
+
+                //Format A1:D1 as bold, vertical alignment = center.
+                oSheet.get_Range("A1", "J1").Font.Bold = true;
+                oSheet.get_Range("A1", "J1").VerticalAlignment =
+                    Excel.XlVAlign.xlVAlignCenter;
+                oSheet.get_Range("A1", "J1").EntireColumn.AutoFit();
+
+                oSheet = (Excel._Worksheet)oWB.Sheets.Add(System.Reflection.Missing.Value, oWB.Sheets[oWB.Sheets.Count], 1, Excel.XlSheetType.xlWorksheet);
+                oSheet.Name = "Report 3";
+
+                //Add table headers going cell by cell.
+                oSheet.Cells[1, 1] = "Card";
+                oSheet.Cells[1, 2] = "Last Name";
+                oSheet.Cells[1, 3] = "First Name";
+                oSheet.Cells[1, 4] = "Handgun";
+                oSheet.Cells[1, 5] = "Action";
+                oSheet.Cells[1, 6] = "Rifle";
+                oSheet.Cells[1, 7] = "Smallbore";
+                oSheet.Cells[1, 8] = "Archery";
+                oSheet.Cells[1, 9] = "Safety Walk";
+                oSheet.Cells[1, 10] = "Extra Card";
+
+                for (int row = 0; row < dtNon.Rows.Count; row++)
+                {
+                    section.Mask = ulong.Parse(dtNon.Rows[row]["section"].ToString());
+
+                    oSheet.Cells[row + 2, 1] = dtNon.Rows[row]["card"].ToString();
+                    oSheet.Cells[row + 2, 2] = dtNon.Rows[row]["last name"].ToString();
+                    oSheet.Cells[row + 2, 3] = dtNon.Rows[row]["first name"].ToString();
+                    oSheet.Cells[row + 2, 4] = section.AnyOn(BitField.Flag.f2) ? "Yes" : "";
+                    oSheet.Cells[row + 2, 5] = section.AnyOn(BitField.Flag.f6) ? "Yes" : "";
+                    oSheet.Cells[row + 2, 6] = section.AnyOn(BitField.Flag.f5) ? "Yes" : "";
+                    oSheet.Cells[row + 2, 7] = section.AnyOn(BitField.Flag.f3) ? "Yes" : "";
+                    oSheet.Cells[row + 2, 8] = section.AnyOn(BitField.Flag.f1) ? "Yes" : "";
+                    oSheet.Cells[row + 2, 9] = dtNon.Rows[row]["Walk"].ToString() == "Done" ? "yes" : "NO";
+                }
+
+                //Format A1:D1 as bold, vertical alignment = center.
+                oSheet.get_Range("A1", "J1").Font.Bold = true;
+                oSheet.get_Range("A1", "J1").VerticalAlignment =
+                    Excel.XlVAlign.xlVAlignCenter;
+                oSheet.get_Range("A1", "J1").EntireColumn.AutoFit();
+                    //Make sure Excel is visible and give the user control
+                    //of Microsoft Excel's lifetime.
+                    oXL.Visible = true;
 		        oXL.UserControl = true;
 
             }
@@ -553,6 +625,7 @@ namespace PFGA_Membership
             }
         }
 
+        #region Helper Functions
         private String Number2String(int number)
         {
             Char c;
@@ -700,6 +773,7 @@ namespace PFGA_Membership
 
             return retVal.ToString();
         }
+        #endregion
 
         private void mailingListEmailsToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -735,7 +809,7 @@ namespace PFGA_Membership
 
                 dtEmails.Rows.Clear();
                 daEmails.FillRemoveEmails(dtEmails, thisYear());
-
+                // Remove emails from this year
                 oSheet = (Excel._Worksheet)oWB.Sheets.Add(System.Reflection.Missing.Value, oWB.Sheets[oWB.Sheets.Count], 1, Excel.XlSheetType.xlWorksheet);
                 oSheet.Name = "Remove";
 
@@ -745,8 +819,8 @@ namespace PFGA_Membership
                     oSheet.Cells[row, 2] = dtEmails.Rows[row]["Website Usernames"].ToString();
                 }
 
-                lastRow = dtEmails.Rows.Count - 1;
-
+                lastRow = (dtEmails.Rows.Count > 0 ? dtEmails.Rows.Count : 1) - 1;
+                // Remove previous year
                 daRemove.FillRemoveEmails(dtRemove, thisYear() - 1);
                 for (int row = 1; row < dtRemove.Rows.Count; row++)
                 {
@@ -769,77 +843,14 @@ namespace PFGA_Membership
             }
         }
 
-        private void renewalToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-         /*   Word.Application App;
-            Word.Document Doc;
-            //OBJECT OF MISSING "NULL VALUE"
-            object oMissing = System.Reflection.Missing.Value;
-            object fileName = "C:\\Program Files (x86)\\PFGA Membership\\Membership.doc";
-            object bmRenewalYear = "RenewalYear";
-            object oConn = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=\"C:\\Program Files (x86)\\PFGA Membership\\MembershipDB.accdb\"";
-            object oQuery = string.Format("SELECT * FROM 'qryExport' WHERE 'YearPaid'={0}", DateTime.Now.Year);
-
-            App = new Word.Application();
-            App.Visible = true;
-            Doc = App.Documents.Open(ref fileName, ref oMissing, ref oMissing, ref oMissing, 
-                ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, 
-                ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing);
-
-            Word.Bookmark bm = Doc.Bookmarks.get_Item(ref bmRenewalYear);
-            Word.Range rng = bm.Range;
-            rng.Text = string.Format("Sept {0} to Sept {1}", DateTime.Now.Year, DateTime.Now.Year + 1);
-            Doc.MailMerge.OpenDataSource("C:\\Program Files (x86)\\PFGA Membership\\MembershipDB.accdb", ref oMissing, ref oMissing, ref oMissing,
-                 ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oConn, ref oMissing,
-                 ref oMissing, ref oMissing, ref oMissing);
-
-           */ 
-        }
-
-        private void welcomeLettersToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            /*
-            Word.Application App;
-            Word.Document Doc;
-            MembershipTableAdapters.PendingTableAdapter taPending = new PFGA_Membership.MembershipTableAdapters.PendingTableAdapter();
-            Membership.PendingDataTable tbPending = new Membership.PendingDataTable();
-
-            //OBJECT OF MISSING "NULL VALUE"
-            Object oMissing = System.Reflection.Missing.Value;
-            Object fileName = "C:\\Program Files (x86)\\PFGA Membership\\NewMemberWelcomeLetter.doc";
-            Object bmSection = "Section";
-            object oSave = false;
-
-            App = new Word.Application();
-            App.Visible = true;
-
-            taPending.Fill(tbPending);
-
-            foreach (DataRow row in tbPending.Rows)
-            {
-                Doc = App.Documents.Open(ref fileName, ref oMissing, ref oMissing, ref oMissing,
-                    ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing,
-                    ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing);
-
-                Word.Bookmark bm = Doc.Bookmarks.get_Item(ref bmSection);
-                Word.Range rng = bm.Range;
-                rng.Text = getSectionLabels(row["SectionFlag"].ToString());
-
-                Doc.PrintOut(ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, 
-                    ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing, 
-                    ref oMissing);
-                Doc.Close(ref oSave, ref oMissing, ref oMissing);
-            }
-            App.Quit(ref oSave, ref oMissing, ref oMissing);
-            */
-        }
-
         private void makeCardsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MembershipTableAdapters.QueriesTableAdapter da = new MembershipTableAdapters.QueriesTableAdapter();
             
             da.qryCards(thisYear());
             MessageBox.Show("Cards Table has been updated");
+
+
         }
 
         private void updateMembersToolStripMenuItem_Click(object sender, EventArgs e)
@@ -869,6 +880,6 @@ namespace PFGA_Membership
             BindGrid();
             MessageBox.Show("Members Updated");
         }
-       
+
     }
 }

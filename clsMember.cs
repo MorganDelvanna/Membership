@@ -94,6 +94,7 @@ namespace PFGA_Membership
                     // New Extra Card
                     MasterRecord = PromoteID;
                     MemberTypeID = 11;
+                    Walk = "Need";
                     BadgeImage = new Byte[0];
                     Card = getNewCard();
                 }

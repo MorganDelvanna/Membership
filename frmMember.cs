@@ -51,6 +51,18 @@ namespace PFGA_Membership
             }
         }
 
+        public clsMembership MemberRecord
+        {
+            get
+            {
+                return mbr;
+            }
+            set
+            {
+                mbr = value;
+            }
+        }
+
         public bool IsExtra { get; set; }
 
         public frmMember(int ID, int promoteID)
@@ -210,40 +222,29 @@ namespace PFGA_Membership
                     dgcName.Width = 500;
                     dgExtraCards.Columns.Add(dgcName);
 
-                    DataGridViewButtonColumn dgRemoveCard = new DataGridViewButtonColumn();
-                    dgRemoveCard.Name = "colRemove";
-                    dgRemoveCard.HeaderText = "";
-                    dgRemoveCard.Text = "û";
-                    dgRemoveCard.ToolTipText = "Delete Row";
-                    dgRemoveCard.UseColumnTextForButtonValue = true;
-                    dgRemoveCard.DefaultCellStyle.Font = new Font("WingDings", 14);
-                    dgRemoveCard.DefaultCellStyle.ForeColor = Color.Red;
-                    dgRemoveCard.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                    dgRemoveCard.Width = 20;
-                    dgExtraCards.Columns.Add(dgRemoveCard);
+                    DataGridViewImageButtonDeleteColumn dgRemove = new DataGridViewImageButtonDeleteColumn();
+                    dgRemove.Name = "colDelete";
+                    dgRemove.HeaderText = "";
+                    dgRemove.Text = "Delete";
+                    dgRemove.ToolTipText = "";
+                    dgRemove.UseColumnTextForButtonValue = true;
+                    dgRemove.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                    dgExtraCards.Columns.Add(dgRemove);
 
-                    DataGridViewButtonColumn dgPromote = new DataGridViewButtonColumn();
+                    DataGridViewImageButtonPromoteColumn dgPromote = new DataGridViewImageButtonPromoteColumn();
                     dgPromote.Name = "colPromote";
                     dgPromote.HeaderText = "";
-                    dgPromote.Text = "ü";
+                    dgPromote.Text = "Promote to Member";
                     dgPromote.ToolTipText = "Promote";
                     dgPromote.UseColumnTextForButtonValue = true;
-                    dgPromote.DefaultCellStyle.Font = new Font("WingDings", 14);
-                    dgPromote.DefaultCellStyle.ForeColor = Color.Blue;
-                    dgPromote.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                    dgPromote.Width = 20;
                     dgExtraCards.Columns.Add(dgPromote);
 
-                    DataGridViewButtonColumn dgEdit = new DataGridViewButtonColumn();
+                    DataGridViewImageButtonEditColumn dgEdit = new DataGridViewImageButtonEditColumn();
                     dgEdit.Name = "colEdit";
                     dgEdit.HeaderText = "";
-                    dgEdit.Text = "!";
+                    dgEdit.Text = "Edit";
                     dgEdit.ToolTipText = "Edit";
                     dgEdit.UseColumnTextForButtonValue = true;
-                    dgEdit.DefaultCellStyle.Font = new Font("WingDings", 14);
-                    dgEdit.DefaultCellStyle.ForeColor = Color.Blue;
-                    dgEdit.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                    dgEdit.Width = 20;
                     dgExtraCards.Columns.Add(dgEdit);
 
                     DataView dvExtraCards = new DataView(mbr.ExtraCards);
@@ -262,15 +263,14 @@ namespace PFGA_Membership
                     city__ProvTextBox.Hide();
                     postalTextBox.Hide();
                     phoneTextBox.Hide();
-                    email_AddressTextBox.Hide();
                     website_UsernamesTextBox.Hide();
                     date_JoinedDateTimePicker.Hide();
                     grpSection.Hide();
                     noBackTrackCheckBox.Hide();
                     noEmailingCheckBox.Hide();
                     chkActive.Hide();
-                    tabPaid.Hide();
-                    tabExtra.Hide();
+                    tabControl1.TabPages.Remove(tabPaid);
+                    tabControl1.TabPages.Remove(tabExtra);
                     grpParticipate.Hide();
                     txtCardNumber.Show();
                     lblCardNumber.Show();
@@ -601,16 +601,6 @@ namespace PFGA_Membership
                     frm.showList();
                 }
 
-                if (Application.OpenForms.Count == 3)
-                {
-                    frmMember frmM = (frmMember)Application.OpenForms[Application.OpenForms.Count - 2];
-                    frmM.mbr.refreshCards();
-
-                    DataView dvExtraCards = new DataView(frmM.mbr.ExtraCards);
-                    dvExtraCards.RowFilter = "Deleted = False AND Promote = False";
-                    frmM.dgExtraCards.DataSource = dvExtraCards;
-                    
-                }
                 this.Close();
                 this.Dispose();
             }
@@ -714,7 +704,7 @@ namespace PFGA_Membership
         {
             try
             {
-                frmMember frm = new frmMember(-1, mbr.ID);
+                frmExtra frm = new frmExtra(-1, mbr.ID);
                 frm.Show();
             }
             catch (Exception ex)

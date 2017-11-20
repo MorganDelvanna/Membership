@@ -1,10 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
-using System.Windows.Forms;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
+using System.Windows.Forms;
 
 namespace PFGA_Membership
 {
@@ -63,8 +62,6 @@ namespace PFGA_Membership
         private void frmExtra_Load(object sender, EventArgs e)
         {
             ulong mask;
-            ulong pMask;
-            int curYear;
             List<KeyValuePair<int, string>> years = new List<KeyValuePair<int,string>>();
 
             try

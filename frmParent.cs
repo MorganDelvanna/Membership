@@ -5,15 +5,6 @@ namespace PFGA_Membership
 {
     public partial class frmParent : Form
     {
-#warning TODO: Web version of the membership App
-#warning TODO: Updater needs to update the Database without the Data
-#warning TODO: Cards and Labels for label maker
-#warning TODO: Email for renewal letters, acceptance letters
-#warning TODO: Pending Cards & Labels
-#warning TODO: Pending Filter on list
-
-
-
         public frmParent()
         {
             InitializeComponent();
@@ -56,6 +47,20 @@ namespace PFGA_Membership
         public void showSummary()
         {
             frmLabels frm = new frmLabels("Summary");
+            frm.MdiParent = this;
+            frm.Show();
+        }
+
+        public void showCardList()
+        {
+            frmCardList frm = new frmCardList();
+            frm.MdiParent = this;
+            frm.Show();
+        }
+
+        public void showCards()
+        {
+            frmCardViewer frm = new frmCardViewer();
             frm.MdiParent = this;
             frm.Show();
         }

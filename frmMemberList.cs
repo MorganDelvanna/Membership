@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Data;
 using System.Drawing;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
-using Word = Microsoft.Office.Interop.Word;
-using System.Reflection;
-using System.Collections.Generic;
-using System.IO;
 
 
 namespace PFGA_Membership
@@ -846,11 +843,13 @@ namespace PFGA_Membership
         private void makeCardsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MembershipTableAdapters.QueriesTableAdapter da = new MembershipTableAdapters.QueriesTableAdapter();
-            
+
             da.qryCards(thisYear());
-            MessageBox.Show("Cards Table has been updated");
 
-
+            frmParent frm = (frmParent)this.ParentForm;
+            frm.showCards();
+            this.Close();
+            this.Dispose();
         }
 
         private void updateMembersToolStripMenuItem_Click(object sender, EventArgs e)
@@ -879,6 +878,21 @@ namespace PFGA_Membership
             da.UpdatePendingToHalf();
             BindGrid();
             MessageBox.Show("Members Updated");
+        }
+
+        private void viewCardLIstToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                frmParent frm = (frmParent)this.ParentForm;
+                frm.showCardList();
+                this.Close();
+                this.Dispose();
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.Log("Error Showing Card List: ", ex, true);
+            }
         }
 
     }

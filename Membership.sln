@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PFGA_Membership", "PFGA_Membership.csproj", "{28B9AADB-D768-46A3-812E-A4DD494A7A54}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PFGA_Cards", "..\..\CardList\CardList\PFGA_Cards.csproj", "{FF767B3C-1B6D-4AD1-A07A-2A279EF51AAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,16 @@ Global
 		{28B9AADB-D768-46A3-812E-A4DD494A7A54}.Release|x64.Build.0 = Release|x64
 		{28B9AADB-D768-46A3-812E-A4DD494A7A54}.Release|x86.ActiveCfg = Release|x86
 		{28B9AADB-D768-46A3-812E-A4DD494A7A54}.Release|x86.Build.0 = Release|x86
+		{FF767B3C-1B6D-4AD1-A07A-2A279EF51AAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF767B3C-1B6D-4AD1-A07A-2A279EF51AAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF767B3C-1B6D-4AD1-A07A-2A279EF51AAE}.Debug|new.ActiveCfg = Debug|Any CPU
+		{FF767B3C-1B6D-4AD1-A07A-2A279EF51AAE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FF767B3C-1B6D-4AD1-A07A-2A279EF51AAE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FF767B3C-1B6D-4AD1-A07A-2A279EF51AAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF767B3C-1B6D-4AD1-A07A-2A279EF51AAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF767B3C-1B6D-4AD1-A07A-2A279EF51AAE}.Release|new.ActiveCfg = Release|Any CPU
+		{FF767B3C-1B6D-4AD1-A07A-2A279EF51AAE}.Release|x64.ActiveCfg = Release|Any CPU
+		{FF767B3C-1B6D-4AD1-A07A-2A279EF51AAE}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

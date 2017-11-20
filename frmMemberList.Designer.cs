@@ -58,6 +58,7 @@
             this.cardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.makeCardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateMembersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewCardLIstToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cboMemberTypeFilter = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgMemberList)).BeginInit();
@@ -294,7 +295,8 @@
             // 
             this.cardsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.makeCardsToolStripMenuItem,
-            this.updateMembersToolStripMenuItem});
+            this.updateMembersToolStripMenuItem,
+            this.viewCardLIstToolStripMenuItem});
             this.cardsToolStripMenuItem.Name = "cardsToolStripMenuItem";
             this.cardsToolStripMenuItem.Size = new System.Drawing.Size(49, 20);
             this.cardsToolStripMenuItem.Text = "Cards";
@@ -312,6 +314,13 @@
             this.updateMembersToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.updateMembersToolStripMenuItem.Text = "Update Members";
             this.updateMembersToolStripMenuItem.Click += new System.EventHandler(this.updateMembersToolStripMenuItem_Click);
+            // 
+            // viewCardLIstToolStripMenuItem
+            // 
+            this.viewCardLIstToolStripMenuItem.Name = "viewCardLIstToolStripMenuItem";
+            this.viewCardLIstToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.viewCardLIstToolStripMenuItem.Text = "View Card LIst";
+            this.viewCardLIstToolStripMenuItem.Click += new System.EventHandler(this.viewCardLIstToolStripMenuItem_Click);
             // 
             // cboMemberTypeFilter
             // 
@@ -395,6 +404,7 @@
         private System.Windows.Forms.ToolStripMenuItem toHalfYearToolStripMenuItem;
         private System.Windows.Forms.ComboBox cboMemberTypeFilter;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ToolStripMenuItem viewCardLIstToolStripMenuItem;
 
     }
 }

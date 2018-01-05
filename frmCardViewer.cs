@@ -33,14 +33,14 @@ namespace PFGA_Membership
             wpfCardViewer = new PFGA_Cards.CardViewer(dtCards);
             wpfCardViewer.InitializeComponent();
             ctrlHost.Child = wpfCardViewer;
-            /*
+            
             wpfCardViewer.OnButtonClick +=
-                new PFGA_Cards.CardList.CardListEventHandler(
+                new PFGA_Cards.CardViewer.CardViewerEventHandler(
                 avCardViewer_OnButtonClick);
-             */
+            
         }
 
-        void avCardViewer_OnButtonClick(object sender, PFGA_Cards.CardListEventArgs args)
+        void avCardViewer_OnButtonClick(object sender, PFGA_Cards.CardViewerEventArgs args)
         {
             frmParent frm = (frmParent)this.ParentForm;
             frm.showList();

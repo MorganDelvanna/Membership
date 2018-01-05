@@ -156,12 +156,6 @@
     <Compile Include="frmExtra.designer.cs">
       <DependentUpon>frmExtra.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmLabels.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmLabels.Designer.cs">
-      <DependentUpon>frmLabels.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmMember.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -202,9 +196,6 @@
     <EmbeddedResource Include="frmExtra.resx">
       <DependentUpon>frmExtra.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmLabels.resx">
-      <DependentUpon>frmLabels.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmMember.resx">
       <DependentUpon>frmMember.cs</DependentUpon>
     </EmbeddedResource>
@@ -231,9 +222,6 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Membership.doc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Membership.xsc">
       <DependentUpon>Membership.xsd</DependentUpon>
     </None>
@@ -245,6 +233,9 @@
     <None Include="Membership.xss">
       <DependentUpon>Membership.xsd</DependentUpon>
     </None>
+    <Content Include="NewMemberWelcomeLetter.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

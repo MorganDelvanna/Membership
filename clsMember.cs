@@ -72,6 +72,7 @@ namespace PFGA_Membership
         public DataTable PaidHistory { get { return _paidHistory; } }
         public DataTable ExtraCards { get { return _ExtraCards; } }
         public byte[] BadgeImage { get; set; }
+        public string MasterRecordName { get; set; }
         
         public clsMembership(int ID, int PromoteID)
         {
@@ -142,6 +143,10 @@ namespace PFGA_Membership
                 _NoBackTrack = row.NoBackTrack;
                 _NoEmail = row.NoEmailing;
                 _MasterRecord = row.MasterRecord;
+                if (_MasterRecord > 0)
+                {
+                    MasterRecordName = getMasterRecordName(row.MasterRecord);
+                }
                 _SectionFlag = row.SectionFlag;
                 _Card = row.Card;
                 _paidHistory = getPaidHistory();
@@ -467,6 +472,17 @@ namespace PFGA_Membership
             retval = (int)da.NewCard();
 
             return retval;
+        }
+
+        private string getMasterRecordName(int MasterId)
+        {
+            string retVal;
+
+            MembershipTableAdapters.QueriesTableAdapter da = new MembershipTableAdapters.QueriesTableAdapter();
+
+            retVal = da.GetMasterName(MasterId).ToString();
+
+            return retVal;
         }
 
         private static void OnRowUpdated(object sender, SqlRowUpdatedEventArgs e)

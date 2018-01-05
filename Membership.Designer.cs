@@ -2137,7 +2137,6 @@ namespace PFGA_Membership {
                 this.columnWalk.MaxLength = 255;
                 this.columnExecutive.AllowDBNull = false;
                 this.columnSwipe.AllowDBNull = false;
-                this.columnYearPaid.AllowDBNull = false;
                 this.columnAddress.MaxLength = 255;
                 this.columnCity__Prov.MaxLength = 255;
                 this.columnPostal.MaxLength = 255;
@@ -2965,8 +2964,6 @@ namespace PFGA_Membership {
             
             private global::System.Data.DataColumn columnSponsor;
             
-            private global::System.Data.DataColumn columnMaxOfYearPaid;
-            
             private global::System.Data.DataColumn columnNoEmailing;
             
             private global::System.Data.DataColumn columnNoBackTrack;
@@ -2975,9 +2972,11 @@ namespace PFGA_Membership {
             
             private global::System.Data.DataColumn columnpOther;
             
-            private global::System.Data.DataColumn columnActive;
-            
             private global::System.Data.DataColumn columnSection;
+            
+            private global::System.Data.DataColumn columnYearPaid;
+            
+            private global::System.Data.DataColumn columnCardMade;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
@@ -3174,14 +3173,6 @@ namespace PFGA_Membership {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn MaxOfYearPaidColumn {
-                get {
-                    return this.columnMaxOfYearPaid;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public global::System.Data.DataColumn NoEmailingColumn {
                 get {
                     return this.columnNoEmailing;
@@ -3214,17 +3205,25 @@ namespace PFGA_Membership {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn ActiveColumn {
+            public global::System.Data.DataColumn SectionColumn {
                 get {
-                    return this.columnActive;
+                    return this.columnSection;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn SectionColumn {
+            public global::System.Data.DataColumn YearPaidColumn {
                 get {
-                    return this.columnSection;
+                    return this.columnYearPaid;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn CardMadeColumn {
+                get {
+                    return this.columnCardMade;
                 }
             }
             
@@ -3286,13 +3285,13 @@ namespace PFGA_Membership {
                         string Website_Usernames, 
                         string Notes, 
                         string Sponsor, 
-                        int MaxOfYearPaid, 
                         bool NoEmailing, 
                         bool NoBackTrack, 
                         byte Participation, 
                         string pOther, 
-                        bool Active, 
-                        byte Section) {
+                        byte Section, 
+                        int YearPaid, 
+                        bool CardMade) {
                 qryExportNonRow rowqryExportNonRow = ((qryExportNonRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         Card,
@@ -3315,13 +3314,13 @@ namespace PFGA_Membership {
                         Website_Usernames,
                         Notes,
                         Sponsor,
-                        MaxOfYearPaid,
                         NoEmailing,
                         NoBackTrack,
                         Participation,
                         pOther,
-                        Active,
-                        Section};
+                        Section,
+                        YearPaid,
+                        CardMade};
                 rowqryExportNonRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowqryExportNonRow);
                 return rowqryExportNonRow;
@@ -3364,13 +3363,13 @@ namespace PFGA_Membership {
                 this.columnWebsite_Usernames = base.Columns["Website Usernames"];
                 this.columnNotes = base.Columns["Notes"];
                 this.columnSponsor = base.Columns["Sponsor"];
-                this.columnMaxOfYearPaid = base.Columns["MaxOfYearPaid"];
                 this.columnNoEmailing = base.Columns["NoEmailing"];
                 this.columnNoBackTrack = base.Columns["NoBackTrack"];
                 this.columnParticipation = base.Columns["Participation"];
                 this.columnpOther = base.Columns["pOther"];
-                this.columnActive = base.Columns["Active"];
                 this.columnSection = base.Columns["Section"];
+                this.columnYearPaid = base.Columns["YearPaid"];
+                this.columnCardMade = base.Columns["CardMade"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -3416,8 +3415,6 @@ namespace PFGA_Membership {
                 base.Columns.Add(this.columnNotes);
                 this.columnSponsor = new global::System.Data.DataColumn("Sponsor", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnSponsor);
-                this.columnMaxOfYearPaid = new global::System.Data.DataColumn("MaxOfYearPaid", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnMaxOfYearPaid);
                 this.columnNoEmailing = new global::System.Data.DataColumn("NoEmailing", typeof(bool), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnNoEmailing);
                 this.columnNoBackTrack = new global::System.Data.DataColumn("NoBackTrack", typeof(bool), null, global::System.Data.MappingType.Element);
@@ -3426,10 +3423,12 @@ namespace PFGA_Membership {
                 base.Columns.Add(this.columnParticipation);
                 this.columnpOther = new global::System.Data.DataColumn("pOther", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnpOther);
-                this.columnActive = new global::System.Data.DataColumn("Active", typeof(bool), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnActive);
                 this.columnSection = new global::System.Data.DataColumn("Section", typeof(byte), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnSection);
+                this.columnYearPaid = new global::System.Data.DataColumn("YearPaid", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnYearPaid);
+                this.columnCardMade = new global::System.Data.DataColumn("CardMade", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCardMade);
                 this.columnLast_Name.MaxLength = 255;
                 this.columnFirst_Name.MaxLength = 255;
                 this.columnMembership_Type.MaxLength = 255;
@@ -3447,7 +3446,7 @@ namespace PFGA_Membership {
                 this.columnNoEmailing.AllowDBNull = false;
                 this.columnNoBackTrack.AllowDBNull = false;
                 this.columnpOther.MaxLength = 255;
-                this.columnActive.AllowDBNull = false;
+                this.columnCardMade.AllowDBNull = false;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -6066,7 +6065,12 @@ namespace PFGA_Membership {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int YearPaid {
                 get {
-                    return ((int)(this[this.tableqryExport.YearPaidColumn]));
+                    try {
+                        return ((int)(this[this.tableqryExport.YearPaidColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'YearPaid\' in table \'qryExport\' is DBNull.", e);
+                    }
                 }
                 set {
                     this[this.tableqryExport.YearPaidColumn] = value;
@@ -6404,6 +6408,18 @@ namespace PFGA_Membership {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetATT_ExpiryNull() {
                 this[this.tableqryExport.ATT_ExpiryColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsYearPaidNull() {
+                return this.IsNull(this.tableqryExport.YearPaidColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetYearPaidNull() {
+                this[this.tableqryExport.YearPaidColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -7552,22 +7568,6 @@ namespace PFGA_Membership {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int MaxOfYearPaid {
-                get {
-                    try {
-                        return ((int)(this[this.tableqryExportNon.MaxOfYearPaidColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'MaxOfYearPaid\' in table \'qryExportNon\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableqryExportNon.MaxOfYearPaidColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool NoEmailing {
                 get {
                     return ((bool)(this[this.tableqryExportNon.NoEmailingColumn]));
@@ -7622,17 +7622,6 @@ namespace PFGA_Membership {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool Active {
-                get {
-                    return ((bool)(this[this.tableqryExportNon.ActiveColumn]));
-                }
-                set {
-                    this[this.tableqryExportNon.ActiveColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public byte Section {
                 get {
                     try {
@@ -7644,6 +7633,33 @@ namespace PFGA_Membership {
                 }
                 set {
                     this[this.tableqryExportNon.SectionColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int YearPaid {
+                get {
+                    try {
+                        return ((int)(this[this.tableqryExportNon.YearPaidColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'YearPaid\' in table \'qryExportNon\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableqryExportNon.YearPaidColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool CardMade {
+                get {
+                    return ((bool)(this[this.tableqryExportNon.CardMadeColumn]));
+                }
+                set {
+                    this[this.tableqryExportNon.CardMadeColumn] = value;
                 }
             }
             
@@ -7865,18 +7881,6 @@ namespace PFGA_Membership {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsMaxOfYearPaidNull() {
-                return this.IsNull(this.tableqryExportNon.MaxOfYearPaidColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetMaxOfYearPaidNull() {
-                this[this.tableqryExportNon.MaxOfYearPaidColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsParticipationNull() {
                 return this.IsNull(this.tableqryExportNon.ParticipationColumn);
             }
@@ -7909,6 +7913,18 @@ namespace PFGA_Membership {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetSectionNull() {
                 this[this.tableqryExportNon.SectionColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsYearPaidNull() {
+                return this.IsNull(this.tableqryExportNon.YearPaidColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetYearPaidNull() {
+                this[this.tableqryExportNon.YearPaidColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -10745,7 +10761,7 @@ SELECT MemberID, Amount, MembershipYear, YearPaid, PaymentType, DatePaid FROM Pa
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[3];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = @"SELECT Card, [Last Name], [First Name], [Membership Type], [Birth Date], Walk, Pal, [Pal Exp Date], [ATT Expiry], Executive, Swipe, YearPaid, Address, [City  Prov], Postal, Phone, [Email Address], [Date Joined], [Website Usernames], Notes, Sponsor, SectionFlag AS Section, Participation, NoBackTrack, NoEmailing, pOther, CardMade FROM dbo.qryExport WHERE (YearPaid = @Year)
+            this._commandCollection[0].CommandText = @"SELECT Card, [Last Name], [First Name], [Membership Type], [Birth Date], Walk, Pal, [Pal Exp Date], [ATT Expiry], Executive, Swipe, YearPaid, Address, [City  Prov], Postal, Phone, [Email Address], [Date Joined], [Website Usernames], Notes, Sponsor, SectionFlag AS Section, Participation, NoBackTrack, NoEmailing, pOther, CardMade FROM dbo.qryExport WHERE (YearPaid = @Year) OR (MemberTypeID = 6)
 ORDER BY [Last Name]";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Year", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "YearPaid", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
@@ -10765,9 +10781,14 @@ ORDER BY [Last Name]";
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, true)]
-        public virtual int Fill(Membership.qryExportDataTable dataTable, int Year) {
+        public virtual int Fill(Membership.qryExportDataTable dataTable, global::System.Nullable<int> Year) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
-            this.Adapter.SelectCommand.Parameters[0].Value = ((int)(Year));
+            if ((Year.HasValue == true)) {
+                this.Adapter.SelectCommand.Parameters[0].Value = ((int)(Year.Value));
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[0].Value = global::System.DBNull.Value;
+            }
             if ((this.ClearBeforeFill == true)) {
                 dataTable.Clear();
             }
@@ -10779,9 +10800,14 @@ ORDER BY [Last Name]";
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
-        public virtual Membership.qryExportDataTable GetData(int Year) {
+        public virtual Membership.qryExportDataTable GetData(global::System.Nullable<int> Year) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
-            this.Adapter.SelectCommand.Parameters[0].Value = ((int)(Year));
+            if ((Year.HasValue == true)) {
+                this.Adapter.SelectCommand.Parameters[0].Value = ((int)(Year.Value));
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[0].Value = global::System.DBNull.Value;
+            }
             Membership.qryExportDataTable dataTable = new Membership.qryExportDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
@@ -10791,9 +10817,14 @@ ORDER BY [Last Name]";
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, false)]
-        public virtual int FillEmails(Membership.qryExportDataTable dataTable, int Year) {
+        public virtual int FillEmails(Membership.qryExportDataTable dataTable, global::System.Nullable<int> Year) {
             this.Adapter.SelectCommand = this.CommandCollection[1];
-            this.Adapter.SelectCommand.Parameters[0].Value = ((int)(Year));
+            if ((Year.HasValue == true)) {
+                this.Adapter.SelectCommand.Parameters[0].Value = ((int)(Year.Value));
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[0].Value = global::System.DBNull.Value;
+            }
             if ((this.ClearBeforeFill == true)) {
                 dataTable.Clear();
             }
@@ -10805,9 +10836,14 @@ ORDER BY [Last Name]";
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
-        public virtual Membership.qryExportDataTable GetEmails(int Year) {
+        public virtual Membership.qryExportDataTable GetEmails(global::System.Nullable<int> Year) {
             this.Adapter.SelectCommand = this.CommandCollection[1];
-            this.Adapter.SelectCommand.Parameters[0].Value = ((int)(Year));
+            if ((Year.HasValue == true)) {
+                this.Adapter.SelectCommand.Parameters[0].Value = ((int)(Year.Value));
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[0].Value = global::System.DBNull.Value;
+            }
             Membership.qryExportDataTable dataTable = new Membership.qryExportDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
@@ -10817,9 +10853,14 @@ ORDER BY [Last Name]";
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, false)]
-        public virtual int FillRemoveEmails(Membership.qryExportDataTable dataTable, int Year) {
+        public virtual int FillRemoveEmails(Membership.qryExportDataTable dataTable, global::System.Nullable<int> Year) {
             this.Adapter.SelectCommand = this.CommandCollection[2];
-            this.Adapter.SelectCommand.Parameters[0].Value = ((int)(Year));
+            if ((Year.HasValue == true)) {
+                this.Adapter.SelectCommand.Parameters[0].Value = ((int)(Year.Value));
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[0].Value = global::System.DBNull.Value;
+            }
             if ((this.ClearBeforeFill == true)) {
                 dataTable.Clear();
             }
@@ -10831,9 +10872,14 @@ ORDER BY [Last Name]";
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
-        public virtual Membership.qryExportDataTable GetRemoveEmails(int Year) {
+        public virtual Membership.qryExportDataTable GetRemoveEmails(global::System.Nullable<int> Year) {
             this.Adapter.SelectCommand = this.CommandCollection[2];
-            this.Adapter.SelectCommand.Parameters[0].Value = ((int)(Year));
+            if ((Year.HasValue == true)) {
+                this.Adapter.SelectCommand.Parameters[0].Value = ((int)(Year.Value));
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[0].Value = global::System.DBNull.Value;
+            }
             Membership.qryExportDataTable dataTable = new Membership.qryExportDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
@@ -11176,13 +11222,13 @@ ORDER BY [Last Name]";
             tableMapping.ColumnMappings.Add("Website Usernames", "Website Usernames");
             tableMapping.ColumnMappings.Add("Notes", "Notes");
             tableMapping.ColumnMappings.Add("Sponsor", "Sponsor");
-            tableMapping.ColumnMappings.Add("MaxOfYearPaid", "MaxOfYearPaid");
             tableMapping.ColumnMappings.Add("NoEmailing", "NoEmailing");
             tableMapping.ColumnMappings.Add("NoBackTrack", "NoBackTrack");
             tableMapping.ColumnMappings.Add("Participation", "Participation");
             tableMapping.ColumnMappings.Add("pOther", "pOther");
-            tableMapping.ColumnMappings.Add("Active", "Active");
             tableMapping.ColumnMappings.Add("Section", "Section");
+            tableMapping.ColumnMappings.Add("YearPaid", "YearPaid");
+            tableMapping.ColumnMappings.Add("CardMade", "CardMade");
             this._adapter.TableMappings.Add(tableMapping);
         }
         
@@ -11199,9 +11245,10 @@ ORDER BY [Last Name]";
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[2];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = @"SELECT Card, [Last Name], [First Name], [Membership Type], [Birth Date], Walk, Pal, [Pal Exp Date], [ATT Expiry], Executive, Swipe, Address, [City  Prov], Postal, Phone, [Email Address], [Date Joined], [Website Usernames], Notes, Sponsor, SectionFlag AS Section, MaxOfYearPaid, NoEmailing, NoBackTrack, Participation, pOther, Active FROM dbo.qryExportNon WHERE (MaxOfYearPaid = @Year) ORDER BY [Last Name]";
+            this._commandCollection[0].CommandText = @"SELECT Card, [Last Name], [First Name], [Membership Type], [Birth Date], Walk, Pal, [Pal Exp Date], [ATT Expiry], Executive, Swipe, YearPaid, Address, [City  Prov], Postal, Phone, [Email Address], [Date Joined], [Website Usernames], Notes, Sponsor, SectionFlag AS Section, Participation, NoBackTrack, NoEmailing, pOther, CardMade FROM dbo.qryExport WHERE (YearPaid = @Year)
+ORDER BY [Last Name]";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
-            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Year", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "MaxOfYearPaid", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Year", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "YearPaid", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[1] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[1].Connection = this.Connection;
             this._commandCollection[1].CommandText = @"SELECT Card, [Last Name], [First Name], [Membership Type], [Birth Date], Walk, Pal, [Pal Exp Date], [ATT Expiry], Executive, Swipe, MemberTypeID, Address, [City  Prov], Postal, Phone, [Email Address], [Date Joined], [Website Usernames], Notes, Sponsor, SectionFlag, MaxOfYearPaid, NoEmailing, NoBackTrack, Participation, pOther, Active FROM dbo.qryExportNon WHERE (MaxOfYearPaid = @Year) AND ([Email Address] IS NOT NULL) AND ([Email Address]<>'')";
@@ -11613,37 +11660,37 @@ ORDER BY [Last Name]";
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.DeleteCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.DeleteCommand.Connection = this.Connection;
-            this._adapter.DeleteCommand.CommandText = "DELETE FROM [dbo].[Members] WHERE (((@IsNull_Last_Name = 1 AND [Last Name] IS NUL" +
-                "L) OR ([Last Name] = @Original_Last_Name)) AND ((@IsNull_First_Name = 1 AND [Fir" +
-                "st Name] IS NULL) OR ([First Name] = @Original_First_Name)) AND ((@IsNull_Addres" +
-                "s = 1 AND [Address] IS NULL) OR ([Address] = @Original_Address)) AND ((@IsNull_C" +
-                "ity__Prov = 1 AND [City  Prov] IS NULL) OR ([City  Prov] = @Original_City__Prov)" +
-                ") AND ((@IsNull_Postal = 1 AND [Postal] IS NULL) OR ([Postal] = @Original_Postal" +
-                ")) AND ((@IsNull_Phone = 1 AND [Phone] IS NULL) OR ([Phone] = @Original_Phone)) " +
-                "AND ((@IsNull_Email_Address = 1 AND [Email Address] IS NULL) OR ([Email Address]" +
-                " = @Original_Email_Address)) AND ((@IsNull_Membership_Type = 1 AND [Membership T" +
-                "ype] IS NULL) OR ([Membership Type] = @Original_Membership_Type)) AND ((@IsNull_" +
-                "Section = 1 AND [Section] IS NULL) OR ([Section] = @Original_Section)) AND ([Mem" +
-                "berTypeID] = @Original_MemberTypeID) AND ((@IsNull_Date_Joined = 1 AND [Date Joi" +
-                "ned] IS NULL) OR ([Date Joined] = @Original_Date_Joined)) AND ((@IsNull_Birth_Da" +
-                "te = 1 AND [Birth Date] IS NULL) OR ([Birth Date] = @Original_Birth_Date)) AND (" +
-                "(@IsNull_Walk = 1 AND [Walk] IS NULL) OR ([Walk] = @Original_Walk)) AND ((@IsNul" +
-                "l_Pal = 1 AND [Pal] IS NULL) OR ([Pal] = @Original_Pal)) AND ((@IsNull_Pal_Exp_D" +
-                "ate = 1 AND [Pal Exp Date] IS NULL) OR ([Pal Exp Date] = @Original_Pal_Exp_Date)" +
-                ") AND ((@IsNull_ATT_Expiry = 1 AND [ATT Expiry] IS NULL) OR ([ATT Expiry] = @Ori" +
-                "ginal_ATT_Expiry)) AND ((@IsNull_Website_Usernames = 1 AND [Website Usernames] I" +
-                "S NULL) OR ([Website Usernames] = @Original_Website_Usernames)) AND ([NoBackTrac" +
-                "k] = @Original_NoBackTrack) AND ([NoEmailing] = @Original_NoEmailing) AND ((@IsN" +
-                "ull_MasterRecord = 1 AND [MasterRecord] IS NULL) OR ([MasterRecord] = @Original_" +
-                "MasterRecord)) AND ((@IsNull_SectionFlag = 1 AND [SectionFlag] IS NULL) OR ([Sec" +
-                "tionFlag] = @Original_SectionFlag)) AND ([Active] = @Original_Active) AND ((@IsN" +
-                "ull_Card = 1 AND [Card] IS NULL) OR ([Card] = @Original_Card)) AND ([Executive] " +
-                "= @Original_Executive) AND ((@IsNull_Sponsor = 1 AND [Sponsor] IS NULL) OR ([Spo" +
-                "nsor] = @Original_Sponsor)) AND ([Swipe] = @Original_Swipe) AND ((@IsNull_Partic" +
-                "ipation = 1 AND [Participation] IS NULL) OR ([Participation] = @Original_Partici" +
-                "pation)) AND ((@IsNull_pOther = 1 AND [pOther] IS NULL) OR ([pOther] = @Original" +
-                "_pOther)) AND ((@IsNull_Cell = 1 AND [Cell] IS NULL) OR ([Cell] = @Original_Cell" +
-                ")) AND ([CardMade] = @Original_CardMade) AND ([ID] = @Original_ID))";
+            this._adapter.DeleteCommand.CommandText = "DELETE FROM [Members] WHERE (((@IsNull_Last_Name = 1 AND [Last Name] IS NULL) OR " +
+                "([Last Name] = @Original_Last_Name)) AND ((@IsNull_First_Name = 1 AND [First Nam" +
+                "e] IS NULL) OR ([First Name] = @Original_First_Name)) AND ((@IsNull_Address = 1 " +
+                "AND [Address] IS NULL) OR ([Address] = @Original_Address)) AND ((@IsNull_City__P" +
+                "rov = 1 AND [City  Prov] IS NULL) OR ([City  Prov] = @Original_City__Prov)) AND " +
+                "((@IsNull_Postal = 1 AND [Postal] IS NULL) OR ([Postal] = @Original_Postal)) AND" +
+                " ((@IsNull_Phone = 1 AND [Phone] IS NULL) OR ([Phone] = @Original_Phone)) AND ((" +
+                "@IsNull_Email_Address = 1 AND [Email Address] IS NULL) OR ([Email Address] = @Or" +
+                "iginal_Email_Address)) AND ((@IsNull_Membership_Type = 1 AND [Membership Type] I" +
+                "S NULL) OR ([Membership Type] = @Original_Membership_Type)) AND ((@IsNull_Sectio" +
+                "n = 1 AND [Section] IS NULL) OR ([Section] = @Original_Section)) AND ([MemberTyp" +
+                "eID] = @Original_MemberTypeID) AND ((@IsNull_Date_Joined = 1 AND [Date Joined] I" +
+                "S NULL) OR ([Date Joined] = @Original_Date_Joined)) AND ((@IsNull_Birth_Date = 1" +
+                " AND [Birth Date] IS NULL) OR ([Birth Date] = @Original_Birth_Date)) AND ((@IsNu" +
+                "ll_Walk = 1 AND [Walk] IS NULL) OR ([Walk] = @Original_Walk)) AND ((@IsNull_Pal " +
+                "= 1 AND [Pal] IS NULL) OR ([Pal] = @Original_Pal)) AND ((@IsNull_Pal_Exp_Date = " +
+                "1 AND [Pal Exp Date] IS NULL) OR ([Pal Exp Date] = @Original_Pal_Exp_Date)) AND " +
+                "((@IsNull_ATT_Expiry = 1 AND [ATT Expiry] IS NULL) OR ([ATT Expiry] = @Original_" +
+                "ATT_Expiry)) AND ((@IsNull_Website_Usernames = 1 AND [Website Usernames] IS NULL" +
+                ") OR ([Website Usernames] = @Original_Website_Usernames)) AND ([NoBackTrack] = @" +
+                "Original_NoBackTrack) AND ([NoEmailing] = @Original_NoEmailing) AND ((@IsNull_Ma" +
+                "sterRecord = 1 AND [MasterRecord] IS NULL) OR ([MasterRecord] = @Original_Master" +
+                "Record)) AND ((@IsNull_SectionFlag = 1 AND [SectionFlag] IS NULL) OR ([SectionFl" +
+                "ag] = @Original_SectionFlag)) AND ([Active] = @Original_Active) AND ((@IsNull_Ca" +
+                "rd = 1 AND [Card] IS NULL) OR ([Card] = @Original_Card)) AND ([Executive] = @Ori" +
+                "ginal_Executive) AND ((@IsNull_Sponsor = 1 AND [Sponsor] IS NULL) OR ([Sponsor] " +
+                "= @Original_Sponsor)) AND ([Swipe] = @Original_Swipe) AND ((@IsNull_Participatio" +
+                "n = 1 AND [Participation] IS NULL) OR ([Participation] = @Original_Participation" +
+                ")) AND ((@IsNull_pOther = 1 AND [pOther] IS NULL) OR ([pOther] = @Original_pOthe" +
+                "r)) AND ((@IsNull_Cell = 1 AND [Cell] IS NULL) OR ([Cell] = @Original_Cell)) AND" +
+                " ([CardMade] = @Original_CardMade) AND ([ID] = @Original_ID))";
             this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_Last_Name", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Last Name", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Last_Name", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Last Name", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
@@ -11701,7 +11748,7 @@ ORDER BY [Last Name]";
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_ID", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "ID", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.InsertCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = @"INSERT INTO [dbo].[Members] ([Last Name], [First Name], [Address], [City  Prov], [Postal], [Phone], [Email Address], [Membership Type], [Section], [MemberTypeID], [Date Joined], [Birth Date], [Walk], [Pal], [Pal Exp Date], [ATT Expiry], [Website Usernames], [NoBackTrack], [NoEmailing], [MasterRecord], [SectionFlag], [Active], [Card], [Notes], [Executive], [Sponsor], [Swipe], [Participation], [pOther], [Cell], [Image], [CardMade]) VALUES (@Last_Name, @First_Name, @Address, @City__Prov, @Postal, @Phone, @Email_Address, @Membership_Type, @Section, @MemberTypeID, @Date_Joined, @Birth_Date, @Walk, @Pal, @Pal_Exp_Date, @ATT_Expiry, @Website_Usernames, @NoBackTrack, @NoEmailing, @MasterRecord, @SectionFlag, @Active, @Card, @Notes, @Executive, @Sponsor, @Swipe, @Participation, @pOther, @Cell, @Image, @CardMade);
+            this._adapter.InsertCommand.CommandText = @"INSERT INTO [Members] ([Last Name], [First Name], [Address], [City  Prov], [Postal], [Phone], [Email Address], [Membership Type], [Section], [MemberTypeID], [Date Joined], [Birth Date], [Walk], [Pal], [Pal Exp Date], [ATT Expiry], [Website Usernames], [NoBackTrack], [NoEmailing], [MasterRecord], [SectionFlag], [Active], [Card], [Notes], [Executive], [Sponsor], [Swipe], [Participation], [pOther], [Cell], [Image], [CardMade]) VALUES (@Last_Name, @First_Name, @Address, @City__Prov, @Postal, @Phone, @Email_Address, @Membership_Type, @Section, @MemberTypeID, @Date_Joined, @Birth_Date, @Walk, @Pal, @Pal_Exp_Date, @ATT_Expiry, @Website_Usernames, @NoBackTrack, @NoEmailing, @MasterRecord, @SectionFlag, @Active, @Card, @Notes, @Executive, @Sponsor, @Swipe, @Participation, @pOther, @Cell, @Image, @CardMade);
 SELECT [Last Name], [First Name], Address, [City  Prov], Postal, Phone, [Email Address], [Membership Type], Section, MemberTypeID, [Date Joined], [Birth Date], Walk, Pal, [Pal Exp Date], [ATT Expiry], [Website Usernames], NoBackTrack, NoEmailing, MasterRecord, SectionFlag, Active, Card, Notes, Executive, Sponsor, Swipe, Participation, pOther, Cell, Image, CardMade, ID FROM Members WHERE (ID = SCOPE_IDENTITY())";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Last_Name", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Last Name", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
@@ -11738,52 +11785,52 @@ SELECT [Last Name], [First Name], Address, [City  Prov], Postal, Phone, [Email A
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@CardMade", global::System.Data.SqlDbType.Bit, 0, global::System.Data.ParameterDirection.Input, 0, 0, "CardMade", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = "UPDATE [dbo].[Members] SET [Last Name] = @Last_Name, [First Name] = @First_Name, " +
-                "[Address] = @Address, [City  Prov] = @City__Prov, [Postal] = @Postal, [Phone] = " +
-                "@Phone, [Email Address] = @Email_Address, [Membership Type] = @Membership_Type, " +
-                "[Section] = @Section, [MemberTypeID] = @MemberTypeID, [Date Joined] = @Date_Join" +
-                "ed, [Birth Date] = @Birth_Date, [Walk] = @Walk, [Pal] = @Pal, [Pal Exp Date] = @" +
-                "Pal_Exp_Date, [ATT Expiry] = @ATT_Expiry, [Website Usernames] = @Website_Usernam" +
-                "es, [NoBackTrack] = @NoBackTrack, [NoEmailing] = @NoEmailing, [MasterRecord] = @" +
-                "MasterRecord, [SectionFlag] = @SectionFlag, [Active] = @Active, [Card] = @Card, " +
-                "[Notes] = @Notes, [Executive] = @Executive, [Sponsor] = @Sponsor, [Swipe] = @Swi" +
-                "pe, [Participation] = @Participation, [pOther] = @pOther, [Cell] = @Cell, [Image" +
-                "] = @Image, [CardMade] = @CardMade WHERE (((@IsNull_Last_Name = 1 AND [Last Name" +
-                "] IS NULL) OR ([Last Name] = @Original_Last_Name)) AND ((@IsNull_First_Name = 1 " +
-                "AND [First Name] IS NULL) OR ([First Name] = @Original_First_Name)) AND ((@IsNul" +
-                "l_Address = 1 AND [Address] IS NULL) OR ([Address] = @Original_Address)) AND ((@" +
-                "IsNull_City__Prov = 1 AND [City  Prov] IS NULL) OR ([City  Prov] = @Original_Cit" +
-                "y__Prov)) AND ((@IsNull_Postal = 1 AND [Postal] IS NULL) OR ([Postal] = @Origina" +
-                "l_Postal)) AND ((@IsNull_Phone = 1 AND [Phone] IS NULL) OR ([Phone] = @Original_" +
-                "Phone)) AND ((@IsNull_Email_Address = 1 AND [Email Address] IS NULL) OR ([Email " +
-                "Address] = @Original_Email_Address)) AND ((@IsNull_Membership_Type = 1 AND [Memb" +
-                "ership Type] IS NULL) OR ([Membership Type] = @Original_Membership_Type)) AND ((" +
-                "@IsNull_Section = 1 AND [Section] IS NULL) OR ([Section] = @Original_Section)) A" +
-                "ND ([MemberTypeID] = @Original_MemberTypeID) AND ((@IsNull_Date_Joined = 1 AND [" +
-                "Date Joined] IS NULL) OR ([Date Joined] = @Original_Date_Joined)) AND ((@IsNull_" +
-                "Birth_Date = 1 AND [Birth Date] IS NULL) OR ([Birth Date] = @Original_Birth_Date" +
-                ")) AND ((@IsNull_Walk = 1 AND [Walk] IS NULL) OR ([Walk] = @Original_Walk)) AND " +
-                "((@IsNull_Pal = 1 AND [Pal] IS NULL) OR ([Pal] = @Original_Pal)) AND ((@IsNull_P" +
-                "al_Exp_Date = 1 AND [Pal Exp Date] IS NULL) OR ([Pal Exp Date] = @Original_Pal_E" +
-                "xp_Date)) AND ((@IsNull_ATT_Expiry = 1 AND [ATT Expiry] IS NULL) OR ([ATT Expiry" +
-                "] = @Original_ATT_Expiry)) AND ((@IsNull_Website_Usernames = 1 AND [Website User" +
-                "names] IS NULL) OR ([Website Usernames] = @Original_Website_Usernames)) AND ([No" +
-                "BackTrack] = @Original_NoBackTrack) AND ([NoEmailing] = @Original_NoEmailing) AN" +
-                "D ((@IsNull_MasterRecord = 1 AND [MasterRecord] IS NULL) OR ([MasterRecord] = @O" +
-                "riginal_MasterRecord)) AND ((@IsNull_SectionFlag = 1 AND [SectionFlag] IS NULL) " +
-                "OR ([SectionFlag] = @Original_SectionFlag)) AND ([Active] = @Original_Active) AN" +
-                "D ((@IsNull_Card = 1 AND [Card] IS NULL) OR ([Card] = @Original_Card)) AND ([Exe" +
-                "cutive] = @Original_Executive) AND ((@IsNull_Sponsor = 1 AND [Sponsor] IS NULL) " +
-                "OR ([Sponsor] = @Original_Sponsor)) AND ([Swipe] = @Original_Swipe) AND ((@IsNul" +
-                "l_Participation = 1 AND [Participation] IS NULL) OR ([Participation] = @Original" +
-                "_Participation)) AND ((@IsNull_pOther = 1 AND [pOther] IS NULL) OR ([pOther] = @" +
-                "Original_pOther)) AND ((@IsNull_Cell = 1 AND [Cell] IS NULL) OR ([Cell] = @Origi" +
-                "nal_Cell)) AND ([CardMade] = @Original_CardMade) AND ([ID] = @Original_ID));\r\nSE" +
-                "LECT [Last Name], [First Name], Address, [City  Prov], Postal, Phone, [Email Add" +
-                "ress], [Membership Type], Section, MemberTypeID, [Date Joined], [Birth Date], Wa" +
-                "lk, Pal, [Pal Exp Date], [ATT Expiry], [Website Usernames], NoBackTrack, NoEmail" +
-                "ing, MasterRecord, SectionFlag, Active, Card, Notes, Executive, Sponsor, Swipe, " +
-                "Participation, pOther, Cell, Image, CardMade, ID FROM Members WHERE (ID = @ID)";
+            this._adapter.UpdateCommand.CommandText = "UPDATE [Members] SET [Last Name] = @Last_Name, [First Name] = @First_Name, [Addre" +
+                "ss] = @Address, [City  Prov] = @City__Prov, [Postal] = @Postal, [Phone] = @Phone" +
+                ", [Email Address] = @Email_Address, [Membership Type] = @Membership_Type, [Secti" +
+                "on] = @Section, [MemberTypeID] = @MemberTypeID, [Date Joined] = @Date_Joined, [B" +
+                "irth Date] = @Birth_Date, [Walk] = @Walk, [Pal] = @Pal, [Pal Exp Date] = @Pal_Ex" +
+                "p_Date, [ATT Expiry] = @ATT_Expiry, [Website Usernames] = @Website_Usernames, [N" +
+                "oBackTrack] = @NoBackTrack, [NoEmailing] = @NoEmailing, [MasterRecord] = @Master" +
+                "Record, [SectionFlag] = @SectionFlag, [Active] = @Active, [Card] = @Card, [Notes" +
+                "] = @Notes, [Executive] = @Executive, [Sponsor] = @Sponsor, [Swipe] = @Swipe, [P" +
+                "articipation] = @Participation, [pOther] = @pOther, [Cell] = @Cell, [Image] = @I" +
+                "mage, [CardMade] = @CardMade WHERE (((@IsNull_Last_Name = 1 AND [Last Name] IS N" +
+                "ULL) OR ([Last Name] = @Original_Last_Name)) AND ((@IsNull_First_Name = 1 AND [F" +
+                "irst Name] IS NULL) OR ([First Name] = @Original_First_Name)) AND ((@IsNull_Addr" +
+                "ess = 1 AND [Address] IS NULL) OR ([Address] = @Original_Address)) AND ((@IsNull" +
+                "_City__Prov = 1 AND [City  Prov] IS NULL) OR ([City  Prov] = @Original_City__Pro" +
+                "v)) AND ((@IsNull_Postal = 1 AND [Postal] IS NULL) OR ([Postal] = @Original_Post" +
+                "al)) AND ((@IsNull_Phone = 1 AND [Phone] IS NULL) OR ([Phone] = @Original_Phone)" +
+                ") AND ((@IsNull_Email_Address = 1 AND [Email Address] IS NULL) OR ([Email Addres" +
+                "s] = @Original_Email_Address)) AND ((@IsNull_Membership_Type = 1 AND [Membership" +
+                " Type] IS NULL) OR ([Membership Type] = @Original_Membership_Type)) AND ((@IsNul" +
+                "l_Section = 1 AND [Section] IS NULL) OR ([Section] = @Original_Section)) AND ([M" +
+                "emberTypeID] = @Original_MemberTypeID) AND ((@IsNull_Date_Joined = 1 AND [Date J" +
+                "oined] IS NULL) OR ([Date Joined] = @Original_Date_Joined)) AND ((@IsNull_Birth_" +
+                "Date = 1 AND [Birth Date] IS NULL) OR ([Birth Date] = @Original_Birth_Date)) AND" +
+                " ((@IsNull_Walk = 1 AND [Walk] IS NULL) OR ([Walk] = @Original_Walk)) AND ((@IsN" +
+                "ull_Pal = 1 AND [Pal] IS NULL) OR ([Pal] = @Original_Pal)) AND ((@IsNull_Pal_Exp" +
+                "_Date = 1 AND [Pal Exp Date] IS NULL) OR ([Pal Exp Date] = @Original_Pal_Exp_Dat" +
+                "e)) AND ((@IsNull_ATT_Expiry = 1 AND [ATT Expiry] IS NULL) OR ([ATT Expiry] = @O" +
+                "riginal_ATT_Expiry)) AND ((@IsNull_Website_Usernames = 1 AND [Website Usernames]" +
+                " IS NULL) OR ([Website Usernames] = @Original_Website_Usernames)) AND ([NoBackTr" +
+                "ack] = @Original_NoBackTrack) AND ([NoEmailing] = @Original_NoEmailing) AND ((@I" +
+                "sNull_MasterRecord = 1 AND [MasterRecord] IS NULL) OR ([MasterRecord] = @Origina" +
+                "l_MasterRecord)) AND ((@IsNull_SectionFlag = 1 AND [SectionFlag] IS NULL) OR ([S" +
+                "ectionFlag] = @Original_SectionFlag)) AND ([Active] = @Original_Active) AND ((@I" +
+                "sNull_Card = 1 AND [Card] IS NULL) OR ([Card] = @Original_Card)) AND ([Executive" +
+                "] = @Original_Executive) AND ((@IsNull_Sponsor = 1 AND [Sponsor] IS NULL) OR ([S" +
+                "ponsor] = @Original_Sponsor)) AND ([Swipe] = @Original_Swipe) AND ((@IsNull_Part" +
+                "icipation = 1 AND [Participation] IS NULL) OR ([Participation] = @Original_Parti" +
+                "cipation)) AND ((@IsNull_pOther = 1 AND [pOther] IS NULL) OR ([pOther] = @Origin" +
+                "al_pOther)) AND ((@IsNull_Cell = 1 AND [Cell] IS NULL) OR ([Cell] = @Original_Ce" +
+                "ll)) AND ([CardMade] = @Original_CardMade) AND ([ID] = @Original_ID));\r\nSELECT [" +
+                "Last Name], [First Name], Address, [City  Prov], Postal, Phone, [Email Address]," +
+                " [Membership Type], Section, MemberTypeID, [Date Joined], [Birth Date], Walk, Pa" +
+                "l, [Pal Exp Date], [ATT Expiry], [Website Usernames], NoBackTrack, NoEmailing, M" +
+                "asterRecord, SectionFlag, Active, Card, Notes, Executive, Sponsor, Swipe, Partic" +
+                "ipation, pOther, Cell, Image, CardMade, ID FROM Members WHERE (ID = @ID)";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Last_Name", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Last Name", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@First_Name", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "First Name", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
@@ -11887,7 +11934,7 @@ SELECT [Last Name], [First Name], Address, [City  Prov], Postal, Phone, [Email A
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[2];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = @"SELECT [Last Name], [First Name], Address, [City  Prov], Postal, Phone, [Email Address], [Membership Type], Section, MemberTypeID, [Date Joined], [Birth Date], Walk, Pal, [Pal Exp Date], [ATT Expiry], [Website Usernames], NoBackTrack, NoEmailing, MasterRecord, SectionFlag, Active, Card, Notes, Executive, Sponsor, Swipe, Participation, pOther, Cell, Image, CardMade, ID FROM dbo.Members";
+            this._commandCollection[0].CommandText = @"SELECT Members.[Last Name], Members.[First Name], Members.Address, Members.[City  Prov], Members.Postal, Members.Phone, Members.[Email Address], Members.[Membership Type], Members.Section, Members.MemberTypeID, Members.[Date Joined], Members.[Birth Date], Members.Walk, Members.Pal, Members.[Pal Exp Date], Members.[ATT Expiry], Members.[Website Usernames], Members.NoBackTrack, Members.NoEmailing, Members.MasterRecord, Members.SectionFlag, Members.Active, Members.Card, Members.Notes, Members.Executive, Members.Sponsor, Members.Swipe, Members.Participation, Members.pOther, Members.Cell, Members.Image, Members.CardMade, Members.ID FROM Members";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[1] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[1].Connection = this.Connection;
@@ -13497,7 +13544,7 @@ SELECT PaymentTypeId, PaymentType FROM PaymentType WHERE (PaymentTypeId = @Payme
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitCommandCollection() {
-            this._commandCollection = new global::System.Data.IDbCommand[6];
+            this._commandCollection = new global::System.Data.IDbCommand[7];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             ((global::System.Data.SqlClient.SqlCommand)(this._commandCollection[0])).Connection = new global::System.Data.SqlClient.SqlConnection(global::PFGA_Membership.Properties.Settings.Default.PFGAMembershipConnectionString);
             ((global::System.Data.SqlClient.SqlCommand)(this._commandCollection[0])).CommandText = "dbo.qryCards";
@@ -13528,6 +13575,12 @@ SELECT PaymentTypeId, PaymentType FROM PaymentType WHERE (PaymentTypeId = @Payme
             ((global::System.Data.SqlClient.SqlCommand)(this._commandCollection[5])).CommandText = "dbo.UpdatePendingToHalf";
             ((global::System.Data.SqlClient.SqlCommand)(this._commandCollection[5])).CommandType = global::System.Data.CommandType.StoredProcedure;
             ((global::System.Data.SqlClient.SqlCommand)(this._commandCollection[5])).Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@RETURN_VALUE", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.ReturnValue, 10, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[6] = new global::System.Data.SqlClient.SqlCommand();
+            ((global::System.Data.SqlClient.SqlCommand)(this._commandCollection[6])).Connection = new global::System.Data.SqlClient.SqlConnection(global::PFGA_Membership.Properties.Settings.Default.PFGAMembershipConnectionString);
+            ((global::System.Data.SqlClient.SqlCommand)(this._commandCollection[6])).CommandText = "dbo.GetMasterName";
+            ((global::System.Data.SqlClient.SqlCommand)(this._commandCollection[6])).CommandType = global::System.Data.CommandType.StoredProcedure;
+            ((global::System.Data.SqlClient.SqlCommand)(this._commandCollection[6])).Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@RETURN_VALUE", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.ReturnValue, 10, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            ((global::System.Data.SqlClient.SqlCommand)(this._commandCollection[6])).Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@MasterID", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 10, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -13672,6 +13725,40 @@ SELECT PaymentTypeId, PaymentType FROM PaymentType WHERE (PaymentTypeId = @Payme
                 }
             }
             return returnValue;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        public virtual object GetMasterName(global::System.Nullable<int> MasterID) {
+            global::System.Data.SqlClient.SqlCommand command = ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[6]));
+            if ((MasterID.HasValue == true)) {
+                command.Parameters[1].Value = ((int)(MasterID.Value));
+            }
+            else {
+                command.Parameters[1].Value = global::System.DBNull.Value;
+            }
+            global::System.Data.ConnectionState previousConnectionState = command.Connection.State;
+            if (((command.Connection.State & global::System.Data.ConnectionState.Open) 
+                        != global::System.Data.ConnectionState.Open)) {
+                command.Connection.Open();
+            }
+            object returnValue;
+            try {
+                returnValue = command.ExecuteScalar();
+            }
+            finally {
+                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
+                    command.Connection.Close();
+                }
+            }
+            if (((returnValue == null) 
+                        || (returnValue.GetType() == typeof(global::System.DBNull)))) {
+                return null;
+            }
+            else {
+                return ((object)(returnValue));
+            }
         }
     }
     

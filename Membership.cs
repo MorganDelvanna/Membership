@@ -12,6 +12,9 @@ namespace PFGA_Membership {
 }
 
 namespace PFGA_Membership.MembershipTableAdapters {
+    partial class qryExportTableAdapter
+    {
+    }
     
     
     public partial class PaidTableAdapter {

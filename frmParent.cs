@@ -37,20 +37,6 @@ namespace PFGA_Membership
             frm.Show();
         }
 
-        public void showLabels()
-        {
-            frmLabels frm = new frmLabels("Avery5161");
-            frm.MdiParent = this;
-            frm.Show();
-        }
-
-        public void showSummary()
-        {
-            frmLabels frm = new frmLabels("Summary");
-            frm.MdiParent = this;
-            frm.Show();
-        }
-
         public void showCardList()
         {
             frmCardList frm = new frmCardList();

@@ -55,6 +55,7 @@
             this.reportsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportMembersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mailingListEmailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pendingMembersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.makeCardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateMembersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -272,7 +273,8 @@
             // 
             this.reportsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exportMembersToolStripMenuItem,
-            this.mailingListEmailsToolStripMenuItem});
+            this.mailingListEmailsToolStripMenuItem,
+            this.pendingMembersToolStripMenuItem});
             this.reportsToolStripMenuItem.Name = "reportsToolStripMenuItem";
             this.reportsToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
             this.reportsToolStripMenuItem.Text = "Reports";
@@ -290,6 +292,13 @@
             this.mailingListEmailsToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.mailingListEmailsToolStripMenuItem.Text = "Mailing List Emails";
             this.mailingListEmailsToolStripMenuItem.Click += new System.EventHandler(this.mailingListEmailsToolStripMenuItem_Click);
+            // 
+            // pendingMembersToolStripMenuItem
+            // 
+            this.pendingMembersToolStripMenuItem.Name = "pendingMembersToolStripMenuItem";
+            this.pendingMembersToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.pendingMembersToolStripMenuItem.Text = "Pending Members";
+            this.pendingMembersToolStripMenuItem.Click += new System.EventHandler(this.pendingMembersToolStripMenuItem_Click);
             // 
             // cardsToolStripMenuItem
             // 
@@ -405,6 +414,7 @@
         private System.Windows.Forms.ComboBox cboMemberTypeFilter;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ToolStripMenuItem viewCardLIstToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pendingMembersToolStripMenuItem;
 
     }
 }

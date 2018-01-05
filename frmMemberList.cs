@@ -4,7 +4,12 @@ using System.Drawing;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using System.Linq;
+using System.IO;
+using System.ComponentModel;
 using Excel = Microsoft.Office.Interop.Excel;
+using Word = Microsoft.Office.Interop.Word;
+
 
 
 namespace PFGA_Membership
@@ -286,21 +291,6 @@ namespace PFGA_Membership
             reFormatGrid(0);
         }
 
-        private void mnuSummary_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                frmParent frm = (frmParent)this.ParentForm;
-                frm.showSummary();
-                this.Close();
-                this.Dispose();
-            }
-            catch (Exception ex)
-            {
-                ErrorLogger.Log("Error trying to generate summary report", ex, true);
-            }
-        }
-
         private void exportMembersToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Excel.Application oXL;
@@ -325,6 +315,7 @@ namespace PFGA_Membership
                         
             try
             {
+                Cursor.Current = Cursors.WaitCursor;
                 //Start Excel and get Application object.
                 oXL = new Excel.Application();
                 oXL.Visible = false;
@@ -620,6 +611,10 @@ namespace PFGA_Membership
             {
                 ErrorLogger.Log("Error trying to generate summary report", ex, true);
             }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
         }
 
         #region Helper Functions
@@ -785,6 +780,7 @@ namespace PFGA_Membership
 
             try
             {
+                Cursor.Current = Cursors.Default;
                 int lastRow;
                 //Start Excel and get Application object.
                 oXL = new Excel.Application();
@@ -837,6 +833,10 @@ namespace PFGA_Membership
             catch (Exception ex)
             {
                 ErrorLogger.Log("Error trying to generate summary report", ex, true);
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
             }
         }
 
@@ -894,6 +894,77 @@ namespace PFGA_Membership
                 ErrorLogger.Log("Error Showing Card List: ", ex, true);
             }
         }
+
+        private void pendingMembersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Word.Application oWd = new Word.Application();
+            Word.Document oDoc;
+            Word.Range rng;
+
+            object replaceAll = Word.WdReplace.wdReplaceAll;
+            Missing missing = System.Reflection.Missing.Value;
+            string section;
+            string fileName;
+            string template = Path.Combine(System.IO.Path.GetDirectoryName(Application.ExecutablePath), "NewMemberWelcomeLetter.docx");
+
+            MembershipTableAdapters.qryExportTableAdapter daEmails = new PFGA_Membership.MembershipTableAdapters.qryExportTableAdapter();
+            Membership.qryExportDataTable dtEmails = new Membership.qryExportDataTable();
+
+            daEmails.FillEmails(dtEmails, thisYear());
+
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                DataRow[] rows = dtEmails.Select("MembertypeId = 13");
+                if (MessageBox.Show(string.Format("This will create {0} documents on your desktop", rows.Length), "Creating Document"
+                    , MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
+                {
+
+                    foreach (DataRow row in rows)
+                    {
+                        // Copy and rename template
+                        fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory),
+                            string.Concat(row["Email Address"].ToString(), ".docx"));
+                        File.Copy(template, fileName, true);
+
+                        oDoc = oWd.Documents.Open(fileName);
+                        rng = oDoc.Content;
+
+                        section = getSectionLabels(row["SectionFlag"].ToString());
+                        if (section.Length > 0)
+                        {
+                            Word.Find findSection = rng.Find;
+                            findSection.ClearFormatting();
+                            findSection.Text = "<<Section>>";
+                            findSection.Replacement.ClearFormatting();
+                            findSection.Replacement.Text = section;
+                            findSection.Execute(missing, missing, missing, missing, missing, missing, missing, missing, missing, missing,
+                            ref replaceAll, missing, missing, missing, missing);
+                        }
+
+                        Word.Find findCard = rng.Find;
+                        findCard.ClearFormatting();
+                        findCard.Text = "<<CardNo>>";
+                        findCard.Replacement.ClearFormatting();
+                        findCard.Replacement.Text = row["Card"].ToString();
+                        findCard.Execute(missing, missing, missing, missing, missing, missing, missing, missing, missing, missing,
+                            ref replaceAll, missing, missing, missing, missing);
+
+                        oDoc.Close(true, missing, missing);
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.Log("Error trying to generate Pending emails", ex, true);
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;            
+            }
+        }
+
 
     }
 }

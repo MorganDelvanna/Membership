@@ -128,7 +128,16 @@ namespace PFGA_Membership
                 }
                 RadioButtons[0].Checked = true;
 
-                this.Text = String.Format("Card #: {0}", mbr.Card.ToString());
+                string Heading = string.Empty; ;
+                if (mbr.MasterRecord < 0)
+                {
+                    Heading = String.Format("Card #: {0}", mbr.Card.ToString());
+                }
+                else
+                {
+                    Heading = string.Format("Card #: {0}, Account: {1}", mbr.Card.ToString(), mbr.MasterRecordName);
+                }
+                this.Text = Heading;
                 last_NameTextBox.Text = mbr.LastName.ToString();
                 first_NameTextBox.Text = mbr.FirstName.ToString();
                 birth_DateDateTimePicker.Text = (mbr.BirthDate.ToString() == "1900-01-01" ? string.Empty : mbr.BirthDate.ToString());
@@ -670,7 +679,7 @@ namespace PFGA_Membership
         {
             try
             {
-                if (e.ColumnIndex == dgExtraCards.Columns["colRemove"].Index)
+                if (e.ColumnIndex == dgExtraCards.Columns["colDelete"].Index)
                 {
                     if (MessageBox.Show("This will delete the Extra Card permanently when you click Save",
                         "Delete Extra Card", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)

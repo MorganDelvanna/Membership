@@ -369,7 +369,7 @@ namespace PFGA_Membership
                         }
                         else if (bool.Parse(row["NewRec"].ToString()) == true)
                         {
-                            retVal = daPaid.Insert(_ID, 0, row["MembershipYear"].ToString(), int.Parse(row["YearPaid"].ToString()), paymentType, null);
+                            retVal = daPaid.Insert(_ID, 0, row["MembershipYear"].ToString(), int.Parse(row["YearPaid"].ToString()), paymentType, DateTime.Today);
                         }
                     }
                 }

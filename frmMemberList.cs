@@ -1,12 +1,12 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
-using System.Linq;
-using System.IO;
-using System.ComponentModel;
 using Excel = Microsoft.Office.Interop.Excel;
 using Word = Microsoft.Office.Interop.Word;
 
@@ -962,6 +962,45 @@ namespace PFGA_Membership
             finally
             {
                 Cursor.Current = Cursors.Default;            
+            }
+        }
+
+        private void renewingMembersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "YearlyRenewalLetter.docx"); ;
+            string template = Path.Combine(System.IO.Path.GetDirectoryName(Application.ExecutablePath), "YearlyRenewalLetter.docx");
+
+            MembershipTableAdapters.qryExportTableAdapter daEmails = new PFGA_Membership.MembershipTableAdapters.qryExportTableAdapter();
+            Membership.qryExportDataTable dtEmails = new Membership.qryExportDataTable();
+
+            File.Copy(template, fileName, true);
+            daEmails.FillEmails(dtEmails, thisYear());
+
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                DataRow[] rows = dtEmails.Select(string.Format("MembertypeId <> 13 AND DatePaid = #{0}#", DateTime.Today));
+
+                if (MessageBox.Show("This will create 2 documents on your desktop", "Creating Document", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
+                {
+                    fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "RenewalAddresses.txt"); ;
+                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(fileName))
+                    {
+                        foreach (DataRow row in rows)
+                        {
+                            file.WriteLine(row["Email Address"].ToString());
+                        }
+                        file.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.Log("Error trying to generate Renewal Emails", ex, true);
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
             }
         }
 

@@ -591,7 +591,8 @@ namespace PFGA_Membership
                     Badge.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                     mbr.BadgeImage = ms.ToArray();
                     ms.Dispose();
-                    string imagesFiled = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images");
+                    /*
+                     * string imagesFiled = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images");
                     if (!Directory.Exists(imagesFiled))
                     {
                         Directory.CreateDirectory(imagesFiled);
@@ -600,6 +601,7 @@ namespace PFGA_Membership
                     {
                         Badge.Image.Save(string.Format(@"{0}\{1}.jpg", imagesFiled, mbr.Card.ToString()));
                     }
+                     */
                 }
                 
                 mbr.Save();

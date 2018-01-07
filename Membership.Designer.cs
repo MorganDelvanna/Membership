@@ -1680,6 +1680,8 @@ namespace PFGA_Membership {
             
             private global::System.Data.DataColumn columnSection;
             
+            private global::System.Data.DataColumn columnDatePaid;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public qryExportDataTable() {
@@ -1931,6 +1933,14 @@ namespace PFGA_Membership {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn DatePaidColumn {
+                get {
+                    return this.columnDatePaid;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -1993,7 +2003,8 @@ namespace PFGA_Membership {
                         bool NoEmailing, 
                         string pOther, 
                         bool CardMade, 
-                        byte Section) {
+                        byte Section, 
+                        System.DateTime DatePaid) {
                 qryExportRow rowqryExportRow = ((qryExportRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         Card,
@@ -2022,7 +2033,8 @@ namespace PFGA_Membership {
                         NoEmailing,
                         pOther,
                         CardMade,
-                        Section};
+                        Section,
+                        DatePaid};
                 rowqryExportRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowqryExportRow);
                 return rowqryExportRow;
@@ -2072,6 +2084,7 @@ namespace PFGA_Membership {
                 this.columnpOther = base.Columns["pOther"];
                 this.columnCardMade = base.Columns["CardMade"];
                 this.columnSection = base.Columns["Section"];
+                this.columnDatePaid = base.Columns["DatePaid"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -2131,6 +2144,8 @@ namespace PFGA_Membership {
                 base.Columns.Add(this.columnCardMade);
                 this.columnSection = new global::System.Data.DataColumn("Section", typeof(byte), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnSection);
+                this.columnDatePaid = new global::System.Data.DataColumn("DatePaid", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDatePaid);
                 this.columnLast_Name.MaxLength = 255;
                 this.columnFirst_Name.MaxLength = 255;
                 this.columnMembership_Type.MaxLength = 255;
@@ -6304,6 +6319,22 @@ namespace PFGA_Membership {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public System.DateTime DatePaid {
+                get {
+                    try {
+                        return ((global::System.DateTime)(this[this.tableqryExport.DatePaidColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'DatePaid\' in table \'qryExport\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableqryExport.DatePaidColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsCardNull() {
                 return this.IsNull(this.tableqryExport.CardColumn);
             }
@@ -6564,6 +6595,18 @@ namespace PFGA_Membership {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetSectionNull() {
                 this[this.tableqryExport.SectionColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsDatePaidNull() {
+                return this.IsNull(this.tableqryExport.DatePaidColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetDatePaidNull() {
+                this[this.tableqryExport.DatePaidColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -10745,6 +10788,7 @@ SELECT MemberID, Amount, MembershipYear, YearPaid, PaymentType, DatePaid FROM Pa
             tableMapping.ColumnMappings.Add("pOther", "pOther");
             tableMapping.ColumnMappings.Add("CardMade", "CardMade");
             tableMapping.ColumnMappings.Add("Section", "Section");
+            tableMapping.ColumnMappings.Add("DatePaid", "DatePaid");
             this._adapter.TableMappings.Add(tableMapping);
         }
         
@@ -10761,13 +10805,13 @@ SELECT MemberID, Amount, MembershipYear, YearPaid, PaymentType, DatePaid FROM Pa
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[3];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = @"SELECT Card, [Last Name], [First Name], [Membership Type], [Birth Date], Walk, Pal, [Pal Exp Date], [ATT Expiry], Executive, Swipe, YearPaid, Address, [City  Prov], Postal, Phone, [Email Address], [Date Joined], [Website Usernames], Notes, Sponsor, SectionFlag AS Section, Participation, NoBackTrack, NoEmailing, pOther, CardMade FROM dbo.qryExport WHERE (YearPaid = @Year) OR (MemberTypeID = 6)
+            this._commandCollection[0].CommandText = @"SELECT Card, [Last Name], [First Name], [Membership Type], [Birth Date], Walk, Pal, [Pal Exp Date], [ATT Expiry], Executive, Swipe, YearPaid, Address, [City  Prov], Postal, Phone, [Email Address], [Date Joined], [Website Usernames], Notes, Sponsor, SectionFlag AS Section, Participation, NoBackTrack, NoEmailing, pOther, CardMade, DatePaid FROM dbo.qryExport WHERE (YearPaid = @Year) OR (MemberTypeID = 6)
 ORDER BY [Last Name]";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Year", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "YearPaid", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[1] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[1].Connection = this.Connection;
-            this._commandCollection[1].CommandText = @"SELECT Card, [Last Name], [First Name], [Membership Type], [Birth Date], Walk, Pal, [Pal Exp Date], [ATT Expiry], Executive, Swipe, YearPaid, MemberTypeID, Address, [City  Prov], Postal, Phone, [Email Address], [Date Joined], [Website Usernames], Notes, Sponsor, SectionFlag, Participation, NoBackTrack, NoEmailing, pOther, ID, CardMade FROM dbo.qryExport WHERE (YearPaid = @Year) AND (NoBackTrack=0) AND (NoEmailing = 0) AND ([Email Address] IS NOT NULL) AND ([Email Address]<>'')";
+            this._commandCollection[1].CommandText = @"SELECT Card, [Last Name], [First Name], [Membership Type], [Birth Date], Walk, Pal, [Pal Exp Date], [ATT Expiry], Executive, Swipe, YearPaid, MemberTypeID, Address, [City  Prov], Postal, Phone, [Email Address], [Date Joined], [Website Usernames], Notes, Sponsor, SectionFlag, Participation, NoBackTrack, NoEmailing, pOther, ID, CardMade, DatePaid FROM dbo.qryExport WHERE (YearPaid = @Year) AND (NoBackTrack=0) AND (NoEmailing = 0) AND ([Email Address] IS NOT NULL) AND ([Email Address]<>'')";
             this._commandCollection[1].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Year", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "YearPaid", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[2] = new global::System.Data.SqlClient.SqlCommand();

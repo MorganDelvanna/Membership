@@ -252,6 +252,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Summary.rpt</DependentUpon>
     </Compile>
+    <Content Include="YearlyRenewalLetter.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="pfgalogo48.ico" />

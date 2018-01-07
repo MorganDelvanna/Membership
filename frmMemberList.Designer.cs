@@ -62,6 +62,7 @@
             this.viewCardLIstToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cboMemberTypeFilter = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.renewingMembersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dgMemberList)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -274,7 +275,8 @@
             this.reportsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exportMembersToolStripMenuItem,
             this.mailingListEmailsToolStripMenuItem,
-            this.pendingMembersToolStripMenuItem});
+            this.pendingMembersToolStripMenuItem,
+            this.renewingMembersToolStripMenuItem});
             this.reportsToolStripMenuItem.Name = "reportsToolStripMenuItem";
             this.reportsToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
             this.reportsToolStripMenuItem.Text = "Reports";
@@ -282,21 +284,21 @@
             // exportMembersToolStripMenuItem
             // 
             this.exportMembersToolStripMenuItem.Name = "exportMembersToolStripMenuItem";
-            this.exportMembersToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.exportMembersToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.exportMembersToolStripMenuItem.Text = "Export Members";
             this.exportMembersToolStripMenuItem.Click += new System.EventHandler(this.exportMembersToolStripMenuItem_Click);
             // 
             // mailingListEmailsToolStripMenuItem
             // 
             this.mailingListEmailsToolStripMenuItem.Name = "mailingListEmailsToolStripMenuItem";
-            this.mailingListEmailsToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.mailingListEmailsToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.mailingListEmailsToolStripMenuItem.Text = "Mailing List Emails";
             this.mailingListEmailsToolStripMenuItem.Click += new System.EventHandler(this.mailingListEmailsToolStripMenuItem_Click);
             // 
             // pendingMembersToolStripMenuItem
             // 
             this.pendingMembersToolStripMenuItem.Name = "pendingMembersToolStripMenuItem";
-            this.pendingMembersToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.pendingMembersToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.pendingMembersToolStripMenuItem.Text = "Pending Members";
             this.pendingMembersToolStripMenuItem.Click += new System.EventHandler(this.pendingMembersToolStripMenuItem_Click);
             // 
@@ -347,6 +349,13 @@
             this.label2.Size = new System.Drawing.Size(116, 13);
             this.label2.TabIndex = 12;
             this.label2.Text = "Membership Type Filter";
+            // 
+            // renewingMembersToolStripMenuItem
+            // 
+            this.renewingMembersToolStripMenuItem.Name = "renewingMembersToolStripMenuItem";
+            this.renewingMembersToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.renewingMembersToolStripMenuItem.Text = "Renewing Members";
+            this.renewingMembersToolStripMenuItem.Click += new System.EventHandler(this.renewingMembersToolStripMenuItem_Click);
             // 
             // frmMemberList
             // 
@@ -415,6 +424,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ToolStripMenuItem viewCardLIstToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pendingMembersToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem renewingMembersToolStripMenuItem;
 
     }
 }

@@ -388,10 +388,10 @@ namespace PFGA_Membership
             try
             {
                 search = _ExtraCards.Select("Deleted = True");
-                ErrorLogger.Log(string.Format("{0} Cards to Delete", search.Length.ToString()), null, false);
-
                 if (search.Length > 0)
                 {
+                    ErrorLogger.Log(string.Format("{0} Cards to Delete", search.Length.ToString()), null, false);
+
                     MembershipTableAdapters.MembersTableAdapter daExtra = new PFGA_Membership.MembershipTableAdapters.MembersTableAdapter();
                     
                     foreach (DataRow row in search)

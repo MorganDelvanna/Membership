@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMemberList));
             this.dgMemberList = new System.Windows.Forms.DataGridView();
             this.colCard = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -56,15 +57,21 @@
             this.exportMembersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mailingListEmailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pendingMembersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.renewingMembersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.makeCardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateMembersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewCardLIstToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cboMemberTypeFilter = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.renewingMembersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.membership = new PFGA_Membership.Membership();
+            this.membershipTypeBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.membershipTypeTableAdapter = new PFGA_Membership.MembershipTableAdapters.MembershipTypeTableAdapter();
+            this.halfToFullToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dgMemberList)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.membership)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.membershipTypeBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // dgMemberList
@@ -235,7 +242,8 @@
             // 
             this.membersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuaddNew,
-            this.pendingToolStripMenuItem});
+            this.pendingToolStripMenuItem,
+            this.halfToFullToolStripMenuItem});
             this.membersToolStripMenuItem.Name = "membersToolStripMenuItem";
             this.membersToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
             this.membersToolStripMenuItem.Text = "Members";
@@ -243,7 +251,7 @@
             // mnuaddNew
             // 
             this.mnuaddNew.Name = "mnuaddNew";
-            this.mnuaddNew.Size = new System.Drawing.Size(123, 22);
+            this.mnuaddNew.Size = new System.Drawing.Size(152, 22);
             this.mnuaddNew.Text = "&Add New";
             this.mnuaddNew.Click += new System.EventHandler(this.btnNew_Click);
             // 
@@ -253,7 +261,7 @@
             this.toFullToolStripMenuItem,
             this.toHalfYearToolStripMenuItem});
             this.pendingToolStripMenuItem.Name = "pendingToolStripMenuItem";
-            this.pendingToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.pendingToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.pendingToolStripMenuItem.Text = "Pending";
             // 
             // toFullToolStripMenuItem
@@ -302,6 +310,13 @@
             this.pendingMembersToolStripMenuItem.Text = "Pending Members";
             this.pendingMembersToolStripMenuItem.Click += new System.EventHandler(this.pendingMembersToolStripMenuItem_Click);
             // 
+            // renewingMembersToolStripMenuItem
+            // 
+            this.renewingMembersToolStripMenuItem.Name = "renewingMembersToolStripMenuItem";
+            this.renewingMembersToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.renewingMembersToolStripMenuItem.Text = "Renewing Members";
+            this.renewingMembersToolStripMenuItem.Click += new System.EventHandler(this.renewingMembersToolStripMenuItem_Click);
+            // 
             // cardsToolStripMenuItem
             // 
             this.cardsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -335,11 +350,14 @@
             // 
             // cboMemberTypeFilter
             // 
+            this.cboMemberTypeFilter.DataSource = this.membershipTypeBindingSource;
+            this.cboMemberTypeFilter.DisplayMember = "Membership Type";
             this.cboMemberTypeFilter.FormattingEnabled = true;
             this.cboMemberTypeFilter.Location = new System.Drawing.Point(518, 25);
             this.cboMemberTypeFilter.Name = "cboMemberTypeFilter";
             this.cboMemberTypeFilter.Size = new System.Drawing.Size(147, 21);
             this.cboMemberTypeFilter.TabIndex = 11;
+            this.cboMemberTypeFilter.SelectedIndexChanged += new System.EventHandler(this.cboMemberTypeFilter_SelectedIndexChanged);
             // 
             // label2
             // 
@@ -350,12 +368,26 @@
             this.label2.TabIndex = 12;
             this.label2.Text = "Membership Type Filter";
             // 
-            // renewingMembersToolStripMenuItem
+            // membership
             // 
-            this.renewingMembersToolStripMenuItem.Name = "renewingMembersToolStripMenuItem";
-            this.renewingMembersToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
-            this.renewingMembersToolStripMenuItem.Text = "Renewing Members";
-            this.renewingMembersToolStripMenuItem.Click += new System.EventHandler(this.renewingMembersToolStripMenuItem_Click);
+            this.membership.DataSetName = "Membership";
+            this.membership.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // membershipTypeBindingSource
+            // 
+            this.membershipTypeBindingSource.DataMember = "MembershipType";
+            this.membershipTypeBindingSource.DataSource = this.membership;
+            // 
+            // membershipTypeTableAdapter
+            // 
+            this.membershipTypeTableAdapter.ClearBeforeFill = true;
+            // 
+            // halfToFullToolStripMenuItem
+            // 
+            this.halfToFullToolStripMenuItem.Name = "halfToFullToolStripMenuItem";
+            this.halfToFullToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.halfToFullToolStripMenuItem.Text = "Half to Full";
+            this.halfToFullToolStripMenuItem.Click += new System.EventHandler(this.halfToFullToolStripMenuItem_Click);
             // 
             // frmMemberList
             // 
@@ -384,6 +416,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgMemberList)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.membership)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.membershipTypeBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -425,6 +459,10 @@
         private System.Windows.Forms.ToolStripMenuItem viewCardLIstToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pendingMembersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem renewingMembersToolStripMenuItem;
+        private Membership membership;
+        private System.Windows.Forms.BindingSource membershipTypeBindingSource;
+        private MembershipTableAdapters.MembershipTypeTableAdapter membershipTypeTableAdapter;
+        private System.Windows.Forms.ToolStripMenuItem halfToFullToolStripMenuItem;
 
     }
 }

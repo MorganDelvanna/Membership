@@ -1,12 +1,14 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using System.Configuration;
 using Excel = Microsoft.Office.Interop.Excel;
 using Word = Microsoft.Office.Interop.Word;
 
@@ -28,6 +30,8 @@ namespace PFGA_Membership
 
         private void frmMemberList_Load(object sender, EventArgs e)
         {
+            // TODO: This line of code loads data into the 'membership.MembershipType' table. You can move, or remove it, as needed.
+            this.membershipTypeTableAdapter.Fill(this.membership.MembershipType);
             try
             {
                 this.dgMemberList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgMemberList_CellClick);
@@ -305,27 +309,43 @@ namespace PFGA_Membership
             DateTime dateJoined;
             DateTime startDate;
             DateTime endDate;
+
+            System.Data.SqlClient.SqlConnection cnn;
+            SqlCommand cmd;
+            DataTable dtExport;
+            DataTable dtExtra;
+            DataTable dtNon;
+            SqlDataAdapter da;
+
+            String config = ConfigurationManager.ConnectionStrings["PFGA_Membership.Properties.Settings.PFGAMembershipConnectionString"].ToString();
             
-            MembershipTableAdapters.qryExportTableAdapter daExport = new PFGA_Membership.MembershipTableAdapters.qryExportTableAdapter();
-            MembershipTableAdapters.qryExportExtraTableAdapter daExtra = new PFGA_Membership.MembershipTableAdapters.qryExportExtraTableAdapter();
-            MembershipTableAdapters.qryExportNonTableAdapter daNon = new PFGA_Membership.MembershipTableAdapters.qryExportNonTableAdapter();
-            Membership.qryExportDataTable dtExport = new Membership.qryExportDataTable();
-            Membership.qryExportExtraDataTable dtExtra = new Membership.qryExportExtraDataTable();
-            Membership.qryExportNonDataTable dtNon = new Membership.qryExportNonDataTable();
-                        
+            //Start Excel and get Application object.
+            oXL = new Excel.Application();
+
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                //Start Excel and get Application object.
-                oXL = new Excel.Application();
-                oXL.Visible = false;
+                
+               // oXL.Visible = false;
+
+                cnn = new SqlConnection(config);
+                cnn.Open();
+
+                String qryExport = @"SELECT Card, [Last Name], [First Name], [Membership Type], Walk, [Pal Exp Date], Pal, [ATT Expiry], Swipe, YearPaid, Phone,
+                                Cell, [Email Address], [Date Joined], [Website Usernames], Notes, Sponsor, SectionFlag, Participation, 
+                                NoBackTrack, NoEmailing, pOther, CardMade, DatePaid
+                            FROM            qryExport
+                            WHERE (YearPaid = " + thisYear() + ") OR (MemberTypeID = 6)";
+
+                cmd = new SqlCommand(qryExport, cnn);
+                dtExport = new DataTable();
+                da = new SqlDataAdapter(cmd);
+                da.Fill(dtExport);
 
                 //Get a new workbook.
                 oWB = (Excel._Workbook)(oXL.Workbooks.Add(Missing.Value));
                 oSheet = (Excel._Worksheet)oWB.ActiveSheet;
                 oSheet.Name = string.Format("Members {0}", thisYear().ToString());
-
-                daExport.Fill(dtExport, thisYear());
 
                 //Add table headers going cell by cell.
                 for (int col = 0; col < dtExport.Columns.Count; col++)
@@ -347,17 +367,26 @@ namespace PFGA_Membership
                         }
                     }
                 }
-                
+
                 //Format A1:D1 as bold, vertical alignment = center.
                 string lastCol = string.Format("{0}1", Number2String(dtExport.Columns.Count));
                 oSheet.get_Range("A1", lastCol).Font.Bold = true;
                 oSheet.get_Range("A1", lastCol).VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
                 oSheet.get_Range("A1", lastCol).EntireColumn.AutoFit();
-                oSheet.get_Range("E2", string.Format("E{0}", dtExport.Rows.Count+1)).NumberFormat = "yyyy-mm-dd";
-                oSheet.get_Range("H2", string.Format("H{0}", dtExport.Rows.Count+1)).NumberFormat = "yyyy-mm-dd";
-                oSheet.get_Range("Q2", string.Format("Q{0}", dtExport.Rows.Count+1)).NumberFormat = "yyyy-mm-dd";
+                oSheet.get_Range("E2", string.Format("E{0}", dtExport.Rows.Count + 1)).NumberFormat = "yyyy-mm-dd";
+                oSheet.get_Range("H2", string.Format("H{0}", dtExport.Rows.Count + 1)).NumberFormat = "yyyy-mm-dd";
+                oSheet.get_Range("Q2", string.Format("Q{0}", dtExport.Rows.Count + 1)).NumberFormat = "yyyy-mm-dd";
 
-                daExtra.Fill(dtExtra, thisYear());
+                String qryExtra = @"SELECT Card, [Last Name], [First Name], [Membership Type], Walk, Pal, [Pal Exp Date], [Master Record], Swipe, YearPaid, Phone, 
+                        [Email Address], [Date Joined], [Website Usernames], Notes, Sponsor, SectionFlag, Participation, 
+                        CardMade, pOther
+                    FROM qryExportExtra
+                    WHERE (YearPaid = " + thisYear() + ")";
+
+                cmd = new SqlCommand(qryExtra, cnn);
+                dtExtra = new DataTable();
+                da = new SqlDataAdapter(cmd);
+                da.Fill(dtExtra);
 
                 oSheet = (Excel._Worksheet)oWB.Sheets.Add(System.Reflection.Missing.Value, oWB.Sheets[oWB.Sheets.Count], 1, Excel.XlSheetType.xlWorksheet);
                 oSheet.Name = "Extra Cards";
@@ -392,7 +421,16 @@ namespace PFGA_Membership
                 oSheet.get_Range("E2", string.Format("E{0}", dtExtra.Rows.Count + 1)).NumberFormat = "yyyy-mm-dd";
                 oSheet.get_Range("H2", string.Format("H{0}", dtExtra.Rows.Count + 1)).NumberFormat = "yyyy-mm-dd";
 
-                daNon.Fill(dtNon, thisYear() - 1);
+                String qryNonRenewals = @"SELECT Card, [Last Name], [First Name], [Membership Type], Walk, [Pal Exp Date], Pal, [ATT Expiry], Swipe, YearPaid, Phone,
+                                Cell, [Email Address], [Date Joined], [Website Usernames], Notes, Sponsor, SectionFlag, Participation, 
+                                NoBackTrack, NoEmailing, pOther, CardMade, DatePaid
+                            FROM            qryExport
+                            WHERE (YearPaid = " + (thisYear() - 1) + ")";
+
+                cmd = new SqlCommand(qryNonRenewals, cnn);
+                dtNon = new DataTable();
+                da = new SqlDataAdapter(cmd);
+                da.Fill(dtNon);
 
                 oSheet = (Excel._Worksheet)oWB.Sheets.Add(System.Reflection.Missing.Value, oWB.Sheets[oWB.Sheets.Count], 1, Excel.XlSheetType.xlWorksheet);
                 oSheet.Name = "Not Renewed";
@@ -403,7 +441,7 @@ namespace PFGA_Membership
                     oSheet.Cells[1, col + 1] = dtNon.Columns[col].ColumnName;
                     for (int row = 0; row < dtNon.Rows.Count; row++)
                     {
-                        if (dtNon.Columns[col].ColumnName == "Section")
+                        if (dtNon.Columns[col].ColumnName == "SectionFlag")
                         {
                             oSheet.Cells[row + 2, col + 1] = getSectionLabels(dtNon.Rows[row][col].ToString());
                         }
@@ -446,12 +484,22 @@ namespace PFGA_Membership
                     renewCount = 0;
                     SectionCounts = new int[6];
 
+                    qryExport = @"SELECT Card, [Last Name], [First Name], [Membership Type], Walk, [Pal Exp Date], Pal, [ATT Expiry], Swipe, YearPaid, Phone,
+                                Cell, [Email Address], [Date Joined], [Website Usernames], Notes, Sponsor, SectionFlag, Participation, 
+                                NoBackTrack, NoEmailing, pOther, CardMade, DatePaid
+                            FROM            qryExport
+                            WHERE (YearPaid = " + nYear + ") OR (MemberTypeID = 6)";
+
+                    cmd = new SqlCommand(qryExport, cnn);
+                    dtExport = new DataTable();
+                    da = new SqlDataAdapter(cmd);
+                    da.Fill(dtExport);
+
                     oSheet.Cells[nCount, 1] = nYear;
-                    daExport.Fill(dtExport, nYear);
                     oSheet.Cells[nCount, 2] = dtExport.Rows.Count;
                     for (int row = 0; row < dtExport.Rows.Count; row++)
                     {
-                        if (DateTime.TryParse(dtExport[row]["Date Joined"].ToString(), out dateJoined) == false)
+                        if (DateTime.TryParse(dtExport.Rows[row]["Date Joined"].ToString(), out dateJoined) == false)
                         {
                             dateJoined = new DateTime(1900, 01, 01);
                         }
@@ -466,7 +514,7 @@ namespace PFGA_Membership
                             renewCount++;
                         }
 
-                        section.Mask = ulong.Parse(dtExport.Rows[row]["Section"].ToString());
+                        section.Mask = ulong.Parse(dtExport.Rows[row]["SectionFlag"].ToString());
                         if (section.AnyOn(BitField.Flag.f1)) // Archery
                         {
                             SectionCounts[0] += 1;
@@ -531,7 +579,7 @@ namespace PFGA_Membership
 
                 for (int row = 0; row < dtExport.Rows.Count; row++)
                 {
-                    section.Mask = ulong.Parse(dtExport.Rows[row]["section"].ToString());
+                    section.Mask = ulong.Parse(dtExport.Rows[row]["SectionFlag"].ToString());
 
                     oSheet.Cells[row + 2, 1] = dtExport.Rows[row]["card"].ToString();
                     oSheet.Cells[row + 2, 2] = dtExport.Rows[row]["last name"].ToString();
@@ -544,9 +592,9 @@ namespace PFGA_Membership
                     oSheet.Cells[row + 2, 9] = dtExport.Rows[row]["Walk"].ToString() == "Done" ? "yes" : "NO";
                 }
 
-                for (int row = 0; row < dtExtra.Rows.Count; row++ )
+                for (int row = 0; row < dtExtra.Rows.Count; row++)
                 {
-                    section.Mask = ulong.Parse(dtExtra.Rows[row]["section"].ToString());
+                    section.Mask = ulong.Parse(dtExtra.Rows[row]["SectionFlag"].ToString());
 
                     oSheet.Cells[row + 2, 1] = dtExtra.Rows[row]["card"].ToString();
                     oSheet.Cells[row + 2, 2] = dtExtra.Rows[row]["last name"].ToString();
@@ -583,7 +631,7 @@ namespace PFGA_Membership
 
                 for (int row = 0; row < dtNon.Rows.Count; row++)
                 {
-                    section.Mask = ulong.Parse(dtNon.Rows[row]["section"].ToString());
+                    section.Mask = ulong.Parse(dtNon.Rows[row]["SectionFlag"].ToString());
 
                     oSheet.Cells[row + 2, 1] = dtNon.Rows[row]["card"].ToString();
                     oSheet.Cells[row + 2, 2] = dtNon.Rows[row]["last name"].ToString();
@@ -601,11 +649,10 @@ namespace PFGA_Membership
                 oSheet.get_Range("A1", "J1").VerticalAlignment =
                     Excel.XlVAlign.xlVAlignCenter;
                 oSheet.get_Range("A1", "J1").EntireColumn.AutoFit();
-                    //Make sure Excel is visible and give the user control
-                    //of Microsoft Excel's lifetime.
-                    oXL.Visible = true;
-		        oXL.UserControl = true;
-
+ 
+                cnn.Close();
+                da.Dispose();
+               
             }
             catch (Exception ex)
             {
@@ -613,6 +660,10 @@ namespace PFGA_Membership
             }
             finally
             {
+                //Make sure Excel is visible and give the user control
+                //of Microsoft Excel's lifetime.
+                oXL.Visible = true;
+                oXL.UserControl = true;
                 Cursor.Current = Cursors.Default;
             }
         }
@@ -769,6 +820,7 @@ namespace PFGA_Membership
 
         private void mailingListEmailsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            /*
             Excel.Application oXL;
             Excel._Workbook oWB;
             Excel._Worksheet oSheet;
@@ -838,6 +890,7 @@ namespace PFGA_Membership
             {
                 Cursor.Current = Cursors.Default;
             }
+             */
         }
 
         private void makeCardsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -897,6 +950,7 @@ namespace PFGA_Membership
 
         private void pendingMembersToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            
             Word.Application oWd = new Word.Application();
             Word.Document oDoc;
             Word.Range rng;
@@ -906,21 +960,31 @@ namespace PFGA_Membership
             string section;
             string fileName;
             string template = Path.Combine(System.IO.Path.GetDirectoryName(Application.ExecutablePath), "NewMemberWelcomeLetter.docx");
+            System.Data.SqlClient.SqlConnection cnn;
 
-            MembershipTableAdapters.qryExportTableAdapter daEmails = new PFGA_Membership.MembershipTableAdapters.qryExportTableAdapter();
-            Membership.qryExportDataTable dtEmails = new Membership.qryExportDataTable();
+            String config = ConfigurationManager.ConnectionStrings["PFGA_Membership.Properties.Settings.PFGAMembershipConnectionString"].ToString();
+            
+            cnn = new SqlConnection(config);
+            cnn.Open();
 
-            daEmails.FillEmails(dtEmails, thisYear());
+            string query = @"SELECT Card, [Email Address], SectionFlag 
+                            FROM            qryExport
+                            WHERE (YearPaid = " + thisYear() + ") AND (MemberTypeID = 13)";
+
+            SqlCommand cmd = new SqlCommand(query, cnn);
+            DataTable dtEmails = new DataTable();
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            da.Fill(dtEmails);
 
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                DataRow[] rows = dtEmails.Select("MembertypeId = 13");
-                if (MessageBox.Show(string.Format("This will create {0} documents on your desktop", rows.Length), "Creating Document"
+      
+                if (MessageBox.Show(string.Format("This will create {0} documents on your desktop", dtEmails.Rows.Count), "Creating Document"
                     , MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
                 {
 
-                    foreach (DataRow row in rows)
+                    foreach (DataRow row in dtEmails.Rows)
                     {
                         // Copy and rename template
                         fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory),
@@ -963,6 +1027,7 @@ namespace PFGA_Membership
             {
                 Cursor.Current = Cursors.Default;            
             }
+             
         }
 
         private void renewingMembersToolStripMenuItem_Click(object sender, EventArgs e)
@@ -970,23 +1035,34 @@ namespace PFGA_Membership
             string fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "YearlyRenewalLetter.docx"); ;
             string template = Path.Combine(System.IO.Path.GetDirectoryName(Application.ExecutablePath), "YearlyRenewalLetter.docx");
 
-            MembershipTableAdapters.qryExportTableAdapter daEmails = new PFGA_Membership.MembershipTableAdapters.qryExportTableAdapter();
-            Membership.qryExportDataTable dtEmails = new Membership.qryExportDataTable();
+            System.Data.SqlClient.SqlConnection cnn;
+
+            String config = ConfigurationManager.ConnectionStrings["PFGA_Membership.Properties.Settings.PFGAMembershipConnectionString"].ToString();
+
+            cnn = new SqlConnection(config);
+            cnn.Open();
+
+            string query = @"SELECT Card, [Email Address], SectionFlag 
+                            FROM            qryExport
+                            WHERE " + string.Format("MembertypeId <> 13 AND DatePaid = #{0}#", DateTime.Today);
+
+            SqlCommand cmd = new SqlCommand(query, cnn);
+            DataTable dtEmails = new DataTable();
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            da.Fill(dtEmails);
 
             File.Copy(template, fileName, true);
-            daEmails.FillEmails(dtEmails, thisYear());
-
+            
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                DataRow[] rows = dtEmails.Select(string.Format("MembertypeId <> 13 AND DatePaid = #{0}#", DateTime.Today));
-
+                
                 if (MessageBox.Show("This will create 2 documents on your desktop", "Creating Document", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
                 {
                     fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "RenewalAddresses.txt"); ;
                     using (System.IO.StreamWriter file = new System.IO.StreamWriter(fileName))
                     {
-                        foreach (DataRow row in rows)
+                        foreach (DataRow row in dtEmails.Rows)
                         {
                             file.WriteLine(row["Email Address"].ToString());
                         }
@@ -1002,8 +1078,23 @@ namespace PFGA_Membership
             {
                 Cursor.Current = Cursors.Default;
             }
+            
         }
 
+        private void cboMemberTypeFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            String filter = "[Membership Type] = '" + cboMemberTypeFilter.Text + "'";
+            dvMemberList.RowFilter = filter;
+            dgMemberList.Refresh();
+        }
 
+        private void halfToFullToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MembershipTableAdapters.QueriesTableAdapter da = new MembershipTableAdapters.QueriesTableAdapter();
+
+            da.UpdateHalftoFull();
+            BindGrid();
+            MessageBox.Show("Members Updated");
+        }
     }
 }

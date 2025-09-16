@@ -187,3 +187,12 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
+/ErrorLog
+/Images
+/NewMemberWelcomeLetter.docx
+/NewMemberWelcomeLetter.rtf
+/OrientationWalkLetter.docx
+/OrientationWalkLetter.rtf
+/YearlyRenewalLetter.docx
+/YearlyRenewalLetter.rtf
+/.vs

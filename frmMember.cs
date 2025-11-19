@@ -29,13 +29,13 @@ namespace PFGA_Membership
 
         private int ID
         {
-            get 
+            get
             {
-               return _ID; 
+                return _ID;
             }
-            set 
+            set
             {
-               _ID = value; 
+                _ID = value;
             }
         }
 
@@ -78,7 +78,7 @@ namespace PFGA_Membership
             ulong mask;
             ulong pMask;
             int curYear;
-            List<KeyValuePair<int, string>> years = new List<KeyValuePair<int,string>>();
+            List<KeyValuePair<int, string>> years = new List<KeyValuePair<int, string>>();
 
             try
             {
@@ -101,33 +101,6 @@ namespace PFGA_Membership
                     curYear = DateTime.Today.Year;
                 }
 
-                for(int c = curYear; c > 2008; c--)
-                {
-                    years.Add(new KeyValuePair<int, string>(c, string.Format("{0} - {1}", c, c + 1)));
-                }
-                cboPaid.DataSource = years;
-                cboPaid.ValueMember="Key";
-                cboPaid.DisplayMember="Value";
-
-                MembershipTableAdapters.PaymentTypeTableAdapter daPayType = new MembershipTableAdapters.PaymentTypeTableAdapter();
-                Membership.PaymentTypeDataTable dtPayType = new Membership.PaymentTypeDataTable();
-                daPayType.Fill(dtPayType);
-                RadioButton[] RadioButtons;
-                int index = 0;
-                RadioButtons = new RadioButton[dtPayType.Rows.Count];
-                foreach(DataRow row in dtPayType)
-                {
-                    RadioButtons[index] = new RadioButton();
-                    RadioButtons[index].Name = "chkPayment" + Convert.ToString(index);
-                    RadioButtons[index].Text = row["PaymentType"].ToString();
-                    RadioButtons[index].AutoSize = true;
-                    RadioButtons[index].Tag = int.Parse(row["PaymentTypeId"].ToString());
-                    RadioButtons[index].Location = new System.Drawing.Point((RadioButtons[index].Width * index) + 5, 15);
-                    grpPayType.Controls.Add(RadioButtons[index]);
-                    index++;
-                }
-                RadioButtons[0].Checked = true;
-
                 string Heading = string.Empty; ;
                 if (mbr.MasterRecord < 0)
                 {
@@ -140,6 +113,7 @@ namespace PFGA_Membership
                 this.Text = Heading;
                 last_NameTextBox.Text = mbr.LastName.ToString();
                 first_NameTextBox.Text = mbr.FirstName.ToString();
+                txtAlias.Text = mbr.Alias.ToString();
                 birth_DateDateTimePicker.Text = (mbr.BirthDate.ToString() == "1900-01-01" ? string.Empty : mbr.BirthDate.ToString());
                 addressTextBox.Text = mbr.Address.ToString();
                 city__ProvTextBox.Text = mbr.CityProv.ToString();
@@ -158,21 +132,19 @@ namespace PFGA_Membership
                 chkActive.Checked = mbr.Active;
                 txtNotes.Text = mbr.Notes;
                 txtCardNumber.Text = mbr.Card.ToString();
-                txtSponsor.Text = mbr.Sponsor;
                 chkSwipe.Checked = mbr.SwipeCard;
-                chkExecutive.Checked = mbr.Executive;
                 txtCell.Text = (mbr.Cell == null ? string.Empty : mbr.Cell.ToString());
                 txtOther.Text = mbr.ParticipationOther;
                 txtParticipateFlag.Text = mbr.Participation.ToString();
                 chkCardMade.Checked = mbr.CardMade;
                 if (mbr.BadgeImage != null)
-                { 
+                {
                     if (mbr.BadgeImage.Length > 0)
-                    { 
+                    {
                         Badge.Image = Image.FromStream(new MemoryStream(mbr.BadgeImage));
                     }
                 }
-                  
+
 
                 // Existing Member
                 if (_ID > 0)
@@ -271,23 +243,24 @@ namespace PFGA_Membership
                     addressTextBox.Hide();
                     city__ProvTextBox.Hide();
                     postalTextBox.Hide();
-                    phoneTextBox.Hide();
+                    //phoneTextBox.Hide();
                     website_UsernamesTextBox.Hide();
                     date_JoinedDateTimePicker.Hide();
                     grpSection.Hide();
                     noBackTrackCheckBox.Hide();
                     noEmailingCheckBox.Hide();
                     chkActive.Hide();
-                    tabControl1.TabPages.Remove(tabPaid);
                     tabControl1.TabPages.Remove(tabExtra);
                     grpParticipate.Hide();
                     txtCardNumber.Show();
                     lblCardNumber.Show();
+                    btnAddPaid.Hide();
+                    dgPaidHistory.Hide();
                 }
-                else if (_ID < 0 && _Promote < 0)
+                if (_ID < 0 && _Promote < 0)
                 {
-                    tabPaid.Hide();
                     tabExtra.Hide();
+                    // btnExtra.Hide();
                     txtCardNumber.Show();
                     lblCardNumber.Show();
                 }
@@ -310,7 +283,7 @@ namespace PFGA_Membership
                     _Participation.ClearField();
                 }
 
-                
+
             }
             catch (Exception ex)
             {
@@ -353,14 +326,6 @@ namespace PFGA_Membership
                     chkSmallbore.Checked = false;
                 }
 
-                if (_Sections.AnyOn(BitField.Flag.f4)) //SCA
-                {
-                    chkSCA.Checked = true;
-                }
-                else
-                {
-                    chkSCA.Checked = false;
-                }
 
                 if (_Sections.AnyOn(BitField.Flag.f5)) //Rifle
                 {
@@ -378,6 +343,14 @@ namespace PFGA_Membership
                 else
                 {
                     chkAction.Checked = false;
+                }
+
+                if (_Sections.AnyOn(BitField.Flag.f4)) // Action RO
+                {
+                    chkActionRO.Checked = true;
+                } else
+                {
+                    chkActionRO.Checked = false;
                 }
             }
             catch (Exception ex)
@@ -450,7 +423,7 @@ namespace PFGA_Membership
                 ErrorLogger.Log("Error setting Participation Checkboxes", ex, true);
             }
         }
-        
+
 
         private void chkArchery_CheckedChanged(object sender, EventArgs e)
         {
@@ -491,19 +464,6 @@ namespace PFGA_Membership
             sectionFlagTextBox.Text = _Sections.Mask.ToString();
         }
 
-        private void chkSCA_CheckedChanged(object sender, EventArgs e)
-        {
-            if (chkSCA.Checked)
-            {
-                _Sections.SetOn(BitField.Flag.f4);
-            }
-            else
-            {
-                _Sections.SetOff(BitField.Flag.f4);
-            }
-            sectionFlagTextBox.Text = _Sections.Mask.ToString();
-        }
-
         private void chkRifle_CheckedChanged(object sender, EventArgs e)
         {
             if (chkRifle.Checked)
@@ -530,11 +490,25 @@ namespace PFGA_Membership
             sectionFlagTextBox.Text = _Sections.Mask.ToString();
         }
 
+        private void chkActionRO_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkActionRO.Checked)
+            {
+                _Sections.SetOn(BitField.Flag.f4);
+            }
+            else
+            {
+                _Sections.SetOff(BitField.Flag.f4);
+            }
+            sectionFlagTextBox.Text = _Sections.Mask.ToString();
+        }
+
+
         private void btnCancel_Click(object sender, EventArgs e)
         {
             try
             {
-                if ((!IsExtra) && Promote == -1 && ID > 0)
+                if ((!IsExtra) && Promote == -1)
                 {
                     frmParent frm = (frmParent)this.ParentForm;
                     frm.showList();
@@ -557,6 +531,7 @@ namespace PFGA_Membership
             {
                 mbr.LastName = last_NameTextBox.Text;
                 mbr.FirstName = first_NameTextBox.Text;
+                mbr.Alias = txtAlias.Text;
                 mbr.BirthDate = birth_DateDateTimePicker.Value;
                 mbr.Address = addressTextBox.Text;
                 mbr.CityProv = city__ProvTextBox.Text;
@@ -579,9 +554,7 @@ namespace PFGA_Membership
                 mbr.Active = chkActive.Checked;
                 mbr.Card = int.Parse(txtCardNumber.Text);
                 mbr.Notes = txtNotes.Text;
-                mbr.Sponsor = txtSponsor.Text;
                 mbr.SwipeCard = chkSwipe.Checked;
-                mbr.Executive = chkExecutive.Checked;
                 mbr.Cell = txtCell.Text;
                 mbr.ParticipationOther = txtOther.Text;
                 mbr.Participation = _Participation.Mask;
@@ -591,19 +564,8 @@ namespace PFGA_Membership
                     Badge.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                     mbr.BadgeImage = ms.ToArray();
                     ms.Dispose();
-                    /*
-                     * string imagesFiled = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images");
-                    if (!Directory.Exists(imagesFiled))
-                    {
-                        Directory.CreateDirectory(imagesFiled);
-                    }
-                    if (mbr.Card > 0)
-                    {
-                        Badge.Image.Save(string.Format(@"{0}\{1}.jpg", imagesFiled, mbr.Card.ToString()));
-                    }
-                     */
                 }
-                
+
                 mbr.Save();
 
                 if ((!IsExtra) && ((Promote == -1 && ID > 0) || Application.OpenForms.Count == 2))
@@ -653,9 +615,14 @@ namespace PFGA_Membership
 
             try
             {
-                curYear = int.Parse(cboPaid.SelectedValue.ToString());
-                int payType = int.Parse(grpPayType.Controls.OfType<RadioButton>()
-                                      .FirstOrDefault(r => r.Checked).Tag.ToString());
+                if (DateTime.Today.Month >= 1 && DateTime.Today.Month < 8)
+                {
+                    curYear = DateTime.Today.Year - 1;
+                }
+                else
+                {
+                    curYear = DateTime.Today.Year;
+                }
 
                 DataRow[] search = mbr.PaidHistory.Select(String.Format("YearPaid={0}", curYear.ToString()));
 
@@ -666,7 +633,6 @@ namespace PFGA_Membership
                     dr["MembershipYear"] = string.Format("{0} - {1}", curYear, curYear + 1);
                     dr["Deleted"] = false;
                     dr["NewRec"] = true;
-                    dr["PaymentType"] = payType;
                     mbr.PaidHistory.Rows.Add(dr);
                     dgPaidHistory.Refresh();
                 }
@@ -686,7 +652,9 @@ namespace PFGA_Membership
                     if (MessageBox.Show("This will delete the Extra Card permanently when you click Save",
                         "Delete Extra Card", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
                     {
-                        mbr.ExtraCards.Rows[e.RowIndex]["Deleted"] = true;
+                        int ID = int.Parse(dgExtraCards["ID", e.RowIndex].Value.ToString());
+                        DataRow[] row = mbr.ExtraCards.Select(String.Format("ID = {0}", ID));
+                        row[0]["Deleted"] = true;
                     }
                 }
                 else if (e.ColumnIndex == dgExtraCards.Columns["colPromote"].Index)
@@ -804,7 +772,7 @@ namespace PFGA_Membership
 
         private void cboMemberType_SelectedIndexChanged(object sender, EventArgs e)
         {
-  
+
             // If the applicant is denied
             if (cboMemberType.SelectedValue.ToString() == "14")
             {
@@ -816,6 +784,8 @@ namespace PFGA_Membership
         {
             using (OpenFileDialog openFileDialog1 = new OpenFileDialog())
             {
+                openFileDialog1.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.bmp";
+                openFileDialog1.Title = "Select an Image File";
                 if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     mbr.BadgeImage = File.ReadAllBytes(openFileDialog1.FileName);
@@ -824,6 +794,5 @@ namespace PFGA_Membership
             }
 
         }
-
     }
 }

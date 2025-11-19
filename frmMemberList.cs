@@ -1,15 +1,16 @@
-﻿using System;
-using System.ComponentModel;
+﻿using OdsReadWrite;
+using PFGA_Membership.MembershipTableAdapters;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Text;
+using System.Web.UI;
 using System.Windows.Forms;
-using Excel = Microsoft.Office.Interop.Excel;
-using Word = Microsoft.Office.Interop.Word;
-
+using System.Web.Script;
 
 
 namespace PFGA_Membership
@@ -20,7 +21,8 @@ namespace PFGA_Membership
         MembershipTableAdapters.MemberListTableAdapter daMemberList = new PFGA_Membership.MembershipTableAdapters.MemberListTableAdapter();
         Membership.MemberListDataTable dtMemberList = new Membership.MemberListDataTable();
         DataView dvMemberList;
-        
+        clsHelpers cHelper = new clsHelpers();
+
         public frmMemberList()
         {
             InitializeComponent();
@@ -28,6 +30,7 @@ namespace PFGA_Membership
 
         private void frmMemberList_Load(object sender, EventArgs e)
         {
+            this.membershipTypeTableAdapter.Fill(this.membership.MembershipType);
             try
             {
                 this.dgMemberList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgMemberList_CellClick);
@@ -71,14 +74,13 @@ namespace PFGA_Membership
             }
         }
 
-        private void reFormatGrid(int Index)
+        private void reFormatGrid()
         {
-            int iYear = -1;
+            int iYear;
             int curYear;
             int colWalk; 
             int colYear;
-            DateTime dYear = DateTime.MaxValue;
-            DateTime dTest = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month));
+
             StringBuilder sFilter = new StringBuilder();
 
             if (DateTime.Today.Month >= 1 && DateTime.Today.Month < 9)
@@ -179,6 +181,10 @@ namespace PFGA_Membership
             {
                 EditMember(e);
             }
+            else if (e.ColumnIndex == dgMemberList.Columns["btnDelete"].Index)
+            {
+                DeleteMember(e);
+            }
         }
 
         private void UpdateWalk(DataGridViewCellEventArgs e)
@@ -201,7 +207,7 @@ namespace PFGA_Membership
                 ErrorLogger.Log("Error in UpdateWalk", ex, true);
             }
 
-            reFormatGrid(e.RowIndex);
+            reFormatGrid();
 
         }
 
@@ -220,6 +226,29 @@ namespace PFGA_Membership
             catch (Exception ex)
             {
                 ErrorLogger.Log("Error Editing Member: ", ex, true);
+            }
+        }
+
+        private void DeleteMember(DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                int id = Int32.Parse(dgMemberList.Rows[e.RowIndex].Cells[dgMemberList.Columns["colID"].Index].Value.ToString());
+                string firstName = dgMemberList.Rows[e.RowIndex].Cells[dgMemberList.Columns["colFirstName"].Index].Value.ToString();
+                string lastName = dgMemberList.Rows[e.RowIndex].Cells[dgMemberList.Columns["colLastName"].Index].Value.ToString();
+
+                if (MessageBox.Show(string.Format("Do you really want to delete {0} {1}", firstName, lastName), "Delete Member"
+                    , MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
+                {
+                    MembershipTableAdapters.QueriesTableAdapter da = new MembershipTableAdapters.QueriesTableAdapter();
+                    da.ArchiveMember(id);
+                    MessageBox.Show(String.Format("{0} {1} Deleted", firstName, lastName));
+                }
+                reFormatGrid();
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.Log("Error Deleting Member: ", ex, true);
             }
         }
  
@@ -278,333 +307,47 @@ namespace PFGA_Membership
 
         private void chkPaid_CheckedChanged(object sender, EventArgs e)
         {
-            reFormatGrid(0);
+            reFormatGrid();
         }
 
         private void chkWalk_CheckedChanged(object sender, EventArgs e)
         {
-            reFormatGrid(0);
+            reFormatGrid();
         }
 
         private void chkGeneral_CheckedChanged(object sender, EventArgs e)
         {
-            reFormatGrid(0);
+            reFormatGrid();
         }
 
         private void exportMembersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Excel.Application oXL;
-            Excel._Workbook oWB;
-            Excel._Worksheet oSheet;
-            int nYear = 0;
-            int nCount = 0;
-            int newCount = 0;
-            int renewCount = 0;
-            BitField  section = new BitField();
-            int[] SectionCounts = new int[6];
-            DateTime dateJoined;
-            DateTime startDate;
-            DateTime endDate;
+            SqlConnection cnn;
+            DataSet dsExport;
+            OdsReaderWriter odsWriter = new OdsReaderWriter();
+
+            String config = ConfigurationManager.ConnectionStrings["PFGA_Membership.Properties.Settings.PFGAMembershipConnectionString"].ToString();
             
-            MembershipTableAdapters.qryExportTableAdapter daExport = new PFGA_Membership.MembershipTableAdapters.qryExportTableAdapter();
-            MembershipTableAdapters.qryExportExtraTableAdapter daExtra = new PFGA_Membership.MembershipTableAdapters.qryExportExtraTableAdapter();
-            MembershipTableAdapters.qryExportNonTableAdapter daNon = new PFGA_Membership.MembershipTableAdapters.qryExportNonTableAdapter();
-            Membership.qryExportDataTable dtExport = new Membership.qryExportDataTable();
-            Membership.qryExportExtraDataTable dtExtra = new Membership.qryExportExtraDataTable();
-            Membership.qryExportNonDataTable dtNon = new Membership.qryExportNonDataTable();
-                        
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                //Start Excel and get Application object.
-                oXL = new Excel.Application();
-                oXL.Visible = false;
 
-                //Get a new workbook.
-                oWB = (Excel._Workbook)(oXL.Workbooks.Add(Missing.Value));
-                oSheet = (Excel._Worksheet)oWB.ActiveSheet;
-                oSheet.Name = string.Format("Members {0}", thisYear().ToString());
+                cnn = new SqlConnection(config);
+                cnn.Open();
 
-                daExport.Fill(dtExport, thisYear());
-
-                //Add table headers going cell by cell.
-                for (int col = 0; col < dtExport.Columns.Count; col++)
-                {
-                    oSheet.Cells[1, col + 1] = dtExport.Columns[col].ColumnName;
-                    for (int row = 0; row < dtExport.Rows.Count; row++)
-                    {
-                        if (dtExport.Columns[col].ColumnName == "Section")
-                        {
-                            oSheet.Cells[row + 2, col + 1] = getSectionLabels(dtExport.Rows[row][col].ToString());
-                        }
-                        else if (dtExport.Columns[col].ColumnName == "Participation")
-                        {
-                            oSheet.Cells[row + 2, col + 1] = getParticipation(dtExport.Rows[row][col].ToString());
-                        }
-                        else
-                        {
-                            oSheet.Cells[row + 2, col + 1] = dtExport.Rows[row][col].ToString();
-                        }
-                    }
-                }
+                clsExport cExport = new clsExport(cnn);
+                dsExport = cExport.exportMembers();
                 
-                //Format A1:D1 as bold, vertical alignment = center.
-                string lastCol = string.Format("{0}1", Number2String(dtExport.Columns.Count));
-                oSheet.get_Range("A1", lastCol).Font.Bold = true;
-                oSheet.get_Range("A1", lastCol).VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
-                oSheet.get_Range("A1", lastCol).EntireColumn.AutoFit();
-                oSheet.get_Range("E2", string.Format("E{0}", dtExport.Rows.Count+1)).NumberFormat = "yyyy-mm-dd";
-                oSheet.get_Range("H2", string.Format("H{0}", dtExport.Rows.Count+1)).NumberFormat = "yyyy-mm-dd";
-                oSheet.get_Range("Q2", string.Format("Q{0}", dtExport.Rows.Count+1)).NumberFormat = "yyyy-mm-dd";
+                String fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory),
+                            string.Concat("PFGAMembershipReport_", DateTime.Now.ToString("MMM"), DateTime.Now.Year.ToString(), ".ods"));
 
-                daExtra.Fill(dtExtra, thisYear());
+                odsWriter.WriteOdsFile(dsExport, fileName);
 
-                oSheet = (Excel._Worksheet)oWB.Sheets.Add(System.Reflection.Missing.Value, oWB.Sheets[oWB.Sheets.Count], 1, Excel.XlSheetType.xlWorksheet);
-                oSheet.Name = "Extra Cards";
+                cnn.Close();
 
-                //Add table headers going cell by cell.
-                for (int col = 0; col < dtExtra.Columns.Count; col++)
-                {
-                    oSheet.Cells[1, col + 1] = dtExtra.Columns[col].ColumnName;
-                    for (int row = 0; row < dtExtra.Rows.Count; row++)
-                    {
-                        if (dtExtra.Columns[col].ColumnName == "Section")
-                        {
-                            oSheet.Cells[row + 2, col + 1] = getSectionLabels(dtExtra.Rows[row][col].ToString());
-                        }
-                        else if (dtExtra.Columns[col].ColumnName == "Participation")
-                        {
-                            oSheet.Cells[row + 2, col + 1] = getParticipation(dtExtra.Rows[row][col].ToString());
-                        }
-                        else
-                        {
-                            oSheet.Cells[row + 2, col + 1] = dtExtra.Rows[row][col].ToString();
-                        }
-                    }
-                }
+                MessageBox.Show(string.Format("A report has been created on your desktop"), "Creating Report"
+                    , MessageBoxButtons.OK);
 
-                //Format A1:D1 as bold, vertical alignment = center.
-                lastCol = string.Format("{0}1", Number2String(dtExtra.Columns.Count));
-                oSheet.get_Range("A1", lastCol).Font.Bold = true;
-                oSheet.get_Range("A1", lastCol).VerticalAlignment =
-                    Excel.XlVAlign.xlVAlignCenter;
-                oSheet.get_Range("A1", lastCol).EntireColumn.AutoFit();
-                oSheet.get_Range("E2", string.Format("E{0}", dtExtra.Rows.Count + 1)).NumberFormat = "yyyy-mm-dd";
-                oSheet.get_Range("H2", string.Format("H{0}", dtExtra.Rows.Count + 1)).NumberFormat = "yyyy-mm-dd";
-
-                daNon.Fill(dtNon, thisYear() - 1);
-
-                oSheet = (Excel._Worksheet)oWB.Sheets.Add(System.Reflection.Missing.Value, oWB.Sheets[oWB.Sheets.Count], 1, Excel.XlSheetType.xlWorksheet);
-                oSheet.Name = "Not Renewed";
-
-                //Add table headers going cell by cell.
-                for (int col = 0; col < dtNon.Columns.Count; col++)
-                {
-                    oSheet.Cells[1, col + 1] = dtNon.Columns[col].ColumnName;
-                    for (int row = 0; row < dtNon.Rows.Count; row++)
-                    {
-                        if (dtNon.Columns[col].ColumnName == "Section")
-                        {
-                            oSheet.Cells[row + 2, col + 1] = getSectionLabels(dtNon.Rows[row][col].ToString());
-                        }
-                        else
-                        {
-                            oSheet.Cells[row + 2, col + 1] = dtNon.Rows[row][col].ToString();
-                        }
-                    }
-                }
-
-                //Format A1:D1 as bold, vertical alignment = center.
-                lastCol = string.Format("{0}1", Number2String(dtNon.Columns.Count));
-                oSheet.get_Range("A1", lastCol).Font.Bold = true;
-                oSheet.get_Range("A1", lastCol).VerticalAlignment =
-                    Excel.XlVAlign.xlVAlignCenter;
-                oSheet.get_Range("A1", lastCol).EntireColumn.AutoFit();
-                oSheet.get_Range("E2", string.Format("E{0}", dtNon.Rows.Count)).NumberFormat = "yyyy-mm-dd";
-                oSheet.get_Range("H2", string.Format("H{0}", dtNon.Rows.Count)).NumberFormat = "yyyy-mm-dd";
-                oSheet.get_Range("Q2", string.Format("Q{0}", dtNon.Rows.Count)).NumberFormat = "yyyy-mm-dd";
-
-                oSheet = (Excel._Worksheet)oWB.Sheets.Add(System.Reflection.Missing.Value, oWB.Sheets[oWB.Sheets.Count], 1, Excel.XlSheetType.xlWorksheet);
-                oSheet.Name = "Report";
-
-                //Add table headers going cell by cell.
-                oSheet.Cells[1, 1] = "Year";
-                oSheet.Cells[1, 2] = "Total";
-                oSheet.Cells[1, 3] = "New Members";
-                oSheet.Cells[1, 4] = "Renewals";
-                oSheet.Cells[1, 5] = "Archery";
-                oSheet.Cells[1, 6] = "Handgun";
-                oSheet.Cells[1, 7] = "Smallbore";
-                oSheet.Cells[1, 8] = "SCA";
-                oSheet.Cells[1, 9] = "Rifle";
-                oSheet.Cells[1, 10] = "Action";
-
-                nCount = 2;
-                for (nYear = 2008; nYear <= thisYear(); nYear++)
-                {
-                    newCount = 0;
-                    renewCount = 0;
-                    SectionCounts = new int[6];
-
-                    oSheet.Cells[nCount, 1] = nYear;
-                    daExport.Fill(dtExport, nYear);
-                    oSheet.Cells[nCount, 2] = dtExport.Rows.Count;
-                    for (int row = 0; row < dtExport.Rows.Count; row++)
-                    {
-                        if (DateTime.TryParse(dtExport[row]["Date Joined"].ToString(), out dateJoined) == false)
-                        {
-                            dateJoined = new DateTime(1900, 01, 01);
-                        }
-                        startDate = new DateTime(nYear, 09, 01);
-                        endDate = new DateTime(nYear + 1, 08, 31);
-                        if (dateJoined >= startDate && dateJoined <= endDate)
-                        {
-                            newCount++;
-                        }
-                        if (dateJoined < startDate)
-                        {
-                            renewCount++;
-                        }
-
-                        section.Mask = ulong.Parse(dtExport.Rows[row]["Section"].ToString());
-                        if (section.AnyOn(BitField.Flag.f1)) // Archery
-                        {
-                            SectionCounts[0] += 1;
-                        }
-
-                        if (section.AnyOn(BitField.Flag.f2)) //Handgun
-                        {
-                            SectionCounts[1] += 1;
-                        }
-
-                        if (section.AnyOn(BitField.Flag.f3)) //Smallbore
-                        {
-                            SectionCounts[2] += 1;
-                        }
-
-                        if (section.AnyOn(BitField.Flag.f4)) //SCA
-                        {
-                            SectionCounts[3] += 1;
-                        }
-
-                        if (section.AnyOn(BitField.Flag.f5)) //Rifle
-                        {
-                            SectionCounts[4] += 1;
-                        }
-
-                        if (section.AnyOn(BitField.Flag.f6)) //Action
-                        {
-                            SectionCounts[5] += 1;
-                        }
-                    }
-                    oSheet.Cells[nCount, 3] = newCount;
-                    oSheet.Cells[nCount, 4] = renewCount;
-                    oSheet.Cells[nCount, 5] = SectionCounts[0];
-                    oSheet.Cells[nCount, 6] = SectionCounts[1];
-                    oSheet.Cells[nCount, 7] = SectionCounts[2];
-                    oSheet.Cells[nCount, 8] = SectionCounts[3];
-                    oSheet.Cells[nCount, 9] = SectionCounts[4];
-                    oSheet.Cells[nCount, 10] = SectionCounts[5];
-                    nCount++;
-                }
-
-                //Format A1:D1 as bold, vertical alignment = center.
-                oSheet.get_Range("A1", "J1").Font.Bold = true;
-                oSheet.get_Range("A1", "J1").VerticalAlignment =
-                    Excel.XlVAlign.xlVAlignCenter;
-                oSheet.get_Range("A1", "J1").EntireColumn.AutoFit();
-
-                oSheet = (Excel._Worksheet)oWB.Sheets.Add(System.Reflection.Missing.Value, oWB.Sheets[oWB.Sheets.Count], 1, Excel.XlSheetType.xlWorksheet);
-                oSheet.Name = "Report 2";
-
-                //Add table headers going cell by cell.
-                oSheet.Cells[1, 1] = "Card";
-                oSheet.Cells[1, 2] = "Last Name";
-                oSheet.Cells[1, 3] = "First Name";
-                oSheet.Cells[1, 4] = "Handgun";
-                oSheet.Cells[1, 5] = "Action";
-                oSheet.Cells[1, 6] = "Rifle";
-                oSheet.Cells[1, 7] = "Smallbore";
-                oSheet.Cells[1, 8] = "Archery";
-                oSheet.Cells[1, 9] = "Safety Walk";
-                oSheet.Cells[1, 10] = "Extra Card";
-
-                for (int row = 0; row < dtExport.Rows.Count; row++)
-                {
-                    section.Mask = ulong.Parse(dtExport.Rows[row]["section"].ToString());
-
-                    oSheet.Cells[row + 2, 1] = dtExport.Rows[row]["card"].ToString();
-                    oSheet.Cells[row + 2, 2] = dtExport.Rows[row]["last name"].ToString();
-                    oSheet.Cells[row + 2, 3] = dtExport.Rows[row]["first name"].ToString();
-                    oSheet.Cells[row + 2, 4] = section.AnyOn(BitField.Flag.f2) ? "Yes" : "";
-                    oSheet.Cells[row + 2, 5] = section.AnyOn(BitField.Flag.f6) ? "Yes" : "";
-                    oSheet.Cells[row + 2, 6] = section.AnyOn(BitField.Flag.f5) ? "Yes" : "";
-                    oSheet.Cells[row + 2, 7] = section.AnyOn(BitField.Flag.f3) ? "Yes" : "";
-                    oSheet.Cells[row + 2, 8] = section.AnyOn(BitField.Flag.f1) ? "Yes" : "";
-                    oSheet.Cells[row + 2, 9] = dtExport.Rows[row]["Walk"].ToString() == "Done" ? "yes" : "NO";
-                }
-
-                for (int row = 0; row < dtExtra.Rows.Count; row++ )
-                {
-                    section.Mask = ulong.Parse(dtExtra.Rows[row]["section"].ToString());
-
-                    oSheet.Cells[row + 2, 1] = dtExtra.Rows[row]["card"].ToString();
-                    oSheet.Cells[row + 2, 2] = dtExtra.Rows[row]["last name"].ToString();
-                    oSheet.Cells[row + 2, 3] = dtExtra.Rows[row]["first name"].ToString();
-                    oSheet.Cells[row + 2, 4] = section.AnyOn(BitField.Flag.f2) ? "Yes" : "";
-                    oSheet.Cells[row + 2, 5] = section.AnyOn(BitField.Flag.f6) ? "Yes" : "";
-                    oSheet.Cells[row + 2, 6] = section.AnyOn(BitField.Flag.f5) ? "Yes" : "";
-                    oSheet.Cells[row + 2, 7] = section.AnyOn(BitField.Flag.f3) ? "Yes" : "";
-                    oSheet.Cells[row + 2, 8] = section.AnyOn(BitField.Flag.f1) ? "Yes" : "";
-                    oSheet.Cells[row + 2, 9] = dtExtra.Rows[row]["Walk"].ToString() == "Done" ? "yes" : "NO";
-                    oSheet.Cells[row + 2, 10] = "Yes";
-                }
-
-                //Format A1:D1 as bold, vertical alignment = center.
-                oSheet.get_Range("A1", "J1").Font.Bold = true;
-                oSheet.get_Range("A1", "J1").VerticalAlignment =
-                    Excel.XlVAlign.xlVAlignCenter;
-                oSheet.get_Range("A1", "J1").EntireColumn.AutoFit();
-
-                oSheet = (Excel._Worksheet)oWB.Sheets.Add(System.Reflection.Missing.Value, oWB.Sheets[oWB.Sheets.Count], 1, Excel.XlSheetType.xlWorksheet);
-                oSheet.Name = "Report 3";
-
-                //Add table headers going cell by cell.
-                oSheet.Cells[1, 1] = "Card";
-                oSheet.Cells[1, 2] = "Last Name";
-                oSheet.Cells[1, 3] = "First Name";
-                oSheet.Cells[1, 4] = "Handgun";
-                oSheet.Cells[1, 5] = "Action";
-                oSheet.Cells[1, 6] = "Rifle";
-                oSheet.Cells[1, 7] = "Smallbore";
-                oSheet.Cells[1, 8] = "Archery";
-                oSheet.Cells[1, 9] = "Safety Walk";
-                oSheet.Cells[1, 10] = "Extra Card";
-
-                for (int row = 0; row < dtNon.Rows.Count; row++)
-                {
-                    section.Mask = ulong.Parse(dtNon.Rows[row]["section"].ToString());
-
-                    oSheet.Cells[row + 2, 1] = dtNon.Rows[row]["card"].ToString();
-                    oSheet.Cells[row + 2, 2] = dtNon.Rows[row]["last name"].ToString();
-                    oSheet.Cells[row + 2, 3] = dtNon.Rows[row]["first name"].ToString();
-                    oSheet.Cells[row + 2, 4] = section.AnyOn(BitField.Flag.f2) ? "Yes" : "";
-                    oSheet.Cells[row + 2, 5] = section.AnyOn(BitField.Flag.f6) ? "Yes" : "";
-                    oSheet.Cells[row + 2, 6] = section.AnyOn(BitField.Flag.f5) ? "Yes" : "";
-                    oSheet.Cells[row + 2, 7] = section.AnyOn(BitField.Flag.f3) ? "Yes" : "";
-                    oSheet.Cells[row + 2, 8] = section.AnyOn(BitField.Flag.f1) ? "Yes" : "";
-                    oSheet.Cells[row + 2, 9] = dtNon.Rows[row]["Walk"].ToString() == "Done" ? "yes" : "NO";
-                }
-
-                //Format A1:D1 as bold, vertical alignment = center.
-                oSheet.get_Range("A1", "J1").Font.Bold = true;
-                oSheet.get_Range("A1", "J1").VerticalAlignment =
-                    Excel.XlVAlign.xlVAlignCenter;
-                oSheet.get_Range("A1", "J1").EntireColumn.AutoFit();
-                    //Make sure Excel is visible and give the user control
-                    //of Microsoft Excel's lifetime.
-                    oXL.Visible = true;
-		        oXL.UserControl = true;
 
             }
             catch (Exception ex)
@@ -612,223 +355,76 @@ namespace PFGA_Membership
                 ErrorLogger.Log("Error trying to generate summary report", ex, true);
             }
             finally
-            {
+            {              
                 Cursor.Current = Cursors.Default;
             }
         }
-
-        #region Helper Functions
-        private String Number2String(int number)
-        {
-            Char c;
-            string retval; 
-
-            if (number <= 25)
-            {
-                c = (Char)(65 + (number - 1));
-                retval = c.ToString();
-            }
-            else
-            {
-                c = (Char)(65 + (number - 26));
-                retval = string.Concat("A", c.ToString());
-            }
-            
-            return retval;
-        }
-
-        private int thisYear()
-        {
-            int retVal;
-
-            if (DateTime.Today.Month >= 1 && DateTime.Today.Month < 9)
-            {
-                retVal = DateTime.Today.Year -1;
-            }
-            else
-            {
-                retVal = DateTime.Today.Year;
-            }
-
-            return retVal;
-        }
-
-        private string getSectionLabels(string sectionFlag)
-        {
-            StringBuilder retVal = new StringBuilder();
-            BitField section = new BitField();
-            ulong sectionMask = 0;
-
-            if (ulong.TryParse(sectionFlag, out sectionMask))
-            {
-
-                section.Mask = sectionMask;
-
-                try
-                {
-                    if (section.AnyOn(BitField.Flag.f1)) //
-                    {
-                        retVal.Append("Archery, ");
-                    }
-
-                    if (section.AnyOn(BitField.Flag.f2)) //
-                    {
-                        retVal.Append("Handgun, ");
-                    }
-
-                    if (section.AnyOn(BitField.Flag.f3)) //
-                    {
-                        retVal.Append("Smallbore, ");
-                    }
-
-                    if (section.AnyOn(BitField.Flag.f4)) //
-                    {
-                        retVal.Append("SCA, ");
-                    }
-
-                    if (section.AnyOn(BitField.Flag.f5)) //
-                    {
-                        retVal.Append("Rifle, ");
-                    }
-
-                    if (section.AnyOn(BitField.Flag.f6)) //
-                    {
-                        retVal.Append("Action, ");
-                    }
-
-                    if (retVal.Length > 0)
-                    {
-                        retVal.Remove(retVal.Length - 2, 2);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ErrorLogger.Log("Error setting Section Checkboxes", ex, true);
-                }
-            }
-
-            return retVal.ToString();
-        }
-
-        private string getParticipation(string participationFlag)
-        {
-            StringBuilder retVal = new StringBuilder();
-            BitField participation = new BitField();
-            ulong participationMask = 0;
-
-            if (ulong.TryParse(participationFlag, out participationMask))
-            {
-                participation.Mask = participationMask;
-
-                try
-                {
-                    if (participation.AnyOn(BitField.Flag.f1)) //
-                    {
-                        retVal.Append("Work Party, ");
-                    }
-
-                    if (participation.AnyOn(BitField.Flag.f2)) //
-                    {
-                        retVal.Append("Events, ");
-                    }
-
-                    if (participation.AnyOn(BitField.Flag.f3)) //
-                    {
-                        retVal.Append("Executive, ");
-                    }
-
-                    if (participation.AnyOn(BitField.Flag.f4)) //
-                    {
-                        retVal.Append("Range Officer, ");
-                    }
-
-                    if (participation.AnyOn(BitField.Flag.f5)) //
-                    {
-                        retVal.Append("Training Officer, ");
-                    }
-
-                    if (participation.AnyOn(BitField.Flag.f6)) //
-                    {
-                        retVal.Append("Other ");
-                    }
-
-                    if (retVal.Length > 0)
-                    {
-                        retVal.Remove(retVal.Length - 2, 2);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ErrorLogger.Log("Error setting Section Checkboxes", ex, true);
-                }
-            }
-
-            return retVal.ToString();
-        }
-        #endregion
 
         private void mailingListEmailsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Excel.Application oXL;
-            Excel._Workbook oWB;
-            Excel._Worksheet oSheet;
+            SqlConnection cnn;
+            SqlCommand cmd;
+            DataTable dtEmails;
+            SqlDataAdapter da;
 
-            MembershipTableAdapters.qryExportTableAdapter daEmails = new PFGA_Membership.MembershipTableAdapters.qryExportTableAdapter();
-            MembershipTableAdapters.qryExportNonTableAdapter daRemove = new PFGA_Membership.MembershipTableAdapters.qryExportNonTableAdapter();
-            Membership.qryExportDataTable dtEmails = new Membership.qryExportDataTable();
-            Membership.qryExportNonDataTable dtRemove = new Membership.qryExportNonDataTable();
+            String config = ConfigurationManager.ConnectionStrings["PFGA_Membership.Properties.Settings.PFGAMembershipConnectionString"].ToString();
 
             try
             {
-                Cursor.Current = Cursors.Default;
-                int lastRow;
-                //Start Excel and get Application object.
-                oXL = new Excel.Application();
-                oXL.Visible = false;
+                Cursor.Current = Cursors.WaitCursor;
 
-                //Get a new workbook.
-                oWB = (Excel._Workbook)(oXL.Workbooks.Add(Missing.Value));
-                oSheet = (Excel._Worksheet)oWB.ActiveSheet;
-                oSheet.Name = string.Format("Members {0}", thisYear().ToString());
+                string fileName;
 
-                daEmails.FillEmails(dtEmails, thisYear());
+                cnn = new SqlConnection(config);
+                cnn.Open();
 
-                for (int row = 1; row < dtEmails.Rows.Count; row++)
+                String qryEmails = $@"SELECT email FROM (SELECT [Email Address] as email FROM qryExport WHERE (YearPaid = {cHelper.thisYear()}) AND Len([Email Address]) > 0 AND NoBackTrack = 0 AND NoEmailing = 0) as Members 
+                    UNION 
+                    SELECT email FROM (SELECT [Email Address] as email FROM qryExportExtra WHERE (YearPaid = {cHelper.thisYear()}) AND Len([Email Address]) > 0) as Extra";
+
+                cmd = new SqlCommand(qryEmails, cnn);
+                dtEmails = new DataTable();
+                da = new SqlDataAdapter(cmd);
+                da.Fill(dtEmails);
+
+                fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "Mailing_List_Emails.txt");
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(fileName))
                 {
-                    oSheet.Cells[row, 1] = dtEmails.Rows[row]["Email Address"].ToString();
-                    oSheet.Cells[row, 2] = dtEmails.Rows[row]["Website Usernames"].ToString();
-                }
-                oSheet.get_Range("A1", "A1").EntireColumn.AutoFit();
-
-                dtEmails.Rows.Clear();
-                daEmails.FillRemoveEmails(dtEmails, thisYear());
-                // Remove emails from this year
-                oSheet = (Excel._Worksheet)oWB.Sheets.Add(System.Reflection.Missing.Value, oWB.Sheets[oWB.Sheets.Count], 1, Excel.XlSheetType.xlWorksheet);
-                oSheet.Name = "Remove";
-
-                for (int row = 1; row < dtEmails.Rows.Count; row++)
-                {
-                    oSheet.Cells[row, 1] = dtEmails.Rows[row]["Email Address"].ToString();
-                    oSheet.Cells[row, 2] = dtEmails.Rows[row]["Website Usernames"].ToString();
+                    foreach (DataRow row in dtEmails.Rows)
+                    {
+                        if (row["email"].ToString().Length > 0)
+                        {
+                            file.WriteLine(row["email"].ToString());
+                        }                        
+                    }
+                    file.Close();
                 }
 
-                lastRow = (dtEmails.Rows.Count > 0 ? dtEmails.Rows.Count : 1) - 1;
-                // Remove previous year
-                daRemove.FillRemoveEmails(dtRemove, thisYear() - 1);
-                for (int row = 1; row < dtRemove.Rows.Count; row++)
+
+                qryEmails = @"SELECT [Email Address], [Website Usernames]
+                    FROM qryExport
+                    JOIN (SELECT ID, Max(YearPaid) AS MaxYearPaid  FROM qryExport GROUP BY ID HAVING Max(YearPaid) = " + (cHelper.thisYear() - 1) + @") AS MaxPaid
+                        ON qryExport.ID = MaxPaid.ID
+                    WHERE Len([Email Address]) > 0
+                    UNION
+                    SELECT [Email Address], [Website Usernames]
+	                    FROM Members 
+	                    WHERE ([NoBackTrack] = 1 OR [NoEmailing] = 1) AND  Len([Email Address]) > 0";
+
+                cmd = new SqlCommand(qryEmails, cnn);
+                dtEmails = new DataTable();
+                da = new SqlDataAdapter(cmd);
+                da.Fill(dtEmails);
+
+                fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "Remove_Emails.csv");
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(fileName))
                 {
-                    oSheet.Cells[row + lastRow, 1] = dtRemove.Rows[row]["Email Address"].ToString();
-                    oSheet.Cells[row + lastRow, 2] = dtRemove.Rows[row]["Website Usernames"].ToString();
-                }
-
-                lastRow += dtRemove.Rows.Count;
-                oSheet.get_Range("A1", string.Format("A{0}", lastRow)).EntireColumn.AutoFit();
-
-                //Make sure Excel is visible and give the user control
-                //of Microsoft Excel's lifetime.
-                oXL.Visible = true;
-                oXL.UserControl = true;
-
+                    foreach (DataRow row in dtEmails.Rows)
+                    {
+                        file.WriteLine(String.Concat(row["Email Address"].ToString(), ",", row["Website Usernames"].ToString()));
+                    }
+                    file.Close();
+                }              
             }
             catch (Exception ex)
             {
@@ -837,14 +433,14 @@ namespace PFGA_Membership
             finally
             {
                 Cursor.Current = Cursors.Default;
+                MessageBox.Show("Done", "Mailing List Emails", MessageBoxButtons.OK);
             }
         }
 
         private void makeCardsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MembershipTableAdapters.QueriesTableAdapter da = new MembershipTableAdapters.QueriesTableAdapter();
-
-            da.qryCards(thisYear());
+            da.qryCards(cHelper.thisYear());
 
             frmParent frm = (frmParent)this.ParentForm;
             frm.showCards();
@@ -864,8 +460,8 @@ namespace PFGA_Membership
         private void toFullToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MembershipTableAdapters.QueriesTableAdapter da = new MembershipTableAdapters.QueriesTableAdapter();
-
             da.UpdatePendingToFull();
+            da.UpdateSeniors();
             BindGrid();
             MessageBox.Show("Members Updated");
 
@@ -874,8 +470,8 @@ namespace PFGA_Membership
         private void toHalfYearToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MembershipTableAdapters.QueriesTableAdapter da = new MembershipTableAdapters.QueriesTableAdapter();
-
             da.UpdatePendingToHalf();
+            da.UpdateSeniors();
             BindGrid();
             MessageBox.Show("Members Updated");
         }
@@ -896,63 +492,68 @@ namespace PFGA_Membership
         }
 
         private void pendingMembersToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Word.Application oWd = new Word.Application();
-            Word.Document oDoc;
-            Word.Range rng;
-
-            object replaceAll = Word.WdReplace.wdReplaceAll;
-            Missing missing = System.Reflection.Missing.Value;
+        {            
             string section;
             string fileName;
-            string template = Path.Combine(System.IO.Path.GetDirectoryName(Application.ExecutablePath), "NewMemberWelcomeLetter.docx");
+            string findSection = "<<Section>>";
+            string template = Path.Combine(System.IO.Path.GetDirectoryName(Application.ExecutablePath), "NewMemberWelcomeLetter.rtf");
+            System.Data.SqlClient.SqlConnection cnn;
+            clsHelpers helper = new clsHelpers();
 
-            MembershipTableAdapters.qryExportTableAdapter daEmails = new PFGA_Membership.MembershipTableAdapters.qryExportTableAdapter();
-            Membership.qryExportDataTable dtEmails = new Membership.qryExportDataTable();
+            String config = ConfigurationManager.ConnectionStrings["PFGA_Membership.Properties.Settings.PFGAMembershipConnectionString"].ToString();
+            
+            cnn = new SqlConnection(config);
+            cnn.Open();
 
-            daEmails.FillEmails(dtEmails, thisYear());
+            string query = @"SELECT Card, COALESCE(NULLIF([Email Address],''), [First Name] + ' ' + [Last Name]) AS Title, SectionFlag 
+                            FROM            qryExport
+                            WHERE (YearPaid = " + cHelper.thisYear() + ") AND (MemberTypeID = 13)";
+
+            SqlCommand cmd = new SqlCommand(query, cnn);
+            DataTable dtEmails = new DataTable();
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            da.Fill(dtEmails);
 
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                DataRow[] rows = dtEmails.Select("MembertypeId = 13");
-                if (MessageBox.Show(string.Format("This will create {0} documents on your desktop", rows.Length), "Creating Document"
+      
+                if (MessageBox.Show(string.Format("This will create {0} documents on your desktop", dtEmails.Rows.Count), "Creating Document"
                     , MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
                 {
 
-                    foreach (DataRow row in rows)
+                    foreach (DataRow row in dtEmails.Rows)
                     {
                         // Copy and rename template
                         fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory),
-                            string.Concat(row["Email Address"].ToString(), ".docx"));
-                        File.Copy(template, fileName, true);
+                            string.Concat(row["Title"].ToString(), ".rtf"));                       
 
-                        oDoc = oWd.Documents.Open(fileName);
-                        rng = oDoc.Content;
+                        richTextBox1.LoadFile(template, RichTextBoxStreamType.RichText);
+                        int index;
 
-                        section = getSectionLabels(row["SectionFlag"].ToString());
+                        section = helper.getSectionLabels(row["SectionFlag"].ToString());
                         if (section.Length > 0)
                         {
-                            Word.Find findSection = rng.Find;
-                            findSection.ClearFormatting();
-                            findSection.Text = "<<Section>>";
-                            findSection.Replacement.ClearFormatting();
-                            findSection.Replacement.Text = section;
-                            findSection.Execute(missing, missing, missing, missing, missing, missing, missing, missing, missing, missing,
-                            ref replaceAll, missing, missing, missing, missing);
+                            index = richTextBox1.Find(findSection);
+                            if (index >= 0)
+                            {
+                                richTextBox1.SelectionStart = index;
+                                richTextBox1.Select(index, findSection.Length);
+                                richTextBox1.SelectedText = section;
+                            }
                         }
 
-                        Word.Find findCard = rng.Find;
-                        findCard.ClearFormatting();
-                        findCard.Text = "<<CardNo>>";
-                        findCard.Replacement.ClearFormatting();
-                        findCard.Replacement.Text = row["Card"].ToString();
-                        findCard.Execute(missing, missing, missing, missing, missing, missing, missing, missing, missing, missing,
-                            ref replaceAll, missing, missing, missing, missing);
+                        index = richTextBox1.Find("<<CardNo>>");
+                        if (index >= 0)
+                        {
+                            richTextBox1.SelectionStart = index;
+                            richTextBox1.Select(index, "<<CardNo>>".Length);
+                            richTextBox1.SelectedText = row["Card"].ToString();
+                        }
 
-                        oDoc.Close(true, missing, missing);
+                        richTextBox1.SaveFile(fileName, RichTextBoxStreamType.RichText);
+                        richTextBox1.Clear();
                     }
-
                 }
             }
             catch (Exception ex)
@@ -961,34 +562,139 @@ namespace PFGA_Membership
             }
             finally
             {
-                Cursor.Current = Cursors.Default;            
-            }
+                Cursor.Current = Cursors.Default;
+                MessageBox.Show("Done", "Pending Member Emails", MessageBoxButtons.OK);
+            }             
         }
 
         private void renewingMembersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "YearlyRenewalLetter.docx"); ;
-            string template = Path.Combine(System.IO.Path.GetDirectoryName(Application.ExecutablePath), "YearlyRenewalLetter.docx");
+            string year;
 
-            MembershipTableAdapters.qryExportTableAdapter daEmails = new PFGA_Membership.MembershipTableAdapters.qryExportTableAdapter();
-            Membership.qryExportDataTable dtEmails = new Membership.qryExportDataTable();
+            string fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "YearlyRenewalLetter.rtf"); ;
+            string template = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "YearlyRenewalLetter.rtf");
 
-            File.Copy(template, fileName, true);
-            daEmails.FillEmails(dtEmails, thisYear());
+            SqlConnection cnn;
+
+            String config = ConfigurationManager.ConnectionStrings["PFGA_Membership.Properties.Settings.PFGAMembershipConnectionString"].ToString();
+
+            cnn = new SqlConnection(config);
+            cnn.Open();
+
+            string query = @"SELECT Card, [Email Address], SectionFlag 
+                            FROM            qryExport
+                            WHERE " + string.Format("MembertypeId <> 13 AND DatePaid = '{0}'", DateTime.Today);
+
+            SqlCommand cmd = new SqlCommand(query, cnn);
+            DataTable dtEmails = new DataTable();
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            da.Fill(dtEmails);
+
+            if (dtEmails.Rows.Count > 0)
+            {
+                richTextBox1.LoadFile(template);
+
+                year = (cHelper.thisYear() + 1).ToString();
+
+                int index = richTextBox1.Find("<<Year>>");
+                if (index >= 0)
+                {
+                    richTextBox1.SelectionStart = index;
+                    richTextBox1.Select(index, "<<Year>>".Length);
+                    richTextBox1.SelectedText = year;
+                }
+                richTextBox1.SaveFile(fileName);
+
+                try
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+                
+                    if (MessageBox.Show("This will create 2 documents on your desktop", "Creating Document", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
+                    {
+                        fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "RenewalAddresses.txt"); ;
+                        using (System.IO.StreamWriter file = new System.IO.StreamWriter(fileName))
+                        {
+                            foreach (DataRow row in dtEmails.Rows)
+                            {
+                                if (row["Email Address"].ToString().Length > 0)
+                                {
+                                    file.WriteLine(row["Email Address"].ToString());
+                                }                                
+                            }
+                            file.Close();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ErrorLogger.Log("Error trying to generate Renewal Emails", ex, true);
+                }
+                finally
+                {
+                    Cursor.Current = Cursors.Default;
+                }
+            } else
+            {
+                MessageBox.Show("No renewals", "Creating Document", MessageBoxButtons.OK);
+            }           
+        }
+
+        private void cboMemberTypeFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            String filter = "[Membership Type] = '" + cboMemberTypeFilter.Text + "'";
+            dvMemberList.RowFilter = filter;
+            dgMemberList.Refresh();
+        }
+
+        private void halfToFullToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MembershipTableAdapters.QueriesTableAdapter da = new MembershipTableAdapters.QueriesTableAdapter();
+
+            da.UpdateHalftoFull();
+            BindGrid();
+            MessageBox.Show("Members Updated");
+        }
+
+        private void safetyWalkMembersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "OrientationWalkLetter.rtf"); ;
+            string template = Path.Combine(System.IO.Path.GetDirectoryName(Application.ExecutablePath), "OrientationWalkLetter.rtf");
+
+            System.Data.SqlClient.SqlConnection cnn;
+
+            String config = ConfigurationManager.ConnectionStrings["PFGA_Membership.Properties.Settings.PFGAMembershipConnectionString"].ToString();
+
+            cnn = new SqlConnection(config);
+            cnn.Open();
+
+            string query = @"SELECT Members.[First Name], Members.[Last Name], Members.[Email Address] FROM Members
+                                INNER JOIN Members extra ON Members.ID = extra.MasterRecord
+                                WHERE (Members.Walk = 'Need' OR extra.Walk = 'Need') AND Members.Archived = 0
+                                GROUP BY Members.[First Name], Members.[Last Name], Members.[Email Address]
+                                ORDER BY Members.[Last Name];";
+
+            SqlCommand cmd = new SqlCommand(query, cnn);
+            DataTable dtEmails = new DataTable();
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            da.Fill(dtEmails);
 
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                DataRow[] rows = dtEmails.Select(string.Format("MembertypeId <> 13 AND DatePaid = #{0}#", DateTime.Today));
 
                 if (MessageBox.Show("This will create 2 documents on your desktop", "Creating Document", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
                 {
-                    fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "RenewalAddresses.txt"); ;
+                    File.Copy(template, fileName, true);
+
+                    fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "OrientationWalkAddresses.txt");
                     using (System.IO.StreamWriter file = new System.IO.StreamWriter(fileName))
                     {
-                        foreach (DataRow row in rows)
+                        foreach (DataRow row in dtEmails.Rows)
                         {
-                            file.WriteLine(row["Email Address"].ToString());
+                            if (row["Email Address"].ToString().Length > 0)
+                            {
+                                file.WriteLine(row["Email Address"].ToString());
+                            }                            
                         }
                         file.Close();
                     }
@@ -1004,6 +710,93 @@ namespace PFGA_Membership
             }
         }
 
+        private void backupToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // read connectionstring from config file
+            String config = ConfigurationManager.ConnectionStrings["PFGA_Membership.Properties.Settings.PFGAMembershipConnectionString"].ToString();
 
+            Cursor.Current = Cursors.WaitCursor;
+
+            // read backup folder from config file ("C:/temp/")
+            var backupFolder = ConfigurationManager.AppSettings["BACKUP_PATH"];
+
+            // set backupfilename (you will get something like: "C:/temp/MyDatabase-2013-12-07.bak")
+            var backupFileName = String.Format("{0}PFGAMembership-{1}.bak",
+                backupFolder,
+                DateTime.Now.ToString("yyyy-MM-dd"));
+
+            using (var connection = new SqlConnection(config))
+            {
+                var query = String.Format("BACKUP DATABASE PFGAMembership TO DISK='{0}'", backupFileName);
+
+                using (var command = new SqlCommand(query, connection))
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+            }
+
+            Cursor.Current = Cursors.Default;
+            MessageBox.Show("BackUp Done");
+        }
+
+        private void cardAvailableListToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Data.SqlClient.SqlConnection cnn;
+            SqlCommand cmd;
+            DataTable dtEmails;
+            SqlDataAdapter da;
+
+            String config = ConfigurationManager.ConnectionStrings["PFGA_Membership.Properties.Settings.PFGAMembershipConnectionString"].ToString();
+
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+
+                string fileName;
+
+                cnn = new SqlConnection(config);
+                cnn.Open();
+
+                String qryEmails = $@"SELECT [Email Address] email 
+                    FROM Cards 
+                    INNER JOIN Members ON Members.ID = Cards.ID
+                    WHERE DATALENGTH(Picture) <> 0";
+
+
+                cmd = new SqlCommand(qryEmails, cnn);
+                dtEmails = new DataTable();
+                da = new SqlDataAdapter(cmd);
+                da.Fill(dtEmails);
+
+                fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "Cards_Available.txt");
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(fileName))
+                {
+                    foreach (DataRow row in dtEmails.Rows)
+                    {
+                        file.WriteLine(row["email"].ToString());
+                    }
+                    file.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.Log("Error trying to generate summary report", ex, true);
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
+        }
+
+        private void exportToAtriumToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmParent frm = (frmParent)this.ParentForm;
+            frm.showAtrium();
+            this.Close();
+            this.Dispose();
+        }
     }
 }
+
+

@@ -50,5 +50,12 @@ namespace PFGA_Membership
             frm.MdiParent = this;
             frm.Show();
         }
+
+        public void showAtrium()
+        {
+            frmExport frm = new frmExport();
+            frm.MdiParent = this;
+            frm.Show();
+        }
     }
 }

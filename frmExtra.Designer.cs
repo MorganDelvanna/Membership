@@ -80,6 +80,87 @@
             this.grpSection.SuspendLayout();
             this.SuspendLayout();
             // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new System.Drawing.Point(91, 119);
+            label4.Name = "label4";
+            label4.Size = new System.Drawing.Size(27, 13);
+            label4.TabIndex = 132;
+            label4.Text = "Cell:";
+            // 
+            // website_UsernamesLabel
+            // 
+            website_UsernamesLabel.AutoSize = true;
+            website_UsernamesLabel.Location = new System.Drawing.Point(18, 171);
+            website_UsernamesLabel.Name = "website_UsernamesLabel";
+            website_UsernamesLabel.Size = new System.Drawing.Size(100, 13);
+            website_UsernamesLabel.TabIndex = 129;
+            website_UsernamesLabel.Text = "Website Username:";
+            // 
+            // pal_Exp_DateLabel
+            // 
+            pal_Exp_DateLabel.AutoSize = true;
+            pal_Exp_DateLabel.Location = new System.Drawing.Point(46, 226);
+            pal_Exp_DateLabel.Name = "pal_Exp_DateLabel";
+            pal_Exp_DateLabel.Size = new System.Drawing.Size(72, 13);
+            pal_Exp_DateLabel.TabIndex = 127;
+            pal_Exp_DateLabel.Text = "Pal Exp Date:";
+            // 
+            // palLabel
+            // 
+            palLabel.AutoSize = true;
+            palLabel.Location = new System.Drawing.Point(93, 199);
+            palLabel.Name = "palLabel";
+            palLabel.Size = new System.Drawing.Size(25, 13);
+            palLabel.TabIndex = 126;
+            palLabel.Text = "Pal:";
+            // 
+            // birth_DateLabel
+            // 
+            birth_DateLabel.AutoSize = true;
+            birth_DateLabel.Location = new System.Drawing.Point(61, 94);
+            birth_DateLabel.Name = "birth_DateLabel";
+            birth_DateLabel.Size = new System.Drawing.Size(57, 13);
+            birth_DateLabel.TabIndex = 125;
+            birth_DateLabel.Text = "Birth Date:";
+            // 
+            // walkLabel
+            // 
+            walkLabel.AutoSize = true;
+            walkLabel.Location = new System.Drawing.Point(83, 251);
+            walkLabel.Name = "walkLabel";
+            walkLabel.Size = new System.Drawing.Size(35, 13);
+            walkLabel.TabIndex = 121;
+            walkLabel.Text = "Walk:";
+            // 
+            // email_AddressLabel
+            // 
+            email_AddressLabel.AutoSize = true;
+            email_AddressLabel.Location = new System.Drawing.Point(42, 145);
+            email_AddressLabel.Name = "email_AddressLabel";
+            email_AddressLabel.Size = new System.Drawing.Size(76, 13);
+            email_AddressLabel.TabIndex = 120;
+            email_AddressLabel.Text = "Email Address:";
+            // 
+            // first_NameLabel
+            // 
+            first_NameLabel.AutoSize = true;
+            first_NameLabel.Location = new System.Drawing.Point(58, 41);
+            first_NameLabel.Name = "first_NameLabel";
+            first_NameLabel.Size = new System.Drawing.Size(60, 13);
+            first_NameLabel.TabIndex = 113;
+            first_NameLabel.Text = "First Name:";
+            // 
+            // last_NameLabel
+            // 
+            last_NameLabel.AutoSize = true;
+            last_NameLabel.Location = new System.Drawing.Point(57, 64);
+            last_NameLabel.Name = "last_NameLabel";
+            last_NameLabel.Size = new System.Drawing.Size(61, 13);
+            last_NameLabel.TabIndex = 111;
+            last_NameLabel.Text = "Last Name:";
+            // 
             // btnSave
             // 
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -138,15 +219,6 @@
             this.Badge.TabIndex = 133;
             this.Badge.TabStop = false;
             // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new System.Drawing.Point(91, 119);
-            label4.Name = "label4";
-            label4.Size = new System.Drawing.Size(27, 13);
-            label4.TabIndex = 132;
-            label4.Text = "Cell:";
-            // 
             // txtCell
             // 
             this.txtCell.Location = new System.Drawing.Point(124, 116);
@@ -193,17 +265,17 @@
             // 
             // first_NameTextBox
             // 
-            this.first_NameTextBox.Location = new System.Drawing.Point(124, 64);
+            this.first_NameTextBox.Location = new System.Drawing.Point(124, 38);
             this.first_NameTextBox.Name = "first_NameTextBox";
             this.first_NameTextBox.Size = new System.Drawing.Size(200, 20);
-            this.first_NameTextBox.TabIndex = 112;
+            this.first_NameTextBox.TabIndex = 110;
             // 
             // last_NameTextBox
             // 
-            this.last_NameTextBox.Location = new System.Drawing.Point(124, 38);
+            this.last_NameTextBox.Location = new System.Drawing.Point(124, 64);
             this.last_NameTextBox.Name = "last_NameTextBox";
             this.last_NameTextBox.Size = new System.Drawing.Size(200, 20);
-            this.last_NameTextBox.TabIndex = 110;
+            this.last_NameTextBox.TabIndex = 112;
             // 
             // chkSwipe
             // 
@@ -331,24 +403,6 @@
             this.cboWalk.Size = new System.Drawing.Size(121, 21);
             this.cboWalk.TabIndex = 122;
             // 
-            // website_UsernamesLabel
-            // 
-            website_UsernamesLabel.AutoSize = true;
-            website_UsernamesLabel.Location = new System.Drawing.Point(18, 171);
-            website_UsernamesLabel.Name = "website_UsernamesLabel";
-            website_UsernamesLabel.Size = new System.Drawing.Size(100, 13);
-            website_UsernamesLabel.TabIndex = 129;
-            website_UsernamesLabel.Text = "Website Username:";
-            // 
-            // pal_Exp_DateLabel
-            // 
-            pal_Exp_DateLabel.AutoSize = true;
-            pal_Exp_DateLabel.Location = new System.Drawing.Point(46, 226);
-            pal_Exp_DateLabel.Name = "pal_Exp_DateLabel";
-            pal_Exp_DateLabel.Size = new System.Drawing.Size(72, 13);
-            pal_Exp_DateLabel.TabIndex = 127;
-            pal_Exp_DateLabel.Text = "Pal Exp Date:";
-            // 
             // pal_Exp_DateDateTimePicker
             // 
             this.pal_Exp_DateDateTimePicker.CustomFormat = "yyyy-MMM-dd";
@@ -358,24 +412,6 @@
             this.pal_Exp_DateDateTimePicker.Size = new System.Drawing.Size(200, 20);
             this.pal_Exp_DateDateTimePicker.TabIndex = 119;
             // 
-            // palLabel
-            // 
-            palLabel.AutoSize = true;
-            palLabel.Location = new System.Drawing.Point(93, 199);
-            palLabel.Name = "palLabel";
-            palLabel.Size = new System.Drawing.Size(25, 13);
-            palLabel.TabIndex = 126;
-            palLabel.Text = "Pal:";
-            // 
-            // birth_DateLabel
-            // 
-            birth_DateLabel.AutoSize = true;
-            birth_DateLabel.Location = new System.Drawing.Point(61, 94);
-            birth_DateLabel.Name = "birth_DateLabel";
-            birth_DateLabel.Size = new System.Drawing.Size(57, 13);
-            birth_DateLabel.TabIndex = 125;
-            birth_DateLabel.Text = "Birth Date:";
-            // 
             // birth_DateDateTimePicker
             // 
             this.birth_DateDateTimePicker.CustomFormat = "yyyy-MMM-dd";
@@ -384,42 +420,6 @@
             this.birth_DateDateTimePicker.Name = "birth_DateDateTimePicker";
             this.birth_DateDateTimePicker.Size = new System.Drawing.Size(200, 20);
             this.birth_DateDateTimePicker.TabIndex = 114;
-            // 
-            // walkLabel
-            // 
-            walkLabel.AutoSize = true;
-            walkLabel.Location = new System.Drawing.Point(83, 251);
-            walkLabel.Name = "walkLabel";
-            walkLabel.Size = new System.Drawing.Size(35, 13);
-            walkLabel.TabIndex = 121;
-            walkLabel.Text = "Walk:";
-            // 
-            // email_AddressLabel
-            // 
-            email_AddressLabel.AutoSize = true;
-            email_AddressLabel.Location = new System.Drawing.Point(42, 145);
-            email_AddressLabel.Name = "email_AddressLabel";
-            email_AddressLabel.Size = new System.Drawing.Size(76, 13);
-            email_AddressLabel.TabIndex = 120;
-            email_AddressLabel.Text = "Email Address:";
-            // 
-            // first_NameLabel
-            // 
-            first_NameLabel.AutoSize = true;
-            first_NameLabel.Location = new System.Drawing.Point(58, 67);
-            first_NameLabel.Name = "first_NameLabel";
-            first_NameLabel.Size = new System.Drawing.Size(60, 13);
-            first_NameLabel.TabIndex = 113;
-            first_NameLabel.Text = "First Name:";
-            // 
-            // last_NameLabel
-            // 
-            last_NameLabel.AutoSize = true;
-            last_NameLabel.Location = new System.Drawing.Point(57, 38);
-            last_NameLabel.Name = "last_NameLabel";
-            last_NameLabel.Size = new System.Drawing.Size(61, 13);
-            last_NameLabel.TabIndex = 111;
-            last_NameLabel.Text = "Last Name:";
             // 
             // frmExtra
             // 

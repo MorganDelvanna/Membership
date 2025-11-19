@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Configuration;
 
 namespace PFGA_Membership
 {
     public class clsMembership
     {
         private bool _Active = true;
-        private bool _Executive = false;
         private bool _NoBackTrack = false;
         private bool _NoEmail = false;
         private bool _SwipeCard = false;
@@ -24,6 +24,7 @@ namespace PFGA_Membership
         private string _Email = string.Empty;
         private string _FirstName = string.Empty;
         private string _LastName = string.Empty;
+        private string _Alias = string.Empty;
         private string _MembershipType = string.Empty;
         private string _Notes = string.Empty;
         private string _Phone = string.Empty;
@@ -42,6 +43,7 @@ namespace PFGA_Membership
         public int ID { get { return _ID; } set { _ID = value; } }
         public string LastName { get { return _LastName; } set { _LastName = value; } }
         public string FirstName { get { return _FirstName; } set { _FirstName = value; } }
+        public string Alias { get { return _Alias; } set { _Alias = value; } }
         public string Address { get { return _Address; } set { _Address = value; } }
         public string CityProv { get { return _CityProv; } set { _CityProv = value; } }
         public string Postal { get { return _Postal; } set { _Postal = value; } }
@@ -60,7 +62,6 @@ namespace PFGA_Membership
         public bool NoEmail { get { return _NoEmail; } set { _NoEmail = value; } }
         public bool Active { get { return _Active; } set { _Active = value; } }
         public bool SwipeCard { get { return _SwipeCard; } set { _SwipeCard = value; } }
-        public bool Executive { get { return _Executive; } set { _Executive = value; } }
         public bool CardMade { get { return _CardMade; } set { _CardMade = value; } }
         public int MasterRecord { get { return _MasterRecord; } set { _MasterRecord = value; } }
         public ulong SectionFlag { get { return _SectionFlag; } set { _SectionFlag = value; } }
@@ -106,7 +107,7 @@ namespace PFGA_Membership
                     BadgeImage = new Byte[0];
                     _paidHistory = getPaidHistory();
                     _ExtraCards = getExtraCards();
-                    setDefaultPaid();
+                    // setDefaultPaid();
                 }
             }
             catch (Exception ex)
@@ -128,6 +129,7 @@ namespace PFGA_Membership
                 _ID = row.ID;
                 _LastName = (row.Last_Name == null ? string.Empty : row.Last_Name);
                 _FirstName = (row.First_Name == null ? string.Empty : row.First_Name);
+                _Alias = (row.Alias == null ? string.Empty : row.Alias);
                 _Address = (row.Address == null ? string.Empty : row.Address);
                 _CityProv = (row.City__Prov == null ? string.Empty : row.City__Prov);
                 _Postal = (row.Postal == null ? string.Empty : row.Postal);
@@ -177,17 +179,14 @@ namespace PFGA_Membership
                 DataColumn dcMembershipYear = new DataColumn("MembershipYear", System.Type.GetType("System.String"));
                 DataColumn dcDeleted = new DataColumn("Deleted", System.Type.GetType("System.Boolean"));
                 DataColumn dcNewRec = new DataColumn("NewRec", System.Type.GetType("System.Boolean"));
-                DataColumn dcPaymentType = new DataColumn("PaymentType", System.Type.GetType("System.Int32"));
-                DataColumn dcPaymentName = new DataColumn("PaymentName", System.Type.GetType("System.String"));
+                               
 
                 DataRow dr;
                 retVal.Columns.Add(dcYearPaid);
                 retVal.Columns.Add(dcMembershipYear);
                 retVal.Columns.Add(dcDeleted);
                 retVal.Columns.Add(dcNewRec);
-                retVal.Columns.Add(dcPaymentType);
-                retVal.Columns.Add(dcPaymentName);
-
+              
                 MembershipTableAdapters.PaidTableAdapter daPaid = new PFGA_Membership.MembershipTableAdapters.PaidTableAdapter();
                 Membership.PaidDataTable dtPaid = new Membership.PaidDataTable();
                 DataView dvPaid;
@@ -198,18 +197,11 @@ namespace PFGA_Membership
 
                 foreach (DataRowView row in dvPaid)
                 {
-                    int paymentType = -1;
-                    if (int.TryParse(row["PaymentType"].ToString(), out paymentType) == false)
-                    {
-                        paymentType = -1;
-                    }
-
                     dr = retVal.NewRow();
                     dr["YearPaid"] = int.Parse(row["YearPaid"].ToString());
                     dr["MembershipYear"] = row["MembershipYear"].ToString();
                     dr["Deleted"] = false;
-                    dr["NewRec"] = false;
-                    dr["PaymentType"] = paymentType;
+                    dr["NewRec"] = false;                
                     retVal.Rows.Add(dr);
                 }
             }
@@ -223,7 +215,7 @@ namespace PFGA_Membership
         private DataTable getExtraCards()
         {
             DataTable retVal = new DataTable();
-
+            int searchId = ID > 0 ? ID : 0;
             try
             {
                 MembershipTableAdapters.MembersTableAdapter daMember = new PFGA_Membership.MembershipTableAdapters.MembersTableAdapter();
@@ -243,7 +235,8 @@ namespace PFGA_Membership
 
                 daMember.Fill(dtMember);
                 dvMember = new DataView(dtMember);
-                dvMember.RowFilter = String.Format("MasterRecord = {0}", ID);
+
+                dvMember.RowFilter = String.Format("MasterRecord = {0}", searchId);
 
                 foreach (DataRowView row in dvMember)
                 {
@@ -284,6 +277,7 @@ namespace PFGA_Membership
 
                 row.Last_Name = _LastName;
                 row.First_Name = _FirstName;
+                row.Alias = _Alias;
                 row.Address = Address;
                 row.City__Prov = _CityProv;
                 row.Postal = _Postal;
@@ -304,18 +298,12 @@ namespace PFGA_Membership
                 row.Card = _Card;
                 row.Notes = _Notes;
                 row.Swipe = _SwipeCard;
-                row.Executive = _Executive;
                 row.Sponsor = _Sponsor;
                 row.Cell = _Cell;
                 row.Participation = byte.Parse(_Participation.ToString());
                 row.pOther = _pOther;
                 row.Image = BadgeImage;
                 row.CardMade = _CardMade;
-
-                // Old columns
-                row.ATT_Expiry = new DateTime(1900, 01, 01);
-                row.Membership_Type = string.Empty;
-                row.Section = string.Empty;
 
                 if (ID > 0)
                 {
@@ -330,10 +318,11 @@ namespace PFGA_Membership
                     ID = row.ID;
                 }
 
-                if (ID > 0 && MasterRecord <= 0)
+                if (ID > 0 && MasterRecord < 0)
                 {
+                    if (_paidHistory.Rows.Count == 0) { setDefaultPaid(); }
                     savePaidHistory();
-                    saveExtraCard();
+                    saveExtraCard(ID);
                 }
             }
             catch (Exception ex)
@@ -356,20 +345,13 @@ namespace PFGA_Membership
 
                     foreach (DataRow row in search)
                     {
-                        int test;
-                        int? paymentType = null;
-                        if (int.TryParse(row["PaymentType"].ToString(), out test))
-                        {
-                            paymentType = test;
-                        }
-                        
                         if (bool.Parse(row["Deleted"].ToString()) == true)
                         {
-                            retVal = daPaid.Delete(_ID, 0, row["MembershipYear"].ToString(), int.Parse(row["YearPaid"].ToString()), paymentType, null);
+                            retVal = daPaid.Delete(_ID, row["MembershipYear"].ToString(), int.Parse(row["YearPaid"].ToString()), null);
                         }
                         else if (bool.Parse(row["NewRec"].ToString()) == true)
                         {
-                            retVal = daPaid.Insert(_ID, 0, row["MembershipYear"].ToString(), int.Parse(row["YearPaid"].ToString()), paymentType, DateTime.Today);
+                            retVal = daPaid.Insert(_ID, row["MembershipYear"].ToString(), int.Parse(row["YearPaid"].ToString()), DateTime.Today);
                         }
                     }
                 }
@@ -380,7 +362,7 @@ namespace PFGA_Membership
             }
         }
 
-        private void saveExtraCard()
+        private void saveExtraCard(int ID)
         {
             DataRow[] search;
             int retVal = 0;
@@ -388,23 +370,33 @@ namespace PFGA_Membership
             try
             {
                 search = _ExtraCards.Select("Deleted = True");
-                ErrorLogger.Log(string.Format("{0} Cards to Delete", search.Length.ToString()), null, false);
-
                 if (search.Length > 0)
                 {
+                    ErrorLogger.Log(string.Format("{0} Cards to Delete", search.Length.ToString()), null, false);
+
                     MembershipTableAdapters.MembersTableAdapter daExtra = new PFGA_Membership.MembershipTableAdapters.MembersTableAdapter();
                     
                     foreach (DataRow row in search)
                     {
                         retVal = daExtra.DeleteQuery(int.Parse(row["ID"].ToString()));
 
-                        ErrorLogger.Log(string.Format("{0} Extra Cards deleted", retVal), null, false);
+                        ErrorLogger.Log(string.Format("Card {0} ({1}) deleted", row["ID"].ToString(), row["Name"].ToString()), null, false);
                     }
                 }
+                
+                String config = ConfigurationManager.ConnectionStrings["PFGA_Membership.Properties.Settings.PFGAMembershipConnectionString"].ToString();
+                using (SqlConnection cnn = new SqlConnection(config)) {
+                    cnn.Open();
+                    SqlCommand cmd = new SqlCommand("UPDATE Members SET MasterRecord = @Id WHERE MasterRecord = 0", cnn);
+                    cmd.Parameters.AddWithValue("@Id", ID);
+                    cmd.ExecuteNonQuery();
+                    cnn.Close();
+                }
+                
             }
             catch (Exception ex)
             {
-                ErrorLogger.Log("Error saving extra card", ex, true);
+                ErrorLogger.Log("Error deleting extra card", ex, true);
             }
         }
 

@@ -28,19 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMemberList));
             this.dgMemberList = new System.Windows.Forms.DataGridView();
-            this.colCard = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colFirstName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colLastName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colYear = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colMemberType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDateJoined = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colWalk = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colPaid = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btnWalk = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.btnEdit = new System.Windows.Forms.DataGridViewButtonColumn();
             this.chkGeneral = new System.Windows.Forms.CheckBox();
             this.chkWalk = new System.Windows.Forms.CheckBox();
             this.chkPaid = new System.Windows.Forms.CheckBox();
@@ -52,19 +42,43 @@
             this.pendingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toFullToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toHalfYearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.reportsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.halfToFullToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportToAtrium = new System.Windows.Forms.ToolStripMenuItem();
             this.exportMembersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mailingListEmailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pendingMembersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.renewingMembersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.safetyWalkMembersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cardAvailableListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportToAtriumToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.makeCardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateMembersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewCardLIstToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.databaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.backupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cboMemberTypeFilter = new System.Windows.Forms.ComboBox();
+            this.membershipTypeBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.membership = new PFGA_Membership.Membership();
             this.label2 = new System.Windows.Forms.Label();
-            this.renewingMembersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.membershipTypeTableAdapter = new PFGA_Membership.MembershipTableAdapters.MembershipTypeTableAdapter();
+            this.colCard = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colFirstName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colLastName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colYear = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colMemberType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDateJoined = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colWalk = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colPaid = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnWalk = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.btnEdit = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.btnDelete = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgMemberList)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.membershipTypeBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.membership)).BeginInit();
             this.SuspendLayout();
             // 
             // dgMemberList
@@ -87,12 +101,276 @@
             this.colPaid,
             this.colID,
             this.btnWalk,
-            this.btnEdit});
+            this.btnEdit,
+            this.btnDelete});
             this.dgMemberList.Location = new System.Drawing.Point(12, 72);
             this.dgMemberList.Name = "dgMemberList";
             this.dgMemberList.ReadOnly = true;
             this.dgMemberList.Size = new System.Drawing.Size(1009, 473);
             this.dgMemberList.TabIndex = 0;
+            // 
+            // chkGeneral
+            // 
+            this.chkGeneral.AutoSize = true;
+            this.chkGeneral.Location = new System.Drawing.Point(12, 27);
+            this.chkGeneral.Name = "chkGeneral";
+            this.chkGeneral.Size = new System.Drawing.Size(94, 17);
+            this.chkGeneral.TabIndex = 2;
+            this.chkGeneral.Text = "Show Inactive";
+            this.chkGeneral.UseVisualStyleBackColor = true;
+            this.chkGeneral.CheckedChanged += new System.EventHandler(this.chkGeneral_CheckedChanged);
+            // 
+            // chkWalk
+            // 
+            this.chkWalk.AutoSize = true;
+            this.chkWalk.Location = new System.Drawing.Point(112, 27);
+            this.chkWalk.Name = "chkWalk";
+            this.chkWalk.Size = new System.Drawing.Size(124, 17);
+            this.chkWalk.TabIndex = 3;
+            this.chkWalk.Text = "Highlight Need Walk";
+            this.chkWalk.UseVisualStyleBackColor = true;
+            this.chkWalk.CheckedChanged += new System.EventHandler(this.chkWalk_CheckedChanged);
+            // 
+            // chkPaid
+            // 
+            this.chkPaid.AutoSize = true;
+            this.chkPaid.Location = new System.Drawing.Point(242, 27);
+            this.chkPaid.Name = "chkPaid";
+            this.chkPaid.Size = new System.Drawing.Size(131, 17);
+            this.chkPaid.TabIndex = 4;
+            this.chkPaid.Text = "Highlight Haven\'t Paid";
+            this.chkPaid.UseVisualStyleBackColor = true;
+            this.chkPaid.CheckedChanged += new System.EventHandler(this.chkPaid_CheckedChanged);
+            // 
+            // txtSearch
+            // 
+            this.txtSearch.Location = new System.Drawing.Point(921, 27);
+            this.txtSearch.Name = "txtSearch";
+            this.txtSearch.Size = new System.Drawing.Size(100, 20);
+            this.txtSearch.TabIndex = 6;
+            this.txtSearch.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextSearch_KeyPress);
+            this.txtSearch.Leave += new System.EventHandler(this.FilterMemberList);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(871, 30);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(44, 13);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "Search:";
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.membersToolStripMenuItem,
+            this.exportToAtrium,
+            this.cardsToolStripMenuItem,
+            this.databaseToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1033, 24);
+            this.menuStrip1.TabIndex = 10;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // membersToolStripMenuItem
+            // 
+            this.membersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuaddNew,
+            this.pendingToolStripMenuItem,
+            this.halfToFullToolStripMenuItem});
+            this.membersToolStripMenuItem.Name = "membersToolStripMenuItem";
+            this.membersToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
+            this.membersToolStripMenuItem.Text = "Members";
+            // 
+            // mnuaddNew
+            // 
+            this.mnuaddNew.Name = "mnuaddNew";
+            this.mnuaddNew.Size = new System.Drawing.Size(132, 22);
+            this.mnuaddNew.Text = "&Add New";
+            this.mnuaddNew.Click += new System.EventHandler(this.btnNew_Click);
+            // 
+            // pendingToolStripMenuItem
+            // 
+            this.pendingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toFullToolStripMenuItem,
+            this.toHalfYearToolStripMenuItem});
+            this.pendingToolStripMenuItem.Name = "pendingToolStripMenuItem";
+            this.pendingToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.pendingToolStripMenuItem.Text = "Pending";
+            // 
+            // toFullToolStripMenuItem
+            // 
+            this.toFullToolStripMenuItem.Name = "toFullToolStripMenuItem";
+            this.toFullToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.toFullToolStripMenuItem.Text = "To Full";
+            this.toFullToolStripMenuItem.Click += new System.EventHandler(this.toFullToolStripMenuItem_Click);
+            // 
+            // toHalfYearToolStripMenuItem
+            // 
+            this.toHalfYearToolStripMenuItem.Name = "toHalfYearToolStripMenuItem";
+            this.toHalfYearToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.toHalfYearToolStripMenuItem.Text = "To Half-Year";
+            this.toHalfYearToolStripMenuItem.Click += new System.EventHandler(this.toHalfYearToolStripMenuItem_Click);
+            // 
+            // halfToFullToolStripMenuItem
+            // 
+            this.halfToFullToolStripMenuItem.Name = "halfToFullToolStripMenuItem";
+            this.halfToFullToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.halfToFullToolStripMenuItem.Text = "Half to Full";
+            this.halfToFullToolStripMenuItem.Click += new System.EventHandler(this.halfToFullToolStripMenuItem_Click);
+            // 
+            // exportToAtrium
+            // 
+            this.exportToAtrium.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportMembersToolStripMenuItem,
+            this.mailingListEmailsToolStripMenuItem,
+            this.pendingMembersToolStripMenuItem,
+            this.renewingMembersToolStripMenuItem,
+            this.safetyWalkMembersToolStripMenuItem,
+            this.cardAvailableListToolStripMenuItem,
+            this.exportToAtriumToolStripMenuItem});
+            this.exportToAtrium.Name = "exportToAtrium";
+            this.exportToAtrium.Size = new System.Drawing.Size(59, 20);
+            this.exportToAtrium.Text = "Reports";
+            // 
+            // exportMembersToolStripMenuItem
+            // 
+            this.exportMembersToolStripMenuItem.Name = "exportMembersToolStripMenuItem";
+            this.exportMembersToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.exportMembersToolStripMenuItem.Text = "Export Members";
+            this.exportMembersToolStripMenuItem.Click += new System.EventHandler(this.exportMembersToolStripMenuItem_Click);
+            // 
+            // mailingListEmailsToolStripMenuItem
+            // 
+            this.mailingListEmailsToolStripMenuItem.Name = "mailingListEmailsToolStripMenuItem";
+            this.mailingListEmailsToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.mailingListEmailsToolStripMenuItem.Text = "Mailing List Emails";
+            this.mailingListEmailsToolStripMenuItem.Click += new System.EventHandler(this.mailingListEmailsToolStripMenuItem_Click);
+            // 
+            // pendingMembersToolStripMenuItem
+            // 
+            this.pendingMembersToolStripMenuItem.Name = "pendingMembersToolStripMenuItem";
+            this.pendingMembersToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.pendingMembersToolStripMenuItem.Text = "Pending Members";
+            this.pendingMembersToolStripMenuItem.Click += new System.EventHandler(this.pendingMembersToolStripMenuItem_Click);
+            // 
+            // renewingMembersToolStripMenuItem
+            // 
+            this.renewingMembersToolStripMenuItem.Name = "renewingMembersToolStripMenuItem";
+            this.renewingMembersToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.renewingMembersToolStripMenuItem.Text = "Renewing Members";
+            this.renewingMembersToolStripMenuItem.Click += new System.EventHandler(this.renewingMembersToolStripMenuItem_Click);
+            // 
+            // safetyWalkMembersToolStripMenuItem
+            // 
+            this.safetyWalkMembersToolStripMenuItem.Name = "safetyWalkMembersToolStripMenuItem";
+            this.safetyWalkMembersToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.safetyWalkMembersToolStripMenuItem.Text = "Orientation Walk Members";
+            this.safetyWalkMembersToolStripMenuItem.Click += new System.EventHandler(this.safetyWalkMembersToolStripMenuItem_Click);
+            // 
+            // cardAvailableListToolStripMenuItem
+            // 
+            this.cardAvailableListToolStripMenuItem.Name = "cardAvailableListToolStripMenuItem";
+            this.cardAvailableListToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.cardAvailableListToolStripMenuItem.Text = "Card Available List";
+            this.cardAvailableListToolStripMenuItem.Click += new System.EventHandler(this.cardAvailableListToolStripMenuItem_Click);
+            // 
+            // exportToAtriumToolStripMenuItem
+            // 
+            this.exportToAtriumToolStripMenuItem.Name = "exportToAtriumToolStripMenuItem";
+            this.exportToAtriumToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.exportToAtriumToolStripMenuItem.Text = "Export to Atrium";
+            this.exportToAtriumToolStripMenuItem.Click += new System.EventHandler(this.exportToAtriumToolStripMenuItem_Click);
+            // 
+            // cardsToolStripMenuItem
+            // 
+            this.cardsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.makeCardsToolStripMenuItem,
+            this.updateMembersToolStripMenuItem,
+            this.viewCardLIstToolStripMenuItem});
+            this.cardsToolStripMenuItem.Name = "cardsToolStripMenuItem";
+            this.cardsToolStripMenuItem.Size = new System.Drawing.Size(49, 20);
+            this.cardsToolStripMenuItem.Text = "Cards";
+            // 
+            // makeCardsToolStripMenuItem
+            // 
+            this.makeCardsToolStripMenuItem.Name = "makeCardsToolStripMenuItem";
+            this.makeCardsToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.makeCardsToolStripMenuItem.Text = "Make Cards";
+            this.makeCardsToolStripMenuItem.Click += new System.EventHandler(this.makeCardsToolStripMenuItem_Click);
+            // 
+            // updateMembersToolStripMenuItem
+            // 
+            this.updateMembersToolStripMenuItem.Name = "updateMembersToolStripMenuItem";
+            this.updateMembersToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.updateMembersToolStripMenuItem.Text = "Update Members";
+            this.updateMembersToolStripMenuItem.Click += new System.EventHandler(this.updateMembersToolStripMenuItem_Click);
+            // 
+            // viewCardLIstToolStripMenuItem
+            // 
+            this.viewCardLIstToolStripMenuItem.Name = "viewCardLIstToolStripMenuItem";
+            this.viewCardLIstToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.viewCardLIstToolStripMenuItem.Text = "View Card LIst";
+            this.viewCardLIstToolStripMenuItem.Click += new System.EventHandler(this.viewCardLIstToolStripMenuItem_Click);
+            // 
+            // databaseToolStripMenuItem
+            // 
+            this.databaseToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.backupToolStripMenuItem});
+            this.databaseToolStripMenuItem.Name = "databaseToolStripMenuItem";
+            this.databaseToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
+            this.databaseToolStripMenuItem.Text = "Database";
+            // 
+            // backupToolStripMenuItem
+            // 
+            this.backupToolStripMenuItem.Name = "backupToolStripMenuItem";
+            this.backupToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.backupToolStripMenuItem.Text = "Backup";
+            this.backupToolStripMenuItem.Click += new System.EventHandler(this.backupToolStripMenuItem_Click);
+            // 
+            // cboMemberTypeFilter
+            // 
+            this.cboMemberTypeFilter.DataSource = this.membershipTypeBindingSource;
+            this.cboMemberTypeFilter.DisplayMember = "Membership Type";
+            this.cboMemberTypeFilter.FormattingEnabled = true;
+            this.cboMemberTypeFilter.Location = new System.Drawing.Point(518, 25);
+            this.cboMemberTypeFilter.Name = "cboMemberTypeFilter";
+            this.cboMemberTypeFilter.Size = new System.Drawing.Size(147, 21);
+            this.cboMemberTypeFilter.TabIndex = 11;
+            this.cboMemberTypeFilter.SelectedIndexChanged += new System.EventHandler(this.cboMemberTypeFilter_SelectedIndexChanged);
+            // 
+            // membershipTypeBindingSource
+            // 
+            this.membershipTypeBindingSource.DataMember = "MembershipType";
+            this.membershipTypeBindingSource.DataSource = this.membership;
+            // 
+            // membership
+            // 
+            this.membership.DataSetName = "Membership";
+            this.membership.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(396, 28);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(116, 13);
+            this.label2.TabIndex = 12;
+            this.label2.Text = "Membership Type Filter";
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Location = new System.Drawing.Point(704, 28);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(100, 20);
+            this.richTextBox1.TabIndex = 13;
+            this.richTextBox1.Text = "";
+            this.richTextBox1.Visible = false;
+            // 
+            // membershipTypeTableAdapter
+            // 
+            this.membershipTypeTableAdapter.ClearBeforeFill = true;
             // 
             // colCard
             // 
@@ -168,194 +446,14 @@
             this.btnEdit.UseColumnTextForButtonValue = true;
             this.btnEdit.Width = 50;
             // 
-            // chkGeneral
+            // btnDelete
             // 
-            this.chkGeneral.AutoSize = true;
-            this.chkGeneral.Location = new System.Drawing.Point(12, 27);
-            this.chkGeneral.Name = "chkGeneral";
-            this.chkGeneral.Size = new System.Drawing.Size(94, 17);
-            this.chkGeneral.TabIndex = 2;
-            this.chkGeneral.Text = "Show Inactive";
-            this.chkGeneral.UseVisualStyleBackColor = true;
-            this.chkGeneral.CheckedChanged += new System.EventHandler(this.chkGeneral_CheckedChanged);
-            // 
-            // chkWalk
-            // 
-            this.chkWalk.AutoSize = true;
-            this.chkWalk.Location = new System.Drawing.Point(112, 27);
-            this.chkWalk.Name = "chkWalk";
-            this.chkWalk.Size = new System.Drawing.Size(124, 17);
-            this.chkWalk.TabIndex = 3;
-            this.chkWalk.Text = "Highlight Need Walk";
-            this.chkWalk.UseVisualStyleBackColor = true;
-            this.chkWalk.CheckedChanged += new System.EventHandler(this.chkWalk_CheckedChanged);
-            // 
-            // chkPaid
-            // 
-            this.chkPaid.AutoSize = true;
-            this.chkPaid.Location = new System.Drawing.Point(242, 27);
-            this.chkPaid.Name = "chkPaid";
-            this.chkPaid.Size = new System.Drawing.Size(131, 17);
-            this.chkPaid.TabIndex = 4;
-            this.chkPaid.Text = "Highlight Haven\'t Paid";
-            this.chkPaid.UseVisualStyleBackColor = true;
-            this.chkPaid.CheckedChanged += new System.EventHandler(this.chkPaid_CheckedChanged);
-            // 
-            // txtSearch
-            // 
-            this.txtSearch.Location = new System.Drawing.Point(921, 27);
-            this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(100, 20);
-            this.txtSearch.TabIndex = 6;
-            this.txtSearch.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextSearch_KeyPress);
-            this.txtSearch.Leave += new System.EventHandler(this.FilterMemberList);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(871, 30);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(44, 13);
-            this.label1.TabIndex = 7;
-            this.label1.Text = "Search:";
-            // 
-            // menuStrip1
-            // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.membersToolStripMenuItem,
-            this.reportsToolStripMenuItem,
-            this.cardsToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1033, 24);
-            this.menuStrip1.TabIndex = 10;
-            this.menuStrip1.Text = "menuStrip1";
-            // 
-            // membersToolStripMenuItem
-            // 
-            this.membersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuaddNew,
-            this.pendingToolStripMenuItem});
-            this.membersToolStripMenuItem.Name = "membersToolStripMenuItem";
-            this.membersToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
-            this.membersToolStripMenuItem.Text = "Members";
-            // 
-            // mnuaddNew
-            // 
-            this.mnuaddNew.Name = "mnuaddNew";
-            this.mnuaddNew.Size = new System.Drawing.Size(123, 22);
-            this.mnuaddNew.Text = "&Add New";
-            this.mnuaddNew.Click += new System.EventHandler(this.btnNew_Click);
-            // 
-            // pendingToolStripMenuItem
-            // 
-            this.pendingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toFullToolStripMenuItem,
-            this.toHalfYearToolStripMenuItem});
-            this.pendingToolStripMenuItem.Name = "pendingToolStripMenuItem";
-            this.pendingToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
-            this.pendingToolStripMenuItem.Text = "Pending";
-            // 
-            // toFullToolStripMenuItem
-            // 
-            this.toFullToolStripMenuItem.Name = "toFullToolStripMenuItem";
-            this.toFullToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
-            this.toFullToolStripMenuItem.Text = "To Full";
-            this.toFullToolStripMenuItem.Click += new System.EventHandler(this.toFullToolStripMenuItem_Click);
-            // 
-            // toHalfYearToolStripMenuItem
-            // 
-            this.toHalfYearToolStripMenuItem.Name = "toHalfYearToolStripMenuItem";
-            this.toHalfYearToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
-            this.toHalfYearToolStripMenuItem.Text = "To Half-Year";
-            this.toHalfYearToolStripMenuItem.Click += new System.EventHandler(this.toHalfYearToolStripMenuItem_Click);
-            // 
-            // reportsToolStripMenuItem
-            // 
-            this.reportsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.exportMembersToolStripMenuItem,
-            this.mailingListEmailsToolStripMenuItem,
-            this.pendingMembersToolStripMenuItem,
-            this.renewingMembersToolStripMenuItem});
-            this.reportsToolStripMenuItem.Name = "reportsToolStripMenuItem";
-            this.reportsToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
-            this.reportsToolStripMenuItem.Text = "Reports";
-            // 
-            // exportMembersToolStripMenuItem
-            // 
-            this.exportMembersToolStripMenuItem.Name = "exportMembersToolStripMenuItem";
-            this.exportMembersToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
-            this.exportMembersToolStripMenuItem.Text = "Export Members";
-            this.exportMembersToolStripMenuItem.Click += new System.EventHandler(this.exportMembersToolStripMenuItem_Click);
-            // 
-            // mailingListEmailsToolStripMenuItem
-            // 
-            this.mailingListEmailsToolStripMenuItem.Name = "mailingListEmailsToolStripMenuItem";
-            this.mailingListEmailsToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
-            this.mailingListEmailsToolStripMenuItem.Text = "Mailing List Emails";
-            this.mailingListEmailsToolStripMenuItem.Click += new System.EventHandler(this.mailingListEmailsToolStripMenuItem_Click);
-            // 
-            // pendingMembersToolStripMenuItem
-            // 
-            this.pendingMembersToolStripMenuItem.Name = "pendingMembersToolStripMenuItem";
-            this.pendingMembersToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
-            this.pendingMembersToolStripMenuItem.Text = "Pending Members";
-            this.pendingMembersToolStripMenuItem.Click += new System.EventHandler(this.pendingMembersToolStripMenuItem_Click);
-            // 
-            // cardsToolStripMenuItem
-            // 
-            this.cardsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.makeCardsToolStripMenuItem,
-            this.updateMembersToolStripMenuItem,
-            this.viewCardLIstToolStripMenuItem});
-            this.cardsToolStripMenuItem.Name = "cardsToolStripMenuItem";
-            this.cardsToolStripMenuItem.Size = new System.Drawing.Size(49, 20);
-            this.cardsToolStripMenuItem.Text = "Cards";
-            // 
-            // makeCardsToolStripMenuItem
-            // 
-            this.makeCardsToolStripMenuItem.Name = "makeCardsToolStripMenuItem";
-            this.makeCardsToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
-            this.makeCardsToolStripMenuItem.Text = "Make Cards";
-            this.makeCardsToolStripMenuItem.Click += new System.EventHandler(this.makeCardsToolStripMenuItem_Click);
-            // 
-            // updateMembersToolStripMenuItem
-            // 
-            this.updateMembersToolStripMenuItem.Name = "updateMembersToolStripMenuItem";
-            this.updateMembersToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
-            this.updateMembersToolStripMenuItem.Text = "Update Members";
-            this.updateMembersToolStripMenuItem.Click += new System.EventHandler(this.updateMembersToolStripMenuItem_Click);
-            // 
-            // viewCardLIstToolStripMenuItem
-            // 
-            this.viewCardLIstToolStripMenuItem.Name = "viewCardLIstToolStripMenuItem";
-            this.viewCardLIstToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
-            this.viewCardLIstToolStripMenuItem.Text = "View Card LIst";
-            this.viewCardLIstToolStripMenuItem.Click += new System.EventHandler(this.viewCardLIstToolStripMenuItem_Click);
-            // 
-            // cboMemberTypeFilter
-            // 
-            this.cboMemberTypeFilter.FormattingEnabled = true;
-            this.cboMemberTypeFilter.Location = new System.Drawing.Point(518, 25);
-            this.cboMemberTypeFilter.Name = "cboMemberTypeFilter";
-            this.cboMemberTypeFilter.Size = new System.Drawing.Size(147, 21);
-            this.cboMemberTypeFilter.TabIndex = 11;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(396, 28);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(116, 13);
-            this.label2.TabIndex = 12;
-            this.label2.Text = "Membership Type Filter";
-            // 
-            // renewingMembersToolStripMenuItem
-            // 
-            this.renewingMembersToolStripMenuItem.Name = "renewingMembersToolStripMenuItem";
-            this.renewingMembersToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
-            this.renewingMembersToolStripMenuItem.Text = "Renewing Members";
-            this.renewingMembersToolStripMenuItem.Click += new System.EventHandler(this.renewingMembersToolStripMenuItem_Click);
+            this.btnDelete.HeaderText = "";
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.ReadOnly = true;
+            this.btnDelete.Text = "Delete";
+            this.btnDelete.UseColumnTextForButtonValue = true;
+            this.btnDelete.Width = 50;
             // 
             // frmMemberList
             // 
@@ -363,6 +461,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1033, 557);
             this.ControlBox = false;
+            this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.cboMemberTypeFilter);
             this.Controls.Add(this.label1);
@@ -384,6 +483,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgMemberList)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.membershipTypeBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.membership)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -398,7 +499,7 @@
         private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem reportsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportToAtrium;
         private System.Windows.Forms.ToolStripMenuItem membersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mnuaddNew;
         private System.Windows.Forms.ToolStripMenuItem exportMembersToolStripMenuItem;
@@ -406,6 +507,24 @@
         private System.Windows.Forms.ToolStripMenuItem cardsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem makeCardsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem updateMembersToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pendingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toFullToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toHalfYearToolStripMenuItem;
+        private System.Windows.Forms.ComboBox cboMemberTypeFilter;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ToolStripMenuItem viewCardLIstToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pendingMembersToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem renewingMembersToolStripMenuItem;
+        private Membership membership;
+        private System.Windows.Forms.BindingSource membershipTypeBindingSource;
+        private MembershipTableAdapters.MembershipTypeTableAdapter membershipTypeTableAdapter;
+        private System.Windows.Forms.ToolStripMenuItem halfToFullToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem safetyWalkMembersToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem databaseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem backupToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cardAvailableListToolStripMenuItem;
+        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.ToolStripMenuItem exportToAtriumToolStripMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCard;
         private System.Windows.Forms.DataGridViewTextBoxColumn colFirstName;
         private System.Windows.Forms.DataGridViewTextBoxColumn colLastName;
@@ -417,15 +536,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colID;
         private System.Windows.Forms.DataGridViewButtonColumn btnWalk;
         private System.Windows.Forms.DataGridViewButtonColumn btnEdit;
-        private System.Windows.Forms.ToolStripMenuItem pendingToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toFullToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toHalfYearToolStripMenuItem;
-        private System.Windows.Forms.ComboBox cboMemberTypeFilter;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ToolStripMenuItem viewCardLIstToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem pendingMembersToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem renewingMembersToolStripMenuItem;
-
+        private System.Windows.Forms.DataGridViewButtonColumn btnDelete;
     }
 }
 

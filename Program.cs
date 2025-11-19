@@ -39,7 +39,6 @@ namespace PFGA_Membership
 
             if (startFrom.Day >= 7 || startFrom.DayOfWeek > DayOfWeek.Tuesday)
             {
-                startFrom = startFrom.AddMonths(1);
                 startFrom = DateTime.Parse(string.Format("{0}-{1}-01", startFrom.Year, startFrom.Month));
             }
 

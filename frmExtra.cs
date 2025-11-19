@@ -315,6 +315,7 @@ namespace PFGA_Membership
                 mbr.SwipeCard = chkSwipe.Checked;
                 mbr.Cell = txtCell.Text;
                 mbr.CardMade = chkCardMade.Checked;
+                mbr.MasterRecord = mbr.MasterRecord > 0 ? mbr.MasterRecord : 0;
                 if (Badge.Image != null)
                 {
                     Badge.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);

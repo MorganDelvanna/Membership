@@ -12,7 +12,7 @@ namespace PFGA_Membership.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "12.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.11.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -26,31 +26,22 @@ namespace PFGA_Membership.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=MembershipDB.accdb")]
-        public string MembershipDBConnectionString {
-            get {
-                return ((string)(this["MembershipDBConnectionString"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=|DataDirectory|\\MembershipDB.accdb")]
-        public string MembershipDBConnectionString1 {
-            get {
-                return ((string)(this["MembershipDBConnectionString1"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=EVIL-HIVE\\SQLEXPRESS;Initial Catalog=PFGAMembership;Persist Security " +
-            "Info=True;User ID=PFGAMembership")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=EVIL-INSIDE\\SQLEXPRESS;Initial Catalog=PFGAMembership;Persist Securit" +
+            "y Info=True;User ID=PFGADev;Password=1q2w3e4r;TrustServerCertificate=true")]
         public string PFGAMembershipConnectionString {
             get {
                 return ((string)(this["PFGAMembershipConnectionString"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=EVIL-INSIDE\\SQLEXPRESS;Initial Catalog=PFGAMembership;User ID=PFGADev" +
+            ";Password=1q2w3e4r;Encrypt=False;TrustServerCertificate=True")]
+        public string PFGAMembershipConnectionString1 {
+            get {
+                return ((string)(this["PFGAMembershipConnectionString1"]));
             }
         }
     }

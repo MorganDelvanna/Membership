@@ -1,8 +1,5 @@
-﻿using OdsReadWrite;
-using PFGA_Membership.MembershipTableAdapters;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
+﻿using System;
+using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
@@ -432,6 +429,10 @@ namespace PFGA_Membership
             }
             finally
             {
+                //Make sure Excel is visible and give the user control
+                //of Microsoft Excel's lifetime.
+                oXL.Visible = true;
+                oXL.UserControl = true;
                 Cursor.Current = Cursors.Default;
                 MessageBox.Show("Done", "Mailing List Emails", MessageBoxButtons.OK);
             }
@@ -708,6 +709,7 @@ namespace PFGA_Membership
             {
                 Cursor.Current = Cursors.Default;
             }
+             
         }
 
         private void backupToolStripMenuItem_Click(object sender, EventArgs e)
@@ -787,6 +789,14 @@ namespace PFGA_Membership
             {
                 Cursor.Current = Cursors.Default;
             }
+            
+        }
+
+        private void cboMemberTypeFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            String filter = "[Membership Type] = '" + cboMemberTypeFilter.Text + "'";
+            dvMemberList.RowFilter = filter;
+            dgMemberList.Refresh();
         }
 
         private void exportToAtriumToolStripMenuItem_Click(object sender, EventArgs e)
@@ -795,6 +805,10 @@ namespace PFGA_Membership
             frm.showAtrium();
             this.Close();
             this.Dispose();
+        }
+            da.UpdateHalftoFull();
+            BindGrid();
+            MessageBox.Show("Members Updated");
         }
     }
 }

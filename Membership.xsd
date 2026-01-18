@@ -564,7 +564,7 @@ FROM            NewCards</CommandText>
       </DataSource>
     </xs:appinfo>
   </xs:annotation>
-  <xs:element name="Membership" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="Membership" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="Membership">
+  <xs:element name="Membership" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="Membership" msprop:Generator_UserDSName="Membership">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element name="MembershipType" msprop:Generator_RowEvHandlerName="MembershipTypeRowChangeEventHandler" msprop:Generator_RowDeletedName="MembershipTypeRowDeleted" msprop:Generator_RowDeletingName="MembershipTypeRowDeleting" msprop:Generator_RowEvArgName="MembershipTypeRowChangeEvent" msprop:Generator_TablePropName="MembershipType" msprop:Generator_RowChangedName="MembershipTypeRowChanged" msprop:Generator_UserTableName="MembershipType" msprop:Generator_RowChangingName="MembershipTypeRowChanging" msprop:Generator_RowClassName="MembershipTypeRow" msprop:Generator_TableClassName="MembershipTypeDataTable" msprop:Generator_TableVarName="tableMembershipType">
@@ -912,6 +912,10 @@ FROM            NewCards</CommandText>
     <xs:unique name="Members_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
       <xs:selector xpath=".//mstns:Members" />
       <xs:field xpath="mstns:ID" />
+    </xs:unique>
+    <xs:unique name="PaymentType_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:PaymentType" />
+      <xs:field xpath="mstns:PaymentTypeId" />
     </xs:unique>
   </xs:element>
   <xs:annotation>

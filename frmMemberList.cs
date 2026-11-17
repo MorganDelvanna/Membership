@@ -1,13 +1,22 @@
-﻿using System;
+﻿using OdsReadWrite;
+using System;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Web.Script;
 using System.Web.UI;
 using System.Windows.Forms;
-using System.Web.Script;
+using MailKit.Net.Pop3;
+using MailKit.Security;
+using MimeKit;
+using System.Security.Cryptography;
+using System.Collections.Generic;
+using System.Web.Script.Serialization;
 
 
 namespace PFGA_Membership
@@ -19,6 +28,7 @@ namespace PFGA_Membership
         Membership.MemberListDataTable dtMemberList = new Membership.MemberListDataTable();
         DataView dvMemberList;
         clsHelpers cHelper = new clsHelpers();
+                
 
         public frmMemberList()
         {
@@ -166,6 +176,11 @@ namespace PFGA_Membership
             }
             dgMemberList.Refresh();
 
+            if (txtSearch.TextLength > 0)
+            {
+                FilterMemberList(txtSearch, EventArgs.Empty);
+            }
+
         }
 
         private void dgMemberList_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -281,12 +296,16 @@ namespace PFGA_Membership
                     {
                         filter = String.Format("[Last Name] LIKE '{0}*' OR [First Name] LIKE '{0}*' OR [Email Address] LIKE '{0}*' OR [Website UserNames] LIKE '{0}*' ", txtSearch.Text);
                     }
-                    dvMemberList.RowFilter = filter;
                 }
-                else
+
+                if (!chkGeneral.Checked)
                 {
-                    dvMemberList.RowFilter = filter;
+                    filter = String.IsNullOrEmpty(filter)
+                        ? "Active = 1"
+                        : String.Format("({0}) AND Active = 1", filter);
                 }
+
+                dvMemberList.RowFilter = filter;
             }
             catch (Exception ex)
             {
@@ -429,10 +448,6 @@ namespace PFGA_Membership
             }
             finally
             {
-                //Make sure Excel is visible and give the user control
-                //of Microsoft Excel's lifetime.
-                oXL.Visible = true;
-                oXL.UserControl = true;
                 Cursor.Current = Cursors.Default;
                 MessageBox.Show("Done", "Mailing List Emails", MessageBoxButtons.OK);
             }
@@ -792,12 +807,6 @@ namespace PFGA_Membership
             
         }
 
-        private void cboMemberTypeFilter_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            String filter = "[Membership Type] = '" + cboMemberTypeFilter.Text + "'";
-            dvMemberList.RowFilter = filter;
-            dgMemberList.Refresh();
-        }
 
         private void exportToAtriumToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -806,9 +815,67 @@ namespace PFGA_Membership
             this.Close();
             this.Dispose();
         }
-            da.UpdateHalftoFull();
-            BindGrid();
-            MessageBox.Show("Members Updated");
+
+        private void expiredPALToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SqlConnection cnn;
+            SqlCommand cmd;
+            DataTable dtPals;
+            SqlDataAdapter da;
+            String palLine = "Last Name, First Name, Pal Expiry, Email, Phone, Cell";
+
+            String config = ConfigurationManager.ConnectionStrings["PFGA_Membership.Properties.Settings.PFGAMembershipConnectionString"].ToString();
+
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+
+                string fileName;
+
+                cnn = new SqlConnection(config);
+                cnn.Open();
+                
+                String qryPals = $@"SELECT [Last Name], [First Name], [Pal Exp Date], [Email Address], phone, cell FROM qryExport WHERE YearPaid = {cHelper.thisYear()} AND [Pal Exp Date] < '{DateTime.Now}'";
+
+                cmd = new SqlCommand(qryPals, cnn);
+                dtPals = new DataTable();
+                da = new SqlDataAdapter(cmd);
+                da.Fill(dtPals);
+
+                fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "Expired_Pal.csv");
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(fileName))
+                {
+                    file.WriteLine(palLine);
+                    foreach (DataRow row in dtPals.Rows)
+                    {
+                        palLine = string.Join(",", row.ItemArray.Select(field => field?.ToString()));
+                        file.WriteLine(palLine);                        
+                    }
+                    file.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.Log("Error trying to generate Pal Expiry Report", ex, true);
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+                MessageBox.Show("Done", "Pal Expiry Report", MessageBoxButtons.OK);
+            }
+        }
+
+        private void fetchEmailsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmParent frm = (frmParent)this.ParentForm;
+            frm.showApplicants();
+            this.Close();
+            this.Dispose();
+        }
+
+        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
         }
     }
 }

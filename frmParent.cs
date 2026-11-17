@@ -57,5 +57,12 @@ namespace PFGA_Membership
             frm.MdiParent = this;
             frm.Show();
         }
+
+        public void showApplicants()
+        {
+            frmApplicantList frm = new frmApplicantList();
+            frm.MdiParent = this;
+            frm.Show();
+        }
     }
 }

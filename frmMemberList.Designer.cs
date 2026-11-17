@@ -31,6 +31,18 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMemberList));
             this.dgMemberList = new System.Windows.Forms.DataGridView();
+            this.colCard = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colFirstName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colLastName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colYear = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colMemberType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDateJoined = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colWalk = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colPaid = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnDelete = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.btnWalk = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.btnEdit = new System.Windows.Forms.DataGridViewButtonColumn();
             this.chkGeneral = new System.Windows.Forms.CheckBox();
             this.chkWalk = new System.Windows.Forms.CheckBox();
             this.chkPaid = new System.Windows.Forms.CheckBox();
@@ -43,6 +55,7 @@
             this.toFullToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toHalfYearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.halfToFullToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToAtrium = new System.Windows.Forms.ToolStripMenuItem();
             this.exportMembersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mailingListEmailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,6 +64,7 @@
             this.safetyWalkMembersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cardAvailableListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToAtriumToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.expiredPALToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.makeCardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateMembersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,18 +77,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.membershipTypeTableAdapter = new PFGA_Membership.MembershipTableAdapters.MembershipTypeTableAdapter();
-            this.colCard = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colFirstName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colLastName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colYear = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colMemberType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDateJoined = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colWalk = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colPaid = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btnWalk = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.btnEdit = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.btnDelete = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgMemberList)).BeginInit();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.membershipTypeBindingSource)).BeginInit();
@@ -100,14 +102,97 @@
             this.colWalk,
             this.colPaid,
             this.colID,
+            this.btnDelete,
             this.btnWalk,
-            this.btnEdit,
-            this.btnDelete});
+            this.btnEdit});
             this.dgMemberList.Location = new System.Drawing.Point(12, 72);
             this.dgMemberList.Name = "dgMemberList";
             this.dgMemberList.ReadOnly = true;
             this.dgMemberList.Size = new System.Drawing.Size(1009, 473);
             this.dgMemberList.TabIndex = 0;
+            // 
+            // colCard
+            // 
+            this.colCard.HeaderText = "Card";
+            this.colCard.Name = "colCard";
+            this.colCard.ReadOnly = true;
+            // 
+            // colFirstName
+            // 
+            this.colFirstName.HeaderText = "First Name";
+            this.colFirstName.Name = "colFirstName";
+            this.colFirstName.ReadOnly = true;
+            // 
+            // colLastName
+            // 
+            this.colLastName.HeaderText = "Last Name";
+            this.colLastName.Name = "colLastName";
+            this.colLastName.ReadOnly = true;
+            // 
+            // colYear
+            // 
+            this.colYear.HeaderText = "Membership Year";
+            this.colYear.Name = "colYear";
+            this.colYear.ReadOnly = true;
+            // 
+            // colMemberType
+            // 
+            this.colMemberType.HeaderText = "Membership Type";
+            this.colMemberType.Name = "colMemberType";
+            this.colMemberType.ReadOnly = true;
+            // 
+            // colDateJoined
+            // 
+            this.colDateJoined.HeaderText = "Date Joined";
+            this.colDateJoined.Name = "colDateJoined";
+            this.colDateJoined.ReadOnly = true;
+            // 
+            // colWalk
+            // 
+            this.colWalk.HeaderText = "Walk";
+            this.colWalk.Name = "colWalk";
+            this.colWalk.ReadOnly = true;
+            // 
+            // colPaid
+            // 
+            this.colPaid.HeaderText = "Paid";
+            this.colPaid.Name = "colPaid";
+            this.colPaid.ReadOnly = true;
+            this.colPaid.Visible = false;
+            // 
+            // colID
+            // 
+            this.colID.HeaderText = "ID";
+            this.colID.Name = "colID";
+            this.colID.ReadOnly = true;
+            this.colID.Visible = false;
+            // 
+            // btnDelete
+            // 
+            this.btnDelete.HeaderText = "";
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.ReadOnly = true;
+            this.btnDelete.Text = "Delete";
+            this.btnDelete.UseColumnTextForButtonValue = true;
+            this.btnDelete.Width = 50;
+            // 
+            // btnWalk
+            // 
+            this.btnWalk.HeaderText = "";
+            this.btnWalk.Name = "btnWalk";
+            this.btnWalk.ReadOnly = true;
+            this.btnWalk.Text = "Walk";
+            this.btnWalk.UseColumnTextForButtonValue = true;
+            this.btnWalk.Width = 50;
+            // 
+            // btnEdit
+            // 
+            this.btnEdit.HeaderText = "";
+            this.btnEdit.Name = "btnEdit";
+            this.btnEdit.ReadOnly = true;
+            this.btnEdit.Text = "Edit";
+            this.btnEdit.UseColumnTextForButtonValue = true;
+            this.btnEdit.Width = 50;
             // 
             // chkGeneral
             // 
@@ -172,13 +257,15 @@
             this.menuStrip1.Size = new System.Drawing.Size(1033, 24);
             this.menuStrip1.TabIndex = 10;
             this.menuStrip1.Text = "menuStrip1";
+            this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
             // 
             // membersToolStripMenuItem
             // 
             this.membersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuaddNew,
             this.pendingToolStripMenuItem,
-            this.halfToFullToolStripMenuItem});
+            this.halfToFullToolStripMenuItem,
+            this.importToolStripMenuItem});
             this.membersToolStripMenuItem.Name = "membersToolStripMenuItem";
             this.membersToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
             this.membersToolStripMenuItem.Text = "Members";
@@ -186,7 +273,7 @@
             // mnuaddNew
             // 
             this.mnuaddNew.Name = "mnuaddNew";
-            this.mnuaddNew.Size = new System.Drawing.Size(132, 22);
+            this.mnuaddNew.Size = new System.Drawing.Size(169, 22);
             this.mnuaddNew.Text = "&Add New";
             this.mnuaddNew.Click += new System.EventHandler(this.btnNew_Click);
             // 
@@ -196,29 +283,36 @@
             this.toFullToolStripMenuItem,
             this.toHalfYearToolStripMenuItem});
             this.pendingToolStripMenuItem.Name = "pendingToolStripMenuItem";
-            this.pendingToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.pendingToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.pendingToolStripMenuItem.Text = "Pending";
             // 
             // toFullToolStripMenuItem
             // 
             this.toFullToolStripMenuItem.Name = "toFullToolStripMenuItem";
-            this.toFullToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.toFullToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.toFullToolStripMenuItem.Text = "To Full";
             this.toFullToolStripMenuItem.Click += new System.EventHandler(this.toFullToolStripMenuItem_Click);
             // 
             // toHalfYearToolStripMenuItem
             // 
             this.toHalfYearToolStripMenuItem.Name = "toHalfYearToolStripMenuItem";
-            this.toHalfYearToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.toHalfYearToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.toHalfYearToolStripMenuItem.Text = "To Half-Year";
             this.toHalfYearToolStripMenuItem.Click += new System.EventHandler(this.toHalfYearToolStripMenuItem_Click);
             // 
             // halfToFullToolStripMenuItem
             // 
             this.halfToFullToolStripMenuItem.Name = "halfToFullToolStripMenuItem";
-            this.halfToFullToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.halfToFullToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.halfToFullToolStripMenuItem.Text = "Half to Full";
             this.halfToFullToolStripMenuItem.Click += new System.EventHandler(this.halfToFullToolStripMenuItem_Click);
+            // 
+            // importToolStripMenuItem
+            // 
+            this.importToolStripMenuItem.Name = "importToolStripMenuItem";
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.importToolStripMenuItem.Text = "Import Applicants";
+            this.importToolStripMenuItem.Click += new System.EventHandler(this.fetchEmailsToolStripMenuItem_Click);
             // 
             // exportToAtrium
             // 
@@ -229,7 +323,8 @@
             this.renewingMembersToolStripMenuItem,
             this.safetyWalkMembersToolStripMenuItem,
             this.cardAvailableListToolStripMenuItem,
-            this.exportToAtriumToolStripMenuItem});
+            this.exportToAtriumToolStripMenuItem,
+            this.expiredPALToolStripMenuItem});
             this.exportToAtrium.Name = "exportToAtrium";
             this.exportToAtrium.Size = new System.Drawing.Size(59, 20);
             this.exportToAtrium.Text = "Reports";
@@ -282,6 +377,13 @@
             this.exportToAtriumToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
             this.exportToAtriumToolStripMenuItem.Text = "Export to Atrium";
             this.exportToAtriumToolStripMenuItem.Click += new System.EventHandler(this.exportToAtriumToolStripMenuItem_Click);
+            // 
+            // expiredPALToolStripMenuItem
+            // 
+            this.expiredPALToolStripMenuItem.Name = "expiredPALToolStripMenuItem";
+            this.expiredPALToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.expiredPALToolStripMenuItem.Text = "Expired PAL";
+            this.expiredPALToolStripMenuItem.Click += new System.EventHandler(this.expiredPALToolStripMenuItem_Click);
             // 
             // cardsToolStripMenuItem
             // 
@@ -372,89 +474,6 @@
             // 
             this.membershipTypeTableAdapter.ClearBeforeFill = true;
             // 
-            // colCard
-            // 
-            this.colCard.HeaderText = "Card";
-            this.colCard.Name = "colCard";
-            this.colCard.ReadOnly = true;
-            // 
-            // colFirstName
-            // 
-            this.colFirstName.HeaderText = "First Name";
-            this.colFirstName.Name = "colFirstName";
-            this.colFirstName.ReadOnly = true;
-            // 
-            // colLastName
-            // 
-            this.colLastName.HeaderText = "Last Name";
-            this.colLastName.Name = "colLastName";
-            this.colLastName.ReadOnly = true;
-            // 
-            // colYear
-            // 
-            this.colYear.HeaderText = "Membership Year";
-            this.colYear.Name = "colYear";
-            this.colYear.ReadOnly = true;
-            // 
-            // colMemberType
-            // 
-            this.colMemberType.HeaderText = "Membership Type";
-            this.colMemberType.Name = "colMemberType";
-            this.colMemberType.ReadOnly = true;
-            // 
-            // colDateJoined
-            // 
-            this.colDateJoined.HeaderText = "Date Joined";
-            this.colDateJoined.Name = "colDateJoined";
-            this.colDateJoined.ReadOnly = true;
-            // 
-            // colWalk
-            // 
-            this.colWalk.HeaderText = "Walk";
-            this.colWalk.Name = "colWalk";
-            this.colWalk.ReadOnly = true;
-            // 
-            // colPaid
-            // 
-            this.colPaid.HeaderText = "Paid";
-            this.colPaid.Name = "colPaid";
-            this.colPaid.ReadOnly = true;
-            this.colPaid.Visible = false;
-            // 
-            // colID
-            // 
-            this.colID.HeaderText = "ID";
-            this.colID.Name = "colID";
-            this.colID.ReadOnly = true;
-            this.colID.Visible = false;
-            // 
-            // btnWalk
-            // 
-            this.btnWalk.HeaderText = "";
-            this.btnWalk.Name = "btnWalk";
-            this.btnWalk.ReadOnly = true;
-            this.btnWalk.Text = "Walk";
-            this.btnWalk.UseColumnTextForButtonValue = true;
-            this.btnWalk.Width = 50;
-            // 
-            // btnEdit
-            // 
-            this.btnEdit.HeaderText = "";
-            this.btnEdit.Name = "btnEdit";
-            this.btnEdit.ReadOnly = true;
-            this.btnEdit.Text = "Edit";
-            this.btnEdit.UseColumnTextForButtonValue = true;
-            this.btnEdit.Width = 50;
-            // 
-            // btnDelete
-            // 
-            this.btnDelete.HeaderText = "";
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.ReadOnly = true;
-            this.btnDelete.Text = "Delete";
-            this.btnDelete.UseColumnTextForButtonValue = true;
-            this.btnDelete.Width = 50;
-            // 
             // frmMemberList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -525,6 +544,7 @@
         private System.Windows.Forms.ToolStripMenuItem cardAvailableListToolStripMenuItem;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.ToolStripMenuItem exportToAtriumToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem expiredPALToolStripMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCard;
         private System.Windows.Forms.DataGridViewTextBoxColumn colFirstName;
         private System.Windows.Forms.DataGridViewTextBoxColumn colLastName;
@@ -534,9 +554,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colWalk;
         private System.Windows.Forms.DataGridViewTextBoxColumn colPaid;
         private System.Windows.Forms.DataGridViewTextBoxColumn colID;
+        private System.Windows.Forms.DataGridViewButtonColumn btnDelete;
         private System.Windows.Forms.DataGridViewButtonColumn btnWalk;
         private System.Windows.Forms.DataGridViewButtonColumn btnEdit;
-        private System.Windows.Forms.DataGridViewButtonColumn btnDelete;
+        private System.Windows.Forms.ToolStripMenuItem importToolStripMenuItem;
     }
 }
 

@@ -116,8 +116,6 @@ namespace PFGA_Membership
                 txtAlias.Text = mbr.Alias.ToString();
                 birth_DateDateTimePicker.Text = (mbr.BirthDate.ToString() == "1900-01-01" ? string.Empty : mbr.BirthDate.ToString());
                 addressTextBox.Text = mbr.Address.ToString();
-                city__ProvTextBox.Text = mbr.CityProv.ToString();
-                postalTextBox.Text = mbr.Postal.ToString();
                 phoneTextBox.Text = mbr.Phone.ToString();
                 email_AddressTextBox.Text = mbr.Email.ToString();
                 website_UsernamesTextBox.Text = mbr.UserName.ToString();
@@ -241,9 +239,6 @@ namespace PFGA_Membership
                     last_NameTextBox.Text = mbr.LastName.ToString();
                     first_NameTextBox.Text = mbr.FirstName.ToString();
                     addressTextBox.Hide();
-                    city__ProvTextBox.Hide();
-                    postalTextBox.Hide();
-                    //phoneTextBox.Hide();
                     website_UsernamesTextBox.Hide();
                     date_JoinedDateTimePicker.Hide();
                     grpSection.Hide();
@@ -534,8 +529,6 @@ namespace PFGA_Membership
                 mbr.Alias = txtAlias.Text;
                 mbr.BirthDate = birth_DateDateTimePicker.Value;
                 mbr.Address = addressTextBox.Text;
-                mbr.CityProv = city__ProvTextBox.Text;
-                mbr.Postal = postalTextBox.Text;
                 mbr.Phone = phoneTextBox.Text;
                 mbr.Email = email_AddressTextBox.Text;
                 mbr.UserName = website_UsernamesTextBox.Text;

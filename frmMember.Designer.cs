@@ -38,8 +38,6 @@
             System.Windows.Forms.Label walkLabel;
             System.Windows.Forms.Label email_AddressLabel;
             System.Windows.Forms.Label phoneLabel;
-            System.Windows.Forms.Label postalLabel;
-            System.Windows.Forms.Label city__ProvLabel;
             System.Windows.Forms.Label addressLabel;
             System.Windows.Forms.Label first_NameLabel;
             System.Windows.Forms.Label last_NameLabel;
@@ -72,6 +70,7 @@
             this.txtCardNumber = new System.Windows.Forms.TextBox();
             this.chkActive = new System.Windows.Forms.CheckBox();
             this.grpSection = new System.Windows.Forms.GroupBox();
+            this.chkActionRO = new System.Windows.Forms.CheckBox();
             this.chkAction = new System.Windows.Forms.CheckBox();
             this.chkRifle = new System.Windows.Forms.CheckBox();
             this.chkSmallbore = new System.Windows.Forms.CheckBox();
@@ -89,8 +88,6 @@
             this.birth_DateDateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.email_AddressTextBox = new System.Windows.Forms.TextBox();
             this.phoneTextBox = new System.Windows.Forms.TextBox();
-            this.postalTextBox = new System.Windows.Forms.TextBox();
-            this.city__ProvTextBox = new System.Windows.Forms.TextBox();
             this.addressTextBox = new System.Windows.Forms.TextBox();
             this.first_NameTextBox = new System.Windows.Forms.TextBox();
             this.last_NameTextBox = new System.Windows.Forms.TextBox();
@@ -98,7 +95,6 @@
             this.btnExtra = new System.Windows.Forms.Button();
             this.dgExtraCards = new System.Windows.Forms.DataGridView();
             this.membership = new PFGA_Membership.Membership();
-            this.chkActionRO = new System.Windows.Forms.CheckBox();
             label4 = new System.Windows.Forms.Label();
             website_UsernamesLabel = new System.Windows.Forms.Label();
             pal_Exp_DateLabel = new System.Windows.Forms.Label();
@@ -109,8 +105,6 @@
             walkLabel = new System.Windows.Forms.Label();
             email_AddressLabel = new System.Windows.Forms.Label();
             phoneLabel = new System.Windows.Forms.Label();
-            postalLabel = new System.Windows.Forms.Label();
-            city__ProvLabel = new System.Windows.Forms.Label();
             addressLabel = new System.Windows.Forms.Label();
             first_NameLabel = new System.Windows.Forms.Label();
             last_NameLabel = new System.Windows.Forms.Label();
@@ -129,7 +123,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new System.Drawing.Point(228, 219);
+            label4.Location = new System.Drawing.Point(228, 166);
             label4.Name = "label4";
             label4.Size = new System.Drawing.Size(27, 13);
             label4.TabIndex = 104;
@@ -138,7 +132,7 @@
             // website_UsernamesLabel
             // 
             website_UsernamesLabel.AutoSize = true;
-            website_UsernamesLabel.Location = new System.Drawing.Point(7, 425);
+            website_UsernamesLabel.Location = new System.Drawing.Point(7, 372);
             website_UsernamesLabel.Name = "website_UsernamesLabel";
             website_UsernamesLabel.Size = new System.Drawing.Size(100, 13);
             website_UsernamesLabel.TabIndex = 98;
@@ -147,7 +141,7 @@
             // pal_Exp_DateLabel
             // 
             pal_Exp_DateLabel.AutoSize = true;
-            pal_Exp_DateLabel.Location = new System.Drawing.Point(35, 298);
+            pal_Exp_DateLabel.Location = new System.Drawing.Point(35, 245);
             pal_Exp_DateLabel.Name = "pal_Exp_DateLabel";
             pal_Exp_DateLabel.Size = new System.Drawing.Size(72, 13);
             pal_Exp_DateLabel.TabIndex = 94;
@@ -156,7 +150,7 @@
             // palLabel
             // 
             palLabel.AutoSize = true;
-            palLabel.Location = new System.Drawing.Point(82, 271);
+            palLabel.Location = new System.Drawing.Point(82, 218);
             palLabel.Name = "palLabel";
             palLabel.Size = new System.Drawing.Size(25, 13);
             palLabel.TabIndex = 92;
@@ -165,7 +159,7 @@
             // date_JoinedLabel
             // 
             date_JoinedLabel.AutoSize = true;
-            date_JoinedLabel.Location = new System.Drawing.Point(40, 372);
+            date_JoinedLabel.Location = new System.Drawing.Point(40, 319);
             date_JoinedLabel.Name = "date_JoinedLabel";
             date_JoinedLabel.Size = new System.Drawing.Size(67, 13);
             date_JoinedLabel.TabIndex = 91;
@@ -183,7 +177,7 @@
             // memberTypeIDLabel
             // 
             memberTypeIDLabel.AutoSize = true;
-            memberTypeIDLabel.Location = new System.Drawing.Point(32, 345);
+            memberTypeIDLabel.Location = new System.Drawing.Point(32, 292);
             memberTypeIDLabel.Name = "memberTypeIDLabel";
             memberTypeIDLabel.Size = new System.Drawing.Size(75, 13);
             memberTypeIDLabel.TabIndex = 87;
@@ -192,7 +186,7 @@
             // walkLabel
             // 
             walkLabel.AutoSize = true;
-            walkLabel.Location = new System.Drawing.Point(72, 398);
+            walkLabel.Location = new System.Drawing.Point(72, 345);
             walkLabel.Name = "walkLabel";
             walkLabel.Size = new System.Drawing.Size(35, 13);
             walkLabel.TabIndex = 83;
@@ -201,7 +195,7 @@
             // email_AddressLabel
             // 
             email_AddressLabel.AutoSize = true;
-            email_AddressLabel.Location = new System.Drawing.Point(31, 245);
+            email_AddressLabel.Location = new System.Drawing.Point(31, 192);
             email_AddressLabel.Name = "email_AddressLabel";
             email_AddressLabel.Size = new System.Drawing.Size(76, 13);
             email_AddressLabel.TabIndex = 80;
@@ -210,29 +204,11 @@
             // phoneLabel
             // 
             phoneLabel.AutoSize = true;
-            phoneLabel.Location = new System.Drawing.Point(66, 219);
+            phoneLabel.Location = new System.Drawing.Point(66, 166);
             phoneLabel.Name = "phoneLabel";
             phoneLabel.Size = new System.Drawing.Size(41, 13);
             phoneLabel.TabIndex = 78;
             phoneLabel.Text = "Phone:";
-            // 
-            // postalLabel
-            // 
-            postalLabel.AutoSize = true;
-            postalLabel.Location = new System.Drawing.Point(68, 193);
-            postalLabel.Name = "postalLabel";
-            postalLabel.Size = new System.Drawing.Size(39, 13);
-            postalLabel.TabIndex = 74;
-            postalLabel.Text = "Postal:";
-            // 
-            // city__ProvLabel
-            // 
-            city__ProvLabel.AutoSize = true;
-            city__ProvLabel.Location = new System.Drawing.Point(26, 167);
-            city__ProvLabel.Name = "city__ProvLabel";
-            city__ProvLabel.Size = new System.Drawing.Size(81, 13);
-            city__ProvLabel.TabIndex = 72;
-            city__ProvLabel.Text = "City && Province:";
             // 
             // addressLabel
             // 
@@ -342,10 +318,6 @@
             this.tabGeneral.Controls.Add(this.email_AddressTextBox);
             this.tabGeneral.Controls.Add(phoneLabel);
             this.tabGeneral.Controls.Add(this.phoneTextBox);
-            this.tabGeneral.Controls.Add(postalLabel);
-            this.tabGeneral.Controls.Add(this.postalTextBox);
-            this.tabGeneral.Controls.Add(city__ProvLabel);
-            this.tabGeneral.Controls.Add(this.city__ProvTextBox);
             this.tabGeneral.Controls.Add(addressLabel);
             this.tabGeneral.Controls.Add(this.addressTextBox);
             this.tabGeneral.Controls.Add(first_NameLabel);
@@ -369,7 +341,7 @@
             // 
             // btnAddPaid
             // 
-            this.btnAddPaid.Location = new System.Drawing.Point(10, 448);
+            this.btnAddPaid.Location = new System.Drawing.Point(10, 395);
             this.btnAddPaid.Name = "btnAddPaid";
             this.btnAddPaid.Size = new System.Drawing.Size(106, 23);
             this.btnAddPaid.TabIndex = 108;
@@ -385,7 +357,7 @@
             this.dgPaidHistory.AllowUserToResizeColumns = false;
             this.dgPaidHistory.AllowUserToResizeRows = false;
             this.dgPaidHistory.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgPaidHistory.Location = new System.Drawing.Point(122, 448);
+            this.dgPaidHistory.Location = new System.Drawing.Point(122, 395);
             this.dgPaidHistory.Name = "dgPaidHistory";
             this.dgPaidHistory.Size = new System.Drawing.Size(253, 118);
             this.dgPaidHistory.TabIndex = 107;
@@ -520,7 +492,7 @@
             // 
             // txtCell
             // 
-            this.txtCell.Location = new System.Drawing.Point(275, 216);
+            this.txtCell.Location = new System.Drawing.Point(275, 163);
             this.txtCell.Name = "txtCell";
             this.txtCell.Size = new System.Drawing.Size(100, 20);
             this.txtCell.TabIndex = 9;
@@ -529,7 +501,7 @@
             // 
             this.chkSwipe.AutoSize = true;
             this.chkSwipe.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkSwipe.Location = new System.Drawing.Point(69, 320);
+            this.chkSwipe.Location = new System.Drawing.Point(69, 267);
             this.chkSwipe.Name = "chkSwipe";
             this.chkSwipe.Size = new System.Drawing.Size(58, 17);
             this.chkSwipe.TabIndex = 13;
@@ -599,6 +571,17 @@
             this.grpSection.TabStop = false;
             this.grpSection.Text = "Sections";
             // 
+            // chkActionRO
+            // 
+            this.chkActionRO.AutoSize = true;
+            this.chkActionRO.Location = new System.Drawing.Point(144, 74);
+            this.chkActionRO.Name = "chkActionRO";
+            this.chkActionRO.Size = new System.Drawing.Size(75, 17);
+            this.chkActionRO.TabIndex = 33;
+            this.chkActionRO.Text = "Action RO";
+            this.chkActionRO.UseVisualStyleBackColor = true;
+            this.chkActionRO.CheckedChanged += new System.EventHandler(this.chkActionRO_CheckedChanged);
+            // 
             // chkAction
             // 
             this.chkAction.AutoSize = true;
@@ -665,7 +648,7 @@
             // 
             this.cboMemberType.DisplayMember = "MembershipTypeID";
             this.cboMemberType.FormattingEnabled = true;
-            this.cboMemberType.Location = new System.Drawing.Point(113, 339);
+            this.cboMemberType.Location = new System.Drawing.Point(113, 286);
             this.cboMemberType.Name = "cboMemberType";
             this.cboMemberType.Size = new System.Drawing.Size(117, 21);
             this.cboMemberType.TabIndex = 14;
@@ -678,7 +661,7 @@
             "",
             "Done",
             "Need"});
-            this.cboWalk.Location = new System.Drawing.Point(113, 395);
+            this.cboWalk.Location = new System.Drawing.Point(113, 342);
             this.cboWalk.Name = "cboWalk";
             this.cboWalk.Size = new System.Drawing.Size(121, 21);
             this.cboWalk.TabIndex = 16;
@@ -705,7 +688,7 @@
             // 
             // website_UsernamesTextBox
             // 
-            this.website_UsernamesTextBox.Location = new System.Drawing.Point(113, 422);
+            this.website_UsernamesTextBox.Location = new System.Drawing.Point(113, 369);
             this.website_UsernamesTextBox.Name = "website_UsernamesTextBox";
             this.website_UsernamesTextBox.Size = new System.Drawing.Size(100, 20);
             this.website_UsernamesTextBox.TabIndex = 17;
@@ -714,14 +697,14 @@
             // 
             this.pal_Exp_DateDateTimePicker.CustomFormat = "yyyy-MMM-dd";
             this.pal_Exp_DateDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.pal_Exp_DateDateTimePicker.Location = new System.Drawing.Point(113, 294);
+            this.pal_Exp_DateDateTimePicker.Location = new System.Drawing.Point(113, 241);
             this.pal_Exp_DateDateTimePicker.Name = "pal_Exp_DateDateTimePicker";
             this.pal_Exp_DateDateTimePicker.Size = new System.Drawing.Size(200, 20);
             this.pal_Exp_DateDateTimePicker.TabIndex = 12;
             // 
             // palTextBox
             // 
-            this.palTextBox.Location = new System.Drawing.Point(113, 268);
+            this.palTextBox.Location = new System.Drawing.Point(113, 215);
             this.palTextBox.Name = "palTextBox";
             this.palTextBox.Size = new System.Drawing.Size(100, 20);
             this.palTextBox.TabIndex = 11;
@@ -730,7 +713,7 @@
             // 
             this.date_JoinedDateTimePicker.CustomFormat = "yyyy-MMM-dd";
             this.date_JoinedDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.date_JoinedDateTimePicker.Location = new System.Drawing.Point(113, 368);
+            this.date_JoinedDateTimePicker.Location = new System.Drawing.Point(113, 315);
             this.date_JoinedDateTimePicker.Name = "date_JoinedDateTimePicker";
             this.date_JoinedDateTimePicker.Size = new System.Drawing.Size(200, 20);
             this.date_JoinedDateTimePicker.TabIndex = 15;
@@ -746,31 +729,17 @@
             // 
             // email_AddressTextBox
             // 
-            this.email_AddressTextBox.Location = new System.Drawing.Point(113, 242);
+            this.email_AddressTextBox.Location = new System.Drawing.Point(113, 189);
             this.email_AddressTextBox.Name = "email_AddressTextBox";
             this.email_AddressTextBox.Size = new System.Drawing.Size(200, 20);
             this.email_AddressTextBox.TabIndex = 10;
             // 
             // phoneTextBox
             // 
-            this.phoneTextBox.Location = new System.Drawing.Point(113, 216);
+            this.phoneTextBox.Location = new System.Drawing.Point(113, 163);
             this.phoneTextBox.Name = "phoneTextBox";
             this.phoneTextBox.Size = new System.Drawing.Size(100, 20);
             this.phoneTextBox.TabIndex = 8;
-            // 
-            // postalTextBox
-            // 
-            this.postalTextBox.Location = new System.Drawing.Point(113, 190);
-            this.postalTextBox.Name = "postalTextBox";
-            this.postalTextBox.Size = new System.Drawing.Size(100, 20);
-            this.postalTextBox.TabIndex = 7;
-            // 
-            // city__ProvTextBox
-            // 
-            this.city__ProvTextBox.Location = new System.Drawing.Point(113, 164);
-            this.city__ProvTextBox.Name = "city__ProvTextBox";
-            this.city__ProvTextBox.Size = new System.Drawing.Size(360, 20);
-            this.city__ProvTextBox.TabIndex = 6;
             // 
             // addressTextBox
             // 
@@ -832,17 +801,6 @@
             // 
             this.membership.DataSetName = "Membership";
             this.membership.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // chkActionRO
-            // 
-            this.chkActionRO.AutoSize = true;
-            this.chkActionRO.Location = new System.Drawing.Point(144, 74);
-            this.chkActionRO.Name = "chkActionRO";
-            this.chkActionRO.Size = new System.Drawing.Size(75, 17);
-            this.chkActionRO.TabIndex = 33;
-            this.chkActionRO.Text = "Action RO";
-            this.chkActionRO.UseVisualStyleBackColor = true;
-            this.chkActionRO.CheckedChanged += new System.EventHandler(this.chkActionRO_CheckedChanged);
             // 
             // frmMember
             // 
@@ -919,8 +877,6 @@
         private System.Windows.Forms.DateTimePicker birth_DateDateTimePicker;
         private System.Windows.Forms.TextBox email_AddressTextBox;
         private System.Windows.Forms.TextBox phoneTextBox;
-        private System.Windows.Forms.TextBox postalTextBox;
-        private System.Windows.Forms.TextBox city__ProvTextBox;
         private System.Windows.Forms.TextBox addressTextBox;
         private System.Windows.Forms.TextBox first_NameTextBox;
         private System.Windows.Forms.TextBox last_NameTextBox;

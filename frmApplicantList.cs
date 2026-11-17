@@ -568,6 +568,46 @@ namespace PFGA_Membership
             return member;
         }
 
+        private static int SaveFamilyMembers(DecryptedApplicant applicant, int parentId,
+            int pendingMembershipTypeId, ref int nextCard)
+        {
+            if (applicant.Family == null)
+            {
+                return 0;
+            }
+
+            if (nextCard < 0)
+            {
+                nextCard = new clsMembership(-1, -1).Card;
+            }
+
+            int savedCount = 0;
+            foreach (var familyMember in applicant.Family)
+            {
+                if (familyMember == null)
+                {
+                    continue;
+                }
+
+                clsMembership member = CreateFamilyMember(familyMember, pendingMembershipTypeId, nextCard++);
+                member.MasterRecord = parentId;
+                member.Save();
+                if (member.ID <= 0)
+                {
+                    WriteDiagnostic(String.Format("Family member {0} {1} could not be saved.",
+                        member.FirstName, member.LastName));
+                    continue;
+                }
+
+                InsertPaidRecord(member.ID);
+                DebugMember("Family member", member);
+                DebugPaidRecord(member.ID);
+                savedCount++;
+            }
+
+            return savedCount;
+        }
+
         private static string FormatCourses(List<Course> courses)
         {
             if (courses == null)
@@ -1275,33 +1315,8 @@ namespace PFGA_Membership
                         DebugPaidRecord(parent.ID);
                         importedCount++;
 
-                        if (applicant.Family == null)
-                        {
-                            continue;
-                        }
-
-                        foreach (var familyMember in applicant.Family)
-                        {
-                            if (familyMember == null)
-                            {
-                                continue;
-                            }
-
-                            clsMembership member = CreateFamilyMember(familyMember, pendingMembershipTypeId, nextCard++);
-                            member.MasterRecord = parent.ID;
-                            member.Save();
-                            if (member.ID <= 0)
-                            {
-                                WriteDiagnostic(String.Format("Family member {0} {1} could not be saved.",
-                                    member.FirstName, member.LastName));
-                                continue;
-                            }
-
-                            InsertPaidRecord(member.ID);
-                            DebugMember("Family member", member);
-                            DebugPaidRecord(member.ID);
-                            importedCount++;
-                        }
+                        importedCount += SaveFamilyMembers(applicant, parent.ID,
+                            pendingMembershipTypeId, ref nextCard);
                     }
                     else if (String.Equals(applicant.ApplicationType, "renew", StringComparison.OrdinalIgnoreCase) ||
                              String.Equals(applicant.ApplicationType, "update", StringComparison.OrdinalIgnoreCase))
@@ -1317,6 +1332,9 @@ namespace PFGA_Membership
                         ApplyApplicant(member, applicant, pendingMembershipTypeId, true);
                         DebugMember(applicant.ApplicationType, member);
                         DebugPaidRecord(member.ID);
+                        importedCount += SaveFamilyMembers(applicant, member.ID,
+                            pendingMembershipTypeId, ref nextCard);
+                        savedApplicantIds.Add(applicant.ResponseId);
                         importedCount++;
                     }
                 }
